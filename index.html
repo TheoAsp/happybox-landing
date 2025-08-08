@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Box</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #fef9f5, #fff6eb);
+      color: #333;
+      overflow-x: hidden;
+    }
+    header {
+      text-align: center;
+      padding: 60px 20px 40px;
+      animation: fadeInDown 1s ease forwards;
+    }
+    header h1 {
+      font-size: 3em;
+      margin: 0;
+      color: #ff7a00;
+    }
+    header p {
+      font-size: 1.2em;
+      margin-top: 10px;
+      color: #555;
+    }
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 30px 20px;
+      animation: fadeIn 2s ease forwards;
+    }
+    .gallery img {
+      width: 280px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+    .cta {
+      text-align: center;
+      padding: 50px 20px;
+      animation: fadeInUp 1.5s ease forwards;
+    }
+    .cta h2 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    .cta button {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      background-color: #ff7a00;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .cta button:hover {
+      background-color: #e66b00;
+      transform: scale(1.05);
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+      color: #999;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes fadeInDown {
+      0% { opacity: 0; transform: translateY(-30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Happy Box</h1>
+    <p>Το πρώτο σου NFT αναμνηστικό ταξιδιού! Απόκτησέ το με ένα κλικ.</p>
+  </header>
+
+  <section class="gallery">
+    <img src="https://source.unsplash.com/featured/?mountain" alt="Μοναδική εικόνα">
+    <img src="https://source.unsplash.com/featured/?forest" alt="Μοναδική εικόνα">
+    <img src="https://source.unsplash.com/featured/?train" alt="Μοναδική εικόνα">
+  </section>
+
+  <section class="cta">
+    <h2>Έμεινες σε ξενοδοχείο στα Καλάβρυτα;</h2>
+    <p>Πάρε το Happy Box σου με ένα μοναδικό NFT ενθύμιο από την περιοχή!</p>
+    <!-- TODO: Αντικατέστησε το href με το πραγματικό claim link από Paper.xyz όταν είναι έτοιμο -->
+    <a href="#" style="text-decoration:none;">
+      <button>🎁 Claim your Happy Box</button>
+    </a>
+  </section>
+
+  <footer>
+    &copy; 2025 Happy Box. All rights reserved.
+  </footer>
+</body>
+</html>
