@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="el">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -20,7 +20,6 @@
       color:var(--ink);
       overflow-x:hidden;
     }
-    /* fun confetti background dots */
     .confetti{
       position:fixed; inset:0; pointer-events:none; opacity:.18;
       background:
@@ -29,10 +28,7 @@
         radial-gradient(circle at 30% 80%, #ffd699 2px, transparent 3px) 0 0/160px 160px;
       animation: floaty 14s linear infinite;
     }
-    @keyframes floaty{
-      from{transform:translateY(0)}
-      to{transform:translateY(-120px)}
-    }
+    @keyframes floaty{ from{transform:translateY(0)} to{transform:translateY(-120px)} }
 
     header{ text-align:center; padding:64px 20px 36px; animation:drop .8s ease forwards; }
     @keyframes drop{ from{opacity:0; transform:translateY(-24px)} to{opacity:1; transform:translateY(0)} }
@@ -43,12 +39,10 @@
       letter-spacing:.5px;
     }
     .sub{ font-size:clamp(14px,2.2vw,18px); color:var(--muted) }
-
     .ribbon{
       display:inline-block; margin-top:10px; padding:6px 12px;
       background:#fff; border:1px dashed var(--brand); color:var(--brand);
-      border-radius:999px; font-weight:600; font-size:14px;
-      transform:rotate(-1deg);
+      border-radius:999px; font-weight:600; font-size:14px; transform:rotate(-1deg);
     }
 
     .gallery{
@@ -67,6 +61,7 @@
       position:absolute; left:10px; top:10px; background:rgba(255,255,255,.86);
       color:#444; font-size:12px; padding:4px 8px; border-radius:999px; backdrop-filter: blur(6px);
     }
+
     .cta{ text-align:center; padding:48px 20px 64px; animation:rise .9s ease forwards; }
     @keyframes rise{from{opacity:0; transform:translateY(24px)} to{opacity:1; transform:translateY(0)}}
     .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px) }
@@ -80,13 +75,8 @@
     .btn:hover{ transform: translateY(-2px) scale(1.02); filter:brightness(1.03); }
     .btn:active{ transform: translateY(0) scale(.99); }
 
-    .sparkle{
-      display:inline-block; margin-left:4px; animation: twinkle 1.2s ease-in-out infinite;
-    }
-    @keyframes twinkle{
-      0%,100%{ transform:scale(1) rotate(0); opacity:1 }
-      50%{ transform:scale(1.2) rotate(12deg); opacity:.7 }
-    }
+    .sparkle{ display:inline-block; margin-left:4px; animation: twinkle 1.2s ease-in-out infinite; }
+    @keyframes twinkle{ 0%,100%{ transform:scale(1) rotate(0); opacity:1 } 50%{ transform:scale(1.2) rotate(12deg); opacity:.7 } }
 
     footer{ text-align:center; padding:20px; color:#999; font-size:13px }
   </style>
@@ -97,36 +87,33 @@
   <header>
     <h1>Happy Box — Kalavryta Edition</h1>
     <div class="ribbon">🎁 Mystery NFT Souvenir</div>
-    <p class="sub">Κάθε διαμονή κρύβει ένα μικρό δώρο. Άνοιξέ το… σαν παιδί! ✨</p>
+    <p class="sub">Every stay hides a tiny present. Open it like a kid! ✨</p>
   </header>
 
-  <section class="gallery" id="gallery">
-    <!-- Οι κάρτες γεμίζουν δυναμικά από JS με 3 τυχαίες εικόνες -->
-  </section>
+  <section class="gallery" id="gallery"><!-- filled by JS --></section>
 
   <section class="cta">
-    <h2>Έμεινες σε ξενοδοχείο στα Καλάβρυτα;</h2>
-    <p>Πάρε το <strong>Happy Box</strong> σου με ένα μοναδικό, περιορισμένο NFT ενθύμιο. Καμία προεπισκόπηση, μόνο έκπληξη <span class="sparkle">✨</span></p>
-    <!-- TODO: βάλε εδώ το πραγματικό claim link από Paper/Thirdweb όταν είναι έτοιμο -->
+    <h2>Stayed in a hotel in Kalavryta?</h2>
+    <p>Grab your <strong>Happy Box</strong> — a unique, limited NFT photo from the area. No spoilers, only surprise <span class="sparkle">✨</span></p>
+    <!-- TODO: replace the href with the real claim URL from Paper/Thirdweb -->
     <a href="#" style="text-decoration:none"><button class="btn">🎁 Claim your Happy Box</button></a>
   </section>
 
   <footer>© 2025 Happy Box. All rights reserved.</footer>
 
   <script>
-    // === ΠΩΣ ΘΑ ΒΑΛΕΙΣ ΤΙΣ 100 ΕΙΚΟΝΕΣ ΣΟΥ ===
-    // 1) Ανέβασέ τες στο ίδιο repo (ιδανικά μέσα σε φάκελο 'images/')
-    // 2) Βάλε εδώ τα ονόματα των αρχείων (π.χ. 'images/kalavryta_001.jpg', ...)
-    // 3) Δεν εμφανίζουμε συνολικό πλήθος — κρατάμε το στοιχείο της έκπληξης
-    const IMG_PATH = "images/"; // Αν αφήσεις τις εικόνες στη ρίζα, κάν’ το "".
+    // === HOW YOU'LL ADD YOUR 100 IMAGES ===
+    // 1) Upload them into this repo (ideally in 'images/' folder)
+    // 2) List their filenames below; the page will randomly show 3 each load
+    const IMG_PATH = "images/"; // if you place them in root, set to ""
     const yourImages = [
-      // Παράδειγμα για όταν τις ανεβάσεις:
+      // Example when ready:
       // IMG_PATH + "kalavryta_001.jpg",
       // IMG_PATH + "kalavryta_002.jpg",
       // ...
     ];
 
-    // Fallbacks μέχρι να ανεβάσεις δικές σου
+    // Temporary fallbacks until you upload yours
     const fallback = [
       "https://source.unsplash.com/featured/?kalavryta,mountain",
       "https://source.unsplash.com/featured/?kalavryta,forest",
@@ -135,13 +122,10 @@
       "https://source.unsplash.com/featured/?helmos,snow"
     ];
 
-    // Επιλέγουμε από τις δικές σου εικόνες αν υπάρχουν, αλλιώς fallbacks
     const pool = (yourImages && yourImages.length) ? yourImages : fallback;
 
-    // Helper: τυχαία ανάμειξη
     function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a }
 
-    // Παίρνουμε 3 τυχαίες εικόνες και φτιάχνουμε τις κάρτες
     const picks = shuffle(pool.slice()).slice(0,3);
     const gallery = document.getElementById("gallery");
 
@@ -150,10 +134,10 @@
       card.className = "card";
       const img = document.createElement("img");
       img.src = src;
-      img.alt = "Μοναδική εικόνα";
+      img.alt = "Unique image";
       const tag = document.createElement("div");
       tag.className = "tag";
-      tag.textContent = ["Από το Happy Box", "Μυστική επιλογή", "Limited"][i % 3];
+      tag.textContent = ["From Happy Box", "Secret pick", "Limited"][i % 3];
       card.appendChild(img);
       card.appendChild(tag);
       gallery.appendChild(card);
