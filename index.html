@@ -7,6 +7,7 @@
   <style>
     :root{
       --brand:#ff7a00;
+      --brand-soft:#ffb84d;
       --bg1:#fef9f5;
       --bg2:#fff6eb;
       --ink:#333;
@@ -20,6 +21,7 @@
       color:var(--ink);
       overflow-x:hidden;
     }
+    /* subtle fun background dots */
     .confetti{
       position:fixed; inset:0; pointer-events:none; opacity:.18;
       background:
@@ -30,19 +32,36 @@
     }
     @keyframes floaty{ from{transform:translateY(0)} to{transform:translateY(-120px)} }
 
-    header{ text-align:center; padding:64px 20px 36px; animation:drop .8s ease forwards; }
+    header{ text-align:center; padding:56px 20px 24px; animation:drop .8s ease forwards; }
     @keyframes drop{ from{opacity:0; transform:translateY(-24px)} to{opacity:1; transform:translateY(0)} }
-    h1{
-      margin:0 0 6px;
-      font-size: clamp(28px, 5vw, 44px);
+
+    .title{
+      margin:0;
+      font-size: clamp(32px, 6vw, 56px);
       color:var(--brand);
-      letter-spacing:.5px;
+      letter-spacing:.4px;
+      display:flex; align-items:center; justify-content:center; gap:.4rem;
     }
-    .sub{ font-size:clamp(14px,2.2vw,18px); color:var(--muted) }
-    .ribbon{
-      display:inline-block; margin-top:10px; padding:6px 12px;
-      background:#fff; border:1px dashed var(--brand); color:var(--brand);
-      border-radius:999px; font-weight:600; font-size:14px; transform:rotate(-1deg);
+    .gift{ font-size: .9em; line-height:1; filter: drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
+
+    .edition{
+      margin:.25rem 0 0;
+      font-size: clamp(14px, 2.6vw, 20px);
+      color:var(--brand-soft);
+      font-style: italic;
+      display:inline-block;
+      transform: rotate(-2deg);
+      background:#fff; padding:6px 12px;
+      border:1px dashed var(--brand-soft);
+      border-radius:999px;
+    }
+
+    .sub{
+      margin:14px auto 0;
+      max-width:940px;
+      font-size:clamp(14px,2.1vw,18px);
+      color:var(--muted);
+      line-height:1.55;
     }
 
     .gallery{
@@ -62,7 +81,7 @@
       color:#444; font-size:12px; padding:4px 8px; border-radius:999px; backdrop-filter: blur(6px);
     }
 
-    .cta{ text-align:center; padding:48px 20px 64px; animation:rise .9s ease forwards; }
+    .cta{ text-align:center; padding:44px 20px 64px; animation:rise .9s ease forwards; }
     @keyframes rise{from{opacity:0; transform:translateY(24px)} to{opacity:1; transform:translateY(0)}}
     .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px) }
     .cta p{ margin:0 0 16px; color:var(--muted) }
@@ -75,9 +94,6 @@
     .btn:hover{ transform: translateY(-2px) scale(1.02); filter:brightness(1.03); }
     .btn:active{ transform: translateY(0) scale(.99); }
 
-    .sparkle{ display:inline-block; margin-left:4px; animation: twinkle 1.2s ease-in-out infinite; }
-    @keyframes twinkle{ 0%,100%{ transform:scale(1) rotate(0); opacity:1 } 50%{ transform:scale(1.2) rotate(12deg); opacity:.7 } }
-
     footer{ text-align:center; padding:20px; color:#999; font-size:13px }
   </style>
 </head>
@@ -85,16 +101,23 @@
   <div class="confetti" aria-hidden="true"></div>
 
   <header>
-    <h1>Happy Box — Kalavryta Edition</h1>
-    <div class="ribbon">🎁 Mystery NFT Souvenir</div>
-    <p class="sub">Every stay hides a tiny present. Open it like a kid! ✨</p>
+    <h1 class="title">Happy Box <span class="gift">🎁</span></h1>
+    <div class="edition">Kalavryta Edition</div>
+
+    <!-- NEW copy: vivid, tourist-friendly, sells the surprise -->
+    <p class="sub">
+      Are you a traveler looking to make your trip unforgettable?
+      Don’t wait—tap to unlock your gift: <strong>one of 100 limited-edition NFT photos of Kalavryta</strong>,
+      yours to keep for a lifetime. Plus, compete for <strong>rare images</strong> and surprise perks
+      from our partner hotels and restaurants. No spoilers—only surprise!
+    </p>
   </header>
 
   <section class="gallery" id="gallery"><!-- filled by JS --></section>
 
   <section class="cta">
     <h2>Stayed in a hotel in Kalavryta?</h2>
-    <p>Grab your <strong>Happy Box</strong> — a unique, limited NFT photo from the area. No spoilers, only surprise <span class="sparkle">✨</span></p>
+    <p>Grab your <strong>Happy Box</strong> — a unique, limited NFT photo from the area.</p>
     <!-- TODO: replace the href with the real claim URL from Paper/Thirdweb -->
     <a href="#" style="text-decoration:none"><button class="btn">🎁 Claim your Happy Box</button></a>
   </section>
