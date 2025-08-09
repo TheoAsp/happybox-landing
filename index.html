@@ -21,7 +21,6 @@
       color:var(--ink);
       overflow-x:hidden;
     }
-    /* subtle fun background dots */
     .confetti{
       position:fixed; inset:0; pointer-events:none; opacity:.18;
       background:
@@ -63,10 +62,7 @@
       transition:transform .25s ease;
     }
     .card:hover{transform:translateY(-4px) rotate(-.4deg);}
-    .card img{
-      width:100%; height:100%; object-fit:cover; display:block;
-      transition:opacity .8s ease;
-    }
+    .card img{width:100%; height:100%; object-fit:cover; display:block;}
     .tag{
       position:absolute; left:10px; top:10px; background:rgba(255,255,255,.86);
       color:#444; font-size:12px; padding:4px 8px; border-radius:999px; backdrop-filter:blur(6px);
@@ -86,6 +82,30 @@
     .btn:active{transform:translateY(0) scale(.99);}
 
     footer{text-align:center; padding:20px; color:#999; font-size:13px}
+
+    /* Modal */
+    .modal{
+      position:fixed; inset:0; display:none; align-items:center; justify-content:center;
+      background:rgba(0,0,0,.35); z-index:50; padding:20px;
+    }
+    .modal.show{display:flex;}
+    .modal-card{
+      width:min(520px, 92vw); background:#fff; border-radius:16px; padding:24px;
+      box-shadow:0 14px 40px rgba(0,0,0,.18); text-align:center; animation:pop .15s ease;
+    }
+    @keyframes pop{from{transform:scale(.96); opacity:.6} to{transform:scale(1); opacity:1}}
+    .spinner{
+      width:40px; height:40px; border-radius:50%;
+      border:4px solid #eee; border-top-color:var(--brand); margin:4px auto 12px;
+      animation:spin 1s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .modal h3{margin:8px 0 6px}
+    .modal p{margin:0; color:#666}
+    .modal .close{
+      margin-top:16px; background:#eee; color:#333; border:none; border-radius:10px;
+      padding:10px 16px; cursor:pointer;
+    }
   </style>
 </head>
 <body>
@@ -107,31 +127,41 @@
   <section class="cta">
     <h2>Stayed in a hotel in Kalavryta?</h2>
     <p>Grab your <strong>Happy Box</strong> — a unique, limited NFT photo from the area.</p>
-    <a href="#" style="text-decoration:none"><button class="btn">🎁 Claim your Happy Box</button></a>
+    <button id="claimBtn" class="btn">🎁 Claim your Happy Box</button>
   </section>
 
   <footer>© 2025 Happy Box. All rights reserved.</footer>
 
+  <!-- Modal -->
+  <div id="waitModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="waitTitle">
+    <div class="modal-card">
+      <div class="spinner" aria-hidden="true"></div>
+      <h3 id="waitTitle">Soon</h3>
+      <p>Minting opens shortly. Stay tuned!</p>
+      <button class="close" id="closeModal">OK</button>
+    </div>
+  </div>
+
   <script>
-    // ΣΩΣΤΑ paths και filenames όπως τα ανέβασες στο repo
+    // Static images (no rotation) – exact filenames
     const IMG_PATH = "public/images/";
     const yourImages = [
-      IMG_PATH + "1-.png",
-      IMG_PATH + "2-.png",
-      IMG_PATH + "3-.png",
+      IMG_PATH + "1-.png?v=1",
+      IMG_PATH + "3-.png?v=1",
+      IMG_PATH + "5-.png?v=1",
     ];
 
     const TAGS = ["From Happy Box", "Secret pick", "Limited"];
     const gallery = document.getElementById("gallery");
 
-    // Δημιουργούμε 3 κάρτες (μία για κάθε εικόνα)
     yourImages.forEach((src, i) => {
       const card = document.createElement("div");
       card.className = "card";
 
       const img = document.createElement("img");
       img.src = src;
-      img.alt = "Happy Box — Kalavryta preview";
+      img.alt = "Happy Box — Kalavryta preview " + (i+1);
+      img.onerror = () => { card.style.display = "none"; };
 
       const tag = document.createElement("div");
       tag.className = "tag";
@@ -142,19 +172,20 @@
       gallery.appendChild(card);
     });
 
-    // Απλό auto-rotate των εικόνων μέσα στα ίδια cards κάθε 4s
-    let offset = 0;
-    setInterval(() => {
-      const imgs = gallery.querySelectorAll("img");
-      offset = (offset + 1) % yourImages.length;
-      imgs.forEach((img, i) => {
-        img.style.opacity = 0;
-        setTimeout(() => {
-          img.src = yourImages[(i + offset) % yourImages.length];
-          img.style.opacity = 1;
-        }, 800);
-      });
-    }, 4000);
+    // Modal logic
+    const claimBtn = document.getElementById("claimBtn");
+    const waitModal = document.getElementById("waitModal");
+    const closeModal = document.getElementById("closeModal");
+
+    claimBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      waitModal.classList.add("show");
+      setTimeout(() => { waitModal.classList.remove("show"); }, 3500); // optional auto-close
+    });
+    closeModal.addEventListener("click", () => waitModal.classList.remove("show"));
+    waitModal.addEventListener("click", (ev) => {
+      if (ev.target === waitModal) waitModal.classList.remove("show");
+    });
   </script>
 </body>
 </html>
