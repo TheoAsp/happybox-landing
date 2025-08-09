@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Happy Box — Kalavryta Edition</title>
   <style>
@@ -16,8 +16,8 @@
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
-      background: linear-gradient(135deg,var(--bg1),var(--bg2));
+      font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+      background:linear-gradient(135deg,var(--bg1),var(--bg2));
       color:var(--ink);
       overflow-x:hidden;
     }
@@ -28,73 +28,64 @@
         radial-gradient(circle at 10% 20%, #ff7a00 2px, transparent 3px) 0 0/120px 120px,
         radial-gradient(circle at 80% 30%, #ffb84d 2px, transparent 3px) 0 0/140px 140px,
         radial-gradient(circle at 30% 80%, #ffd699 2px, transparent 3px) 0 0/160px 160px;
-      animation: floaty 14s linear infinite;
+      animation:floaty 14s linear infinite;
     }
-    @keyframes floaty{ from{transform:translateY(0)} to{transform:translateY(-120px)} }
+    @keyframes floaty{from{transform:translateY(0)} to{transform:translateY(-120px)}}
 
-    header{ text-align:center; padding:56px 20px 24px; animation:drop .8s ease forwards; }
-    @keyframes drop{ from{opacity:0; transform:translateY(-24px)} to{opacity:1; transform:translateY(0)} }
+    header{text-align:center; padding:56px 20px 24px; animation:drop .8s ease forwards;}
+    @keyframes drop{from{opacity:0; transform:translateY(-24px)} to{opacity:1; transform:translateY(0)}}
 
     .title{
-      margin:0;
-      font-size: clamp(32px, 6vw, 56px);
-      color:var(--brand);
-      letter-spacing:.4px;
-      display:flex; align-items:center; justify-content:center; gap:.4rem;
+      margin:0; font-size:clamp(32px,6vw,56px); color:var(--brand);
+      letter-spacing:.4px; display:flex; align-items:center; justify-content:center; gap:.4rem;
     }
-    .gift{ font-size: .9em; line-height:1; filter: drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
+    .gift{font-size:.9em; line-height:1; filter:drop-shadow(0 2px 2px rgba(0,0,0,.08));}
 
     .edition{
-      margin:.25rem 0 0;
-      font-size: clamp(14px, 2.6vw, 20px);
-      color:var(--brand-soft);
-      font-style: italic;
-      display:inline-block;
-      transform: rotate(-2deg);
-      background:#fff; padding:6px 12px;
-      border:1px dashed var(--brand-soft);
-      border-radius:999px;
+      margin:.25rem 0 0; font-size:clamp(14px,2.6vw,20px); color:var(--brand-soft);
+      font-style:italic; display:inline-block; transform:rotate(-2deg);
+      background:#fff; padding:6px 12px; border:1px dashed var(--brand-soft); border-radius:999px;
     }
 
     .sub{
-      margin:14px auto 0;
-      max-width:940px;
-      font-size:clamp(14px,2.1vw,18px);
-      color:var(--muted);
-      line-height:1.55;
+      margin:14px auto 0; max-width:940px; font-size:clamp(14px,2.1vw,18px);
+      color:var(--muted); line-height:1.55;
     }
 
     .gallery{
       display:flex; flex-wrap:wrap; justify-content:center; gap:18px;
       padding:28px 18px; animation:fIn 1.1s ease forwards;
     }
-    @keyframes fIn{from{opacity:0}to{opacity:1}}
+    @keyframes fIn{from{opacity:0} to{opacity:1}}
     .card{
       width:min(320px,92vw); aspect-ratio:16/10; position:relative; overflow:hidden;
       border-radius:14px; background:#fff; box-shadow:0 8px 28px rgba(0,0,0,.08);
       transition:transform .25s ease;
     }
-    .card:hover{ transform: translateY(-4px) rotate(-.4deg); }
-    .card img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .card:hover{transform:translateY(-4px) rotate(-.4deg);}
+    .card img{
+      width:100%; height:100%; object-fit:cover; display:block;
+      transition:opacity .8s ease;
+    }
     .tag{
       position:absolute; left:10px; top:10px; background:rgba(255,255,255,.86);
-      color:#444; font-size:12px; padding:4px 8px; border-radius:999px; backdrop-filter: blur(6px);
+      color:#444; font-size:12px; padding:4px 8px; border-radius:999px; backdrop-filter:blur(6px);
     }
 
-    .cta{ text-align:center; padding:44px 20px 64px; animation:rise .9s ease forwards; }
+    .cta{text-align:center; padding:44px 20px 64px; animation:rise .9s ease forwards;}
     @keyframes rise{from{opacity:0; transform:translateY(24px)} to{opacity:1; transform:translateY(0)}}
-    .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px) }
-    .cta p{ margin:0 0 16px; color:var(--muted) }
+    .cta h2{margin:0 0 10px; font-size:clamp(20px,4vw,28px)}
+    .cta p{margin:0 0 16px; color:var(--muted)}
     .btn{
       appearance:none; border:none; cursor:pointer; color:#fff; background:var(--brand);
       padding:14px 22px; border-radius:12px; font-size:18px; font-weight:700;
       box-shadow:0 8px 20px rgba(255,122,0,.35);
-      transition: transform .15s ease, filter .2s ease, box-shadow .2s ease;
+      transition:transform .15s ease, filter .2s ease, box-shadow .2s ease;
     }
-    .btn:hover{ transform: translateY(-2px) scale(1.02); filter:brightness(1.03); }
-    .btn:active{ transform: translateY(0) scale(.99); }
+    .btn:hover{transform:translateY(-2px) scale(1.02); filter:brightness(1.03);}
+    .btn:active{transform:translateY(0) scale(.99);}
 
-    footer{ text-align:center; padding:20px; color:#999; font-size:13px }
+    footer{text-align:center; padding:20px; color:#999; font-size:13px}
   </style>
 </head>
 <body>
@@ -103,8 +94,6 @@
   <header>
     <h1 class="title">Happy Box <span class="gift">🎁</span></h1>
     <div class="edition">Kalavryta Edition</div>
-
-    <!-- NEW copy: vivid, tourist-friendly, sells the surprise -->
     <p class="sub">
       Are you a traveler looking to make your trip unforgettable?
       Don’t wait—tap to unlock your gift: <strong>one of 100 limited-edition NFT photos of Kalavryta</strong>,
@@ -113,58 +102,60 @@
     </p>
   </header>
 
-  <section class="gallery" id="gallery"><!-- filled by JS --></section>
+  <section class="gallery" id="gallery"></section>
 
   <section class="cta">
     <h2>Stayed in a hotel in Kalavryta?</h2>
     <p>Grab your <strong>Happy Box</strong> — a unique, limited NFT photo from the area.</p>
-    <!-- TODO: replace the href with the real claim URL from Paper/Thirdweb -->
     <a href="#" style="text-decoration:none"><button class="btn">🎁 Claim your Happy Box</button></a>
   </section>
 
   <footer>© 2025 Happy Box. All rights reserved.</footer>
 
   <script>
-    // === HOW YOU'LL ADD YOUR 100 IMAGES ===
-    // 1) Upload them into this repo (ideally in 'images/' folder)
-    // 2) List their filenames below; the page will randomly show 3 each load
-    const IMG_PATH = "images/"; // if you place them in root, set to ""
+    // ΣΩΣΤΑ paths και filenames όπως τα ανέβασες στο repo
+    const IMG_PATH = "public/images/";
     const yourImages = [
-      // Example when ready:
-      // IMG_PATH + "kalavryta_001.jpg",
-      // IMG_PATH + "kalavryta_002.jpg",
-      // ...
+      IMG_PATH + "1-.png",
+      IMG_PATH + "2-.png",
+      IMG_PATH + "3-.png",
     ];
 
-    // Temporary fallbacks until you upload yours
-    const fallback = [
-      "https://source.unsplash.com/featured/?kalavryta,mountain",
-      "https://source.unsplash.com/featured/?kalavryta,forest",
-      "https://source.unsplash.com/featured/?kalavryta,train",
-      "https://source.unsplash.com/featured/?greece,mountain",
-      "https://source.unsplash.com/featured/?helmos,snow"
-    ];
-
-    const pool = (yourImages && yourImages.length) ? yourImages : fallback;
-
-    function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a }
-
-    const picks = shuffle(pool.slice()).slice(0,3);
+    const TAGS = ["From Happy Box", "Secret pick", "Limited"];
     const gallery = document.getElementById("gallery");
 
-    picks.forEach((src, i) => {
+    // Δημιουργούμε 3 κάρτες (μία για κάθε εικόνα)
+    yourImages.forEach((src, i) => {
       const card = document.createElement("div");
       card.className = "card";
+
       const img = document.createElement("img");
       img.src = src;
-      img.alt = "Unique image";
+      img.alt = "Happy Box — Kalavryta preview";
+
       const tag = document.createElement("div");
       tag.className = "tag";
-      tag.textContent = ["From Happy Box", "Secret pick", "Limited"][i % 3];
+      tag.textContent = TAGS[i % TAGS.length];
+
       card.appendChild(img);
       card.appendChild(tag);
       gallery.appendChild(card);
     });
+
+    // Απλό auto-rotate των εικόνων μέσα στα ίδια cards κάθε 4s
+    let offset = 0;
+    setInterval(() => {
+      const imgs = gallery.querySelectorAll("img");
+      offset = (offset + 1) % yourImages.length;
+      imgs.forEach((img, i) => {
+        img.style.opacity = 0;
+        setTimeout(() => {
+          img.src = yourImages[(i + offset) % yourImages.length];
+          img.style.opacity = 1;
+        }, 800);
+      });
+    }, 4000);
   </script>
 </body>
 </html>
+
