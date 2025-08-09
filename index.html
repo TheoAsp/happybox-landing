@@ -14,6 +14,7 @@
       --muted:#555;
       --card:#fff;
       --ring: rgba(255,122,0,.25);
+      --imgbg:#f7f7f7; /* φόντο πίσω από εικόνες όταν περισσεύει χώρος */
     }
     *{box-sizing:border-box}
     body{
@@ -24,7 +25,6 @@
       overflow-x:hidden;
     }
 
-    /* subtle background dots */
     .confetti{
       position:fixed; inset:0; pointer-events:none; opacity:.18;
       background:
@@ -74,8 +74,8 @@
       display:flex; justify-content:center; padding:28px 18px 8px;
     }
     .hero-card{
-      width:min(680px, 92vw);
-      aspect-ratio: 16/10;
+      width:min(800px, 94vw);
+      aspect-ratio: 16/10;             /* σταθερό “κάδρο” */
       position:relative;
       border-radius:16px;
       background:var(--card);
@@ -84,7 +84,6 @@
       outline: 0;
     }
     .hero-card::after{
-      /* soft ring to draw focus */
       content:"";
       position:absolute; inset:0; pointer-events:none;
       box-shadow: inset 0 0 0 2px rgba(0,0,0,.03), 0 0 0 6px var(--ring);
@@ -92,15 +91,13 @@
     }
     .hero-card:hover::after{ opacity:.6 }
 
-    .stack{ position:absolute; inset:0; }
+    .stack{ position:absolute; inset:0; display:grid; place-items:center; background:var(--imgbg); }
     .slide{
-      position:absolute; inset:0;
       width:100%; height:100%;
-      object-fit:cover;
-      opacity:0;
-      transition:opacity .9s ease;
-      will-change: opacity;
-      display:block;
+      object-fit: contain;              /* ✅ δείχνει ΟΛΟΚΛΗΡΗ την εικόνα */
+      background:var(--imgbg);
+      position:absolute; inset:0;
+      opacity:0; transition:opacity .9s ease; will-change:opacity;
     }
     .slide.active{ opacity:1 }
 
@@ -111,6 +108,7 @@
       padding:6px 10px;
       font-size:12px; color:#444;
       backdrop-filter: blur(8px);
+      z-index:2;
     }
 
     /* -------- Example bundle (1-.png) -------- */
@@ -118,17 +116,28 @@
       display:flex; justify-content:center; padding:16px 18px 8px;
     }
     .example-card{
-      width:min(560px, 92vw);
-      background:#fff;
+      width:min(800px, 94vw);
       border-radius:14px;
       box-shadow:0 8px 26px rgba(0,0,0,.08);
       overflow:hidden;
+      background:var(--imgbg);
       text-align:center;
     }
-    .example-card img{ width:100%; height:auto; display:block; }
+    /* φτιάχνουμε “κάδρο” για να φαίνεται όλη */
+    .example-frame{
+      width:100%;
+      aspect-ratio: 16/10;
+      display:grid; place-items:center;
+      background:var(--imgbg);
+    }
+    .example-frame img{
+      max-width:100%;
+      max-height:100%;
+      object-fit: contain;              /* ✅ καμία περικοπή */
+      display:block;
+    }
     .example-card figcaption{
-      font-size:13px; color:#666; padding:10px 12px;
-      background:#fafafa;
+      font-size:13px; color:#666; padding:10px 12px; background:#fafafa;
     }
 
     .cta{ text-align:center; padding:34px 20px 64px; animation:rise .9s ease forwards; }
@@ -149,8 +158,7 @@
     /* --- tiny modal for Soon --- */
     .modal{
       position:fixed; inset:0; display:none; place-items:center;
-      background:rgba(0,0,0,.35);
-      z-index:40;
+      background:rgba(0,0,0,.35); z-index:40;
     }
     .modal.open{ display:grid }
     .modal-card{
@@ -161,9 +169,7 @@
     @keyframes pop{ from{transform:scale(.94); opacity:0} to{transform:scale(1); opacity:1} }
     .modal-card h3{ margin:0 0 6px; font-size:22px }
     .modal-card p{ margin:0 0 14px; color:#666 }
-    .modal-card button{
-      padding:10px 14px; border-radius:10px; border:none; background:#eee; cursor:pointer;
-    }
+    .modal-card button{ padding:10px 14px; border-radius:10px; border:none; background:#eee; cursor:pointer; }
   </style>
 </head>
 <body>
@@ -186,7 +192,6 @@
     <div class="hero-card" id="heroCard" aria-live="polite">
       <div class="badge">Kalavryta preview</div>
       <div class="stack">
-        <!-- two layers for cross-fade -->
         <img class="slide active" id="slideA" alt="Preview image"/>
         <img class="slide" id="slideB" alt="Preview image"/>
       </div>
@@ -196,7 +201,9 @@
   <!-- Static example bundle (1-.png) -->
   <section class="example">
     <figure class="example-card">
-      <img src="public/images/1-.png" alt="Example bundle — art + original"/>
+      <div class="example-frame">
+        <img src="public/images/1-.png" alt="Example bundle — art + original"/>
+      </div>
       <figcaption>Example bundle (art + original)</figcaption>
     </figure>
   </section>
@@ -219,9 +226,7 @@
   </div>
 
   <script>
-    /* ---------------- Images for slideshow ----------------
-       Μόνο οι παρακάτω θα εναλλάσσονται στο κεντρικό κάδρο:
-    */
+    /* ---------------- Slideshow images (χωρίς κόψιμο) ---------------- */
     const IMAGES = [
       "public/images/7-.png",
       "public/images/8-.png",
@@ -231,7 +236,6 @@
       "public/images/12-.png",
     ];
 
-    // ----- Slideshow logic (cross-fade) -----
     const slideA = document.getElementById("slideA");
     const slideB = document.getElementById("slideB");
     const hero = document.getElementById("heroCard");
@@ -239,27 +243,19 @@
     let idx = Math.floor(Math.random() * IMAGES.length);
     let showingA = true;
 
-    function preload(src){
-      const img = new Image();
-      img.src = src;
-    }
+    function preload(src){ const img = new Image(); img.src = src; }
+    function setSrc(el, src){ el.src = src; }
 
-    function setSrc(el, src){
-      el.src = src;
-    }
-
-    // init
     if (IMAGES.length > 0) {
       setSrc(slideA, IMAGES[idx]);
       preload(IMAGES[(idx + 1) % IMAGES.length]);
     }
 
     let timer = null;
-    const INTERVAL = 4000; // ms
+    const INTERVAL = 4000;
 
     function next(){
       if (!IMAGES.length) return;
-
       const nextIdx = (idx + 1) % IMAGES.length;
       const nextSrc = IMAGES[nextIdx];
 
@@ -272,7 +268,6 @@
         slideA.classList.add("active");
         slideB.classList.remove("active");
       }
-
       showingA = !showingA;
       idx = nextIdx;
       preload(IMAGES[(idx + 1) % IMAGES.length]);
@@ -281,28 +276,19 @@
     function start(){ if(!timer) timer = setInterval(next, INTERVAL); }
     function stop(){ clearInterval(timer); timer = null; }
 
-    // pause on hover (desktop)
     hero.addEventListener("mouseenter", stop);
     hero.addEventListener("mouseleave", start);
     start();
 
-    // ----- Modal "Soon" -----
+    // Modal
     const claimBtn = document.getElementById("claimBtn");
     const soonModal = document.getElementById("soonModal");
     const closeModal = document.getElementById("closeModal");
 
-    claimBtn.addEventListener("click", () => {
-      soonModal.classList.add("open");
-    });
-    closeModal.addEventListener("click", () => {
-      soonModal.classList.remove("open");
-    });
-    soonModal.addEventListener("click", (e) => {
-      if (e.target === soonModal) soonModal.classList.remove("open");
-    });
-    window.addEventListener("keydown", (e)=>{
-      if(e.key === "Escape") soonModal.classList.remove("open");
-    });
+    claimBtn.addEventListener("click", () => { soonModal.classList.add("open"); });
+    closeModal.addEventListener("click", () => { soonModal.classList.remove("open"); });
+    soonModal.addEventListener("click", (e) => { if (e.target === soonModal) soonModal.classList.remove("open"); });
+    window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") soonModal.classList.remove("open"); });
   </script>
 </body>
 </html>
