@@ -12,99 +12,157 @@
       --bg2:#fff6eb;
       --ink:#333;
       --muted:#555;
+      --card:#fff;
+      --ring: rgba(255,122,0,.25);
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
-      background:linear-gradient(135deg,var(--bg1),var(--bg2));
+      font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+      background: linear-gradient(135deg,var(--bg1),var(--bg2));
       color:var(--ink);
       overflow-x:hidden;
     }
+
+    /* subtle background dots */
     .confetti{
       position:fixed; inset:0; pointer-events:none; opacity:.18;
       background:
         radial-gradient(circle at 10% 20%, #ff7a00 2px, transparent 3px) 0 0/120px 120px,
         radial-gradient(circle at 80% 30%, #ffb84d 2px, transparent 3px) 0 0/140px 140px,
         radial-gradient(circle at 30% 80%, #ffd699 2px, transparent 3px) 0 0/160px 160px;
-      animation:floaty 14s linear infinite;
+      animation: floaty 14s linear infinite;
     }
-    @keyframes floaty{from{transform:translateY(0)} to{transform:translateY(-120px)}}
+    @keyframes floaty{ from{transform:translateY(0)} to{transform:translateY(-120px)} }
 
-    header{text-align:center; padding:56px 20px 24px; animation:drop .8s ease forwards;}
-    @keyframes drop{from{opacity:0; transform:translateY(-24px)} to{opacity:1; transform:translateY(0)}}
+    header{ text-align:center; padding:56px 20px 24px; animation:drop .8s ease forwards; }
+    @keyframes drop{ from{opacity:0; transform:translateY(-24px)} to{opacity:1; transform:translateY(0)} }
 
     .title{
-      margin:0; font-size:clamp(32px,6vw,56px); color:var(--brand);
-      letter-spacing:.4px; display:flex; align-items:center; justify-content:center; gap:.4rem;
+      margin:0;
+      font-size: clamp(32px, 6vw, 56px);
+      color:var(--brand);
+      letter-spacing:.4px;
+      display:flex; align-items:center; justify-content:center; gap:.4rem;
     }
-    .gift{font-size:.9em; line-height:1; filter:drop-shadow(0 2px 2px rgba(0,0,0,.08));}
+    .gift{ font-size: .9em; line-height:1; filter: drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
 
     .edition{
-      margin:.25rem 0 0; font-size:clamp(14px,2.6vw,20px); color:var(--brand-soft);
-      font-style:italic; display:inline-block; transform:rotate(-2deg);
-      background:#fff; padding:6px 12px; border:1px dashed var(--brand-soft); border-radius:999px;
+      margin:.25rem 0 0;
+      font-size: clamp(14px, 2.6vw, 20px);
+      color:var(--brand-soft);
+      font-style: italic;
+      display:inline-block;
+      transform: rotate(-2deg);
+      background:#fff; padding:6px 12px;
+      border:1px dashed var(--brand-soft);
+      border-radius:999px;
     }
 
     .sub{
-      margin:14px auto 0; max-width:940px; font-size:clamp(14px,2.1vw,18px);
-      color:var(--muted); line-height:1.55;
+      margin:14px auto 0;
+      max-width:940px;
+      font-size:clamp(14px,2.1vw,18px);
+      color:var(--muted);
+      line-height:1.55;
+      text-align:center;
+      padding:0 18px;
     }
 
-    .gallery{
-      display:flex; flex-wrap:wrap; justify-content:center; gap:18px;
-      padding:28px 18px; animation:fIn 1.1s ease forwards;
+    /* -------- Single central card (slideshow) -------- */
+    .hero{
+      display:flex; justify-content:center; padding:28px 18px 8px;
     }
-    @keyframes fIn{from{opacity:0} to{opacity:1}}
-    .card{
-      width:min(320px,92vw); aspect-ratio:16/10; position:relative; overflow:hidden;
-      border-radius:14px; background:#fff; box-shadow:0 8px 28px rgba(0,0,0,.08);
-      transition:transform .25s ease;
+    .hero-card{
+      width:min(680px, 92vw);
+      aspect-ratio: 16/10;
+      position:relative;
+      border-radius:16px;
+      background:var(--card);
+      box-shadow:0 10px 32px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.06);
+      overflow:hidden;
+      outline: 0;
     }
-    .card:hover{transform:translateY(-4px) rotate(-.4deg);}
-    .card img{width:100%; height:100%; object-fit:cover; display:block;}
-    .tag{
-      position:absolute; left:10px; top:10px; background:rgba(255,255,255,.86);
-      color:#444; font-size:12px; padding:4px 8px; border-radius:999px; backdrop-filter:blur(6px);
+    .hero-card::after{
+      /* soft ring to draw focus */
+      content:"";
+      position:absolute; inset:0; pointer-events:none;
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,.03), 0 0 0 6px var(--ring);
+      border-radius:16px; opacity:.0; transition:opacity .35s ease;
+    }
+    .hero-card:hover::after{ opacity:.6 }
+
+    .stack{ position:absolute; inset:0; }
+    .slide{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      object-fit:cover;
+      opacity:0;
+      transition:opacity .9s ease;
+      will-change: opacity;
+      display:block;
+    }
+    .slide.active{ opacity:1 }
+
+    .badge{
+      position:absolute; left:12px; top:12px;
+      background:rgba(255,255,255,.86);
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:12px; color:#444;
+      backdrop-filter: blur(8px);
     }
 
-    .cta{text-align:center; padding:44px 20px 64px; animation:rise .9s ease forwards;}
+    /* -------- Example bundle (1-.png) -------- */
+    .example{
+      display:flex; justify-content:center; padding:16px 18px 8px;
+    }
+    .example-card{
+      width:min(560px, 92vw);
+      background:#fff;
+      border-radius:14px;
+      box-shadow:0 8px 26px rgba(0,0,0,.08);
+      overflow:hidden;
+      text-align:center;
+    }
+    .example-card img{ width:100%; height:auto; display:block; }
+    .example-card figcaption{
+      font-size:13px; color:#666; padding:10px 12px;
+      background:#fafafa;
+    }
+
+    .cta{ text-align:center; padding:34px 20px 64px; animation:rise .9s ease forwards; }
     @keyframes rise{from{opacity:0; transform:translateY(24px)} to{opacity:1; transform:translateY(0)}}
-    .cta h2{margin:0 0 10px; font-size:clamp(20px,4vw,28px)}
-    .cta p{margin:0 0 16px; color:var(--muted)}
+    .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px) }
+    .cta p{ margin:0 0 16px; color:var(--muted) }
     .btn{
       appearance:none; border:none; cursor:pointer; color:#fff; background:var(--brand);
       padding:14px 22px; border-radius:12px; font-size:18px; font-weight:700;
       box-shadow:0 8px 20px rgba(255,122,0,.35);
-      transition:transform .15s ease, filter .2s ease, box-shadow .2s ease;
+      transition: transform .15s ease, filter .2s ease, box-shadow .2s ease;
     }
-    .btn:hover{transform:translateY(-2px) scale(1.02); filter:brightness(1.03);}
-    .btn:active{transform:translateY(0) scale(.99);}
+    .btn:hover{ transform: translateY(-2px) scale(1.02); filter:brightness(1.03); }
+    .btn:active{ transform: translateY(0) scale(.99); }
 
-    footer{text-align:center; padding:20px; color:#999; font-size:13px}
+    footer{ text-align:center; padding:20px; color:#999; font-size:13px }
 
-    /* Modal */
+    /* --- tiny modal for Soon --- */
     .modal{
-      position:fixed; inset:0; display:none; align-items:center; justify-content:center;
-      background:rgba(0,0,0,.35); z-index:50; padding:20px;
+      position:fixed; inset:0; display:none; place-items:center;
+      background:rgba(0,0,0,.35);
+      z-index:40;
     }
-    .modal.show{display:flex;}
+    .modal.open{ display:grid }
     .modal-card{
-      width:min(520px, 92vw); background:#fff; border-radius:16px; padding:24px;
-      box-shadow:0 14px 40px rgba(0,0,0,.18); text-align:center; animation:pop .15s ease;
+      background:#fff; border-radius:14px; padding:22px 24px; min-width:240px;
+      box-shadow:0 18px 50px rgba(0,0,0,.18);
+      text-align:center; animation:pop .18s ease;
     }
-    @keyframes pop{from{transform:scale(.96); opacity:.6} to{transform:scale(1); opacity:1}}
-    .spinner{
-      width:40px; height:40px; border-radius:50%;
-      border:4px solid #eee; border-top-color:var(--brand); margin:4px auto 12px;
-      animation:spin 1s linear infinite;
-    }
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .modal h3{margin:8px 0 6px}
-    .modal p{margin:0; color:#666}
-    .modal .close{
-      margin-top:16px; background:#eee; color:#333; border:none; border-radius:10px;
-      padding:10px 16px; cursor:pointer;
+    @keyframes pop{ from{transform:scale(.94); opacity:0} to{transform:scale(1); opacity:1} }
+    .modal-card h3{ margin:0 0 6px; font-size:22px }
+    .modal-card p{ margin:0 0 14px; color:#666 }
+    .modal-card button{
+      padding:10px 14px; border-radius:10px; border:none; background:#eee; cursor:pointer;
     }
   </style>
 </head>
@@ -114,6 +172,7 @@
   <header>
     <h1 class="title">Happy Box <span class="gift">🎁</span></h1>
     <div class="edition">Kalavryta Edition</div>
+
     <p class="sub">
       Are you a traveler looking to make your trip unforgettable?
       Don’t wait—tap to unlock your gift: <strong>one of 100 limited-edition NFT photos of Kalavryta</strong>,
@@ -122,7 +181,25 @@
     </p>
   </header>
 
-  <section class="gallery" id="gallery"></section>
+  <!-- Single, central slideshow card -->
+  <section class="hero">
+    <div class="hero-card" id="heroCard" aria-live="polite">
+      <div class="badge">Kalavryta preview</div>
+      <div class="stack">
+        <!-- two layers for cross-fade -->
+        <img class="slide active" id="slideA" alt="Preview image"/>
+        <img class="slide" id="slideB" alt="Preview image"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- Static example bundle (1-.png) -->
+  <section class="example">
+    <figure class="example-card">
+      <img src="public/images/1-.png" alt="Example bundle — art + original"/>
+      <figcaption>Example bundle (art + original)</figcaption>
+    </figure>
+  </section>
 
   <section class="cta">
     <h2>Stayed in a hotel in Kalavryta?</h2>
@@ -133,60 +210,99 @@
   <footer>© 2025 Happy Box. All rights reserved.</footer>
 
   <!-- Modal -->
-  <div id="waitModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="waitTitle">
+  <div class="modal" id="soonModal" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
     <div class="modal-card">
-      <div class="spinner" aria-hidden="true"></div>
-      <h3 id="waitTitle">Soon</h3>
-      <p>Minting opens shortly. Stay tuned!</p>
-      <button class="close" id="closeModal">OK</button>
+      <h3 id="soonTitle">Soon</h3>
+      <p>Claiming opens shortly. Thanks for your patience!</p>
+      <button id="closeModal">OK</button>
     </div>
   </div>
 
   <script>
-    // Static images (no rotation) – exact filenames
-    const IMG_PATH = "public/images/";
-    const yourImages = [
-      IMG_PATH + "1-.png?v=1",
-      IMG_PATH + "3-.png?v=1",
-      IMG_PATH + "5-.png?v=1",
+    /* ---------------- Images for slideshow ----------------
+       Μόνο οι παρακάτω θα εναλλάσσονται στο κεντρικό κάδρο:
+    */
+    const IMAGES = [
+      "public/images/7-.png",
+      "public/images/8-.png",
+      "public/images/9-.png",
+      "public/images/10-.png",
+      "public/images/11-.png",
+      "public/images/12-.png",
     ];
 
-    const TAGS = ["From Happy Box", "Secret pick", "Limited"];
-    const gallery = document.getElementById("gallery");
+    // ----- Slideshow logic (cross-fade) -----
+    const slideA = document.getElementById("slideA");
+    const slideB = document.getElementById("slideB");
+    const hero = document.getElementById("heroCard");
 
-    yourImages.forEach((src, i) => {
-      const card = document.createElement("div");
-      card.className = "card";
+    let idx = Math.floor(Math.random() * IMAGES.length);
+    let showingA = true;
 
-      const img = document.createElement("img");
+    function preload(src){
+      const img = new Image();
       img.src = src;
-      img.alt = "Happy Box — Kalavryta preview " + (i+1);
-      img.onerror = () => { card.style.display = "none"; };
+    }
 
-      const tag = document.createElement("div");
-      tag.className = "tag";
-      tag.textContent = TAGS[i % TAGS.length];
+    function setSrc(el, src){
+      el.src = src;
+    }
 
-      card.appendChild(img);
-      card.appendChild(tag);
-      gallery.appendChild(card);
-    });
+    // init
+    if (IMAGES.length > 0) {
+      setSrc(slideA, IMAGES[idx]);
+      preload(IMAGES[(idx + 1) % IMAGES.length]);
+    }
 
-    // Modal logic
+    let timer = null;
+    const INTERVAL = 4000; // ms
+
+    function next(){
+      if (!IMAGES.length) return;
+
+      const nextIdx = (idx + 1) % IMAGES.length;
+      const nextSrc = IMAGES[nextIdx];
+
+      if (showingA){
+        setSrc(slideB, nextSrc);
+        slideB.classList.add("active");
+        slideA.classList.remove("active");
+      } else {
+        setSrc(slideA, nextSrc);
+        slideA.classList.add("active");
+        slideB.classList.remove("active");
+      }
+
+      showingA = !showingA;
+      idx = nextIdx;
+      preload(IMAGES[(idx + 1) % IMAGES.length]);
+    }
+
+    function start(){ if(!timer) timer = setInterval(next, INTERVAL); }
+    function stop(){ clearInterval(timer); timer = null; }
+
+    // pause on hover (desktop)
+    hero.addEventListener("mouseenter", stop);
+    hero.addEventListener("mouseleave", start);
+    start();
+
+    // ----- Modal "Soon" -----
     const claimBtn = document.getElementById("claimBtn");
-    const waitModal = document.getElementById("waitModal");
+    const soonModal = document.getElementById("soonModal");
     const closeModal = document.getElementById("closeModal");
 
-    claimBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      waitModal.classList.add("show");
-      setTimeout(() => { waitModal.classList.remove("show"); }, 3500); // optional auto-close
+    claimBtn.addEventListener("click", () => {
+      soonModal.classList.add("open");
     });
-    closeModal.addEventListener("click", () => waitModal.classList.remove("show"));
-    waitModal.addEventListener("click", (ev) => {
-      if (ev.target === waitModal) waitModal.classList.remove("show");
+    closeModal.addEventListener("click", () => {
+      soonModal.classList.remove("open");
+    });
+    soonModal.addEventListener("click", (e) => {
+      if (e.target === soonModal) soonModal.classList.remove("open");
+    });
+    window.addEventListener("keydown", (e)=>{
+      if(e.key === "Escape") soonModal.classList.remove("open");
     });
   </script>
 </body>
 </html>
-
