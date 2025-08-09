@@ -1,176 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Happy Box — Kalavryta Edition</title>
-  <style>
-    :root{
-      --brand:#ff7a00;
-      --brand-soft:#ffb84d;
-      --bg1:#fef9f5;
-      --bg2:#fff6eb;
-      --ink:#333;
-      --muted:#555;
-      --card:#fff;
-      --ring: rgba(255,122,0,.25);
-      --imgbg:#f7f7f7; /* φόντο πίσω από εικόνες όταν περισσεύει χώρος */
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
-      background: linear-gradient(135deg,var(--bg1),var(--bg2));
-      color:var(--ink);
-      overflow-x:hidden;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Happy Box — Kalavryta Edition</title>
 
-    .confetti{
-      position:fixed; inset:0; pointer-events:none; opacity:.18;
-      background:
-        radial-gradient(circle at 10% 20%, #ff7a00 2px, transparent 3px) 0 0/120px 120px,
-        radial-gradient(circle at 80% 30%, #ffb84d 2px, transparent 3px) 0 0/140px 140px,
-        radial-gradient(circle at 30% 80%, #ffd699 2px, transparent 3px) 0 0/160px 160px;
-      animation: floaty 14s linear infinite;
-    }
-    @keyframes floaty{ from{transform:translateY(0)} to{transform:translateY(-120px)} }
+<style>
+  :root{
+    --brand:#ff7a00;
+    --brand-soft:#ffb84d;
+    --bg1:#fef9f5;
+    --bg2:#fff6eb;
+    --ink:#333;
+    --muted:#555;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+    background:linear-gradient(135deg,var(--bg1),var(--bg2));
+    color:var(--ink);
+    overflow-x:hidden;
+  }
 
-    header{ text-align:center; padding:56px 20px 24px; animation:drop .8s ease forwards; }
-    @keyframes drop{ from{opacity:0; transform:translateY(-24px)} to{opacity:1; transform:translateY(0)} }
+  /* subtle background dots */
+  .confetti{
+    position:fixed; inset:0; pointer-events:none; opacity:.18;
+    background:
+      radial-gradient(circle at 10% 20%, #ff7a00 2px, transparent 3px) 0 0/120px 120px,
+      radial-gradient(circle at 80% 30%, #ffb84d 2px, transparent 3px) 0 0/140px 140px,
+      radial-gradient(circle at 30% 80%, #ffd699 2px, transparent 3px) 0 0/160px 160px;
+    animation: floaty 14s linear infinite;
+  }
+  @keyframes floaty{from{transform:translateY(0)}to{transform:translateY(-120px)}}
 
-    .title{
-      margin:0;
-      font-size: clamp(32px, 6vw, 56px);
-      color:var(--brand);
-      letter-spacing:.4px;
-      display:flex; align-items:center; justify-content:center; gap:.4rem;
-    }
-    .gift{ font-size: .9em; line-height:1; filter: drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
+  header{ text-align:center; padding:56px 20px 24px; animation:drop .8s ease forwards; }
+  @keyframes drop{from{opacity:0; transform:translateY(-24px)}to{opacity:1; transform:translateY(0)}}
 
-    .edition{
-      margin:.25rem 0 0;
-      font-size: clamp(14px, 2.6vw, 20px);
-      color:var(--brand-soft);
-      font-style: italic;
-      display:inline-block;
-      transform: rotate(-2deg);
-      background:#fff; padding:6px 12px;
-      border:1px dashed var(--brand-soft);
-      border-radius:999px;
-    }
+  .title{
+    margin:0;
+    font-size:clamp(32px,6vw,56px);
+    color:var(--brand);
+    letter-spacing:.4px;
+    display:flex; align-items:center; justify-content:center; gap:.4rem;
+  }
+  .gift{ font-size:.9em; filter:drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
 
-    .sub{
-      margin:14px auto 0;
-      max-width:940px;
-      font-size:clamp(14px,2.1vw,18px);
-      color:var(--muted);
-      line-height:1.55;
-      text-align:center;
-      padding:0 18px;
-    }
+  .edition{
+    margin:.25rem 0 0;
+    font-size:clamp(14px,2.6vw,20px);
+    color:var(--brand-soft);
+    font-style:italic;
+    display:inline-block;
+    transform:rotate(-2deg);
+    background:#fff; padding:6px 12px;
+    border:1px dashed var(--brand-soft);
+    border-radius:999px;
+  }
 
-    /* -------- Single central card (slideshow) -------- */
-    .hero{
-      display:flex; justify-content:center; padding:28px 18px 8px;
-    }
-    .hero-card{
-      width:min(800px, 94vw);
-      aspect-ratio: 16/10;             /* σταθερό “κάδρο” */
-      position:relative;
-      border-radius:16px;
-      background:var(--card);
-      box-shadow:0 10px 32px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.06);
-      overflow:hidden;
-      outline: 0;
-    }
-    .hero-card::after{
-      content:"";
-      position:absolute; inset:0; pointer-events:none;
-      box-shadow: inset 0 0 0 2px rgba(0,0,0,.03), 0 0 0 6px var(--ring);
-      border-radius:16px; opacity:.0; transition:opacity .35s ease;
-    }
-    .hero-card:hover::after{ opacity:.6 }
+  .sub{
+    margin:14px auto 0;
+    max-width:940px;
+    font-size:clamp(14px,2.1vw,18px);
+    color:var(--muted);
+    line-height:1.55;
+    text-align:center;
+    padding:0 16px;
+  }
 
-    .stack{ position:absolute; inset:0; display:grid; place-items:center; background:var(--imgbg); }
-    .slide{
-      width:100%; height:100%;
-      object-fit: contain;              /* ✅ δείχνει ΟΛΟΚΛΗΡΗ την εικόνα */
-      background:var(--imgbg);
-      position:absolute; inset:0;
-      opacity:0; transition:opacity .9s ease; will-change:opacity;
-    }
-    .slide.active{ opacity:1 }
+  /* ===== Hero slider (ONE frame) ===== */
+  .hero-wrap{
+    display:flex; justify-content:center;
+    padding:22px 16px 10px;
+  }
+  .hero-frame{
+    width:min(1020px,90vw);
+    height: clamp(260px, 48vw, 560px);            /* responsive height */
+    background:#fff;                               /* ALWAYS PURE WHITE FRAME */
+    border: 10px solid #fff;                       /* ensure white border even over shadows */
+    border-radius:18px;
+    box-shadow:0 12px 36px rgba(0,0,0,.14);
+    position:relative; overflow:hidden;
+  }
+  .hero-img{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:contain;                            /* show the whole image */
+    background:#fff;                               /* white “matt” behind image */
+    transition:opacity .5s ease;
+  }
+  .badge{
+    position:absolute; top:10px; left:10px;
+    background:rgba(255,255,255,.9); color:#444;
+    font-size:12px; padding:4px 8px; border-radius:999px;
+    backdrop-filter:blur(6px);
+  }
+  .nav{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:42px; height:42px; border-radius:50%;
+    background:rgba(255,255,255,.9);
+    display:grid; place-items:center;
+    box-shadow:0 4px 16px rgba(0,0,0,.15);
+    cursor:pointer; user-select:none;
+  }
+  .nav:hover{ filter:brightness(1.03) }
+  .nav.prev{ left:10px }
+  .nav.next{ right:10px }
 
-    .badge{
-      position:absolute; left:12px; top:12px;
-      background:rgba(255,255,255,.86);
-      border-radius:999px;
-      padding:6px 10px;
-      font-size:12px; color:#444;
-      backdrop-filter: blur(8px);
-      z-index:2;
-    }
+  /* ===== Static example card below ===== */
+  .example{
+    max-width:min(1020px,90vw);
+    margin:26px auto 0;
+    padding:18px 14px 8px;
+    border-radius:18px;
+    background:rgba(255,255,255,.65);
+    box-shadow:0 8px 26px rgba(0,0,0,.08);
+  }
+  .example h4{
+    margin:0 0 10px 6px; font-size:13px; color:#666; font-weight:600;
+  }
+  .example-img{
+    display:block; width:100%; height:auto; border-radius:12px;
+    background:#fff; border:10px solid #fff;        /* same white frame */
+    box-shadow:0 8px 26px rgba(0,0,0,.08);
+  }
 
-    /* -------- Example bundle (1-.png) -------- */
-    .example{
-      display:flex; justify-content:center; padding:16px 18px 8px;
-    }
-    .example-card{
-      width:min(800px, 94vw);
-      border-radius:14px;
-      box-shadow:0 8px 26px rgba(0,0,0,.08);
-      overflow:hidden;
-      background:var(--imgbg);
-      text-align:center;
-    }
-    /* φτιάχνουμε “κάδρο” για να φαίνεται όλη */
-    .example-frame{
-      width:100%;
-      aspect-ratio: 16/10;
-      display:grid; place-items:center;
-      background:var(--imgbg);
-    }
-    .example-frame img{
-      max-width:100%;
-      max-height:100%;
-      object-fit: contain;              /* ✅ καμία περικοπή */
-      display:block;
-    }
-    .example-card figcaption{
-      font-size:13px; color:#666; padding:10px 12px; background:#fafafa;
-    }
+  /* CTA */
+  .cta{ text-align:center; padding:42px 20px 70px }
+  .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px) }
+  .cta p{ margin:0 0 16px; color:var(--muted) }
+  .btn{
+    appearance:none; border:none; cursor:pointer; color:#fff; background:var(--brand);
+    padding:14px 22px; border-radius:12px; font-size:18px; font-weight:700;
+    box-shadow:0 8px 20px rgba(255,122,0,.35);
+    transition: transform .15s ease, filter .2s ease, box-shadow .2s ease;
+  }
+  .btn:hover{ transform: translateY(-2px) scale(1.02); filter:brightness(1.03) }
+  .btn:active{ transform: translateY(0) scale(.99) }
 
-    .cta{ text-align:center; padding:34px 20px 64px; animation:rise .9s ease forwards; }
-    @keyframes rise{from{opacity:0; transform:translateY(24px)} to{opacity:1; transform:translateY(0)}}
-    .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px) }
-    .cta p{ margin:0 0 16px; color:var(--muted) }
-    .btn{
-      appearance:none; border:none; cursor:pointer; color:#fff; background:var(--brand);
-      padding:14px 22px; border-radius:12px; font-size:18px; font-weight:700;
-      box-shadow:0 8px 20px rgba(255,122,0,.35);
-      transition: transform .15s ease, filter .2s ease, box-shadow .2s ease;
-    }
-    .btn:hover{ transform: translateY(-2px) scale(1.02); filter:brightness(1.03); }
-    .btn:active{ transform: translateY(0) scale(.99); }
+  footer{ text-align:center; padding:18px; color:#999; font-size:13px }
 
-    footer{ text-align:center; padding:20px; color:#999; font-size:13px }
-
-    /* --- tiny modal for Soon --- */
-    .modal{
-      position:fixed; inset:0; display:none; place-items:center;
-      background:rgba(0,0,0,.35); z-index:40;
-    }
-    .modal.open{ display:grid }
-    .modal-card{
-      background:#fff; border-radius:14px; padding:22px 24px; min-width:240px;
-      box-shadow:0 18px 50px rgba(0,0,0,.18);
-      text-align:center; animation:pop .18s ease;
-    }
-    @keyframes pop{ from{transform:scale(.94); opacity:0} to{transform:scale(1); opacity:1} }
-    .modal-card h3{ margin:0 0 6px; font-size:22px }
-    .modal-card p{ margin:0 0 14px; color:#666 }
-    .modal-card button{ padding:10px 14px; border-radius:10px; border:none; background:#eee; cursor:pointer; }
-  </style>
+  /* Modal “Soon” */
+  .modal{
+    position:fixed; inset:0; background:rgba(0,0,0,.45);
+    display:none; align-items:center; justify-content:center; z-index:50;
+  }
+  .modal.show{ display:flex }
+  .modal-card{
+    background:#fff; border-radius:16px; padding:26px 28px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+    text-align:center; min-width:min(90vw,380px);
+  }
+  .modal-card h3{ margin:0 0 6px }
+  .modal-card p{ margin:0 0 16px; color:#666 }
+  .close{
+    border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer;
+  }
+</style>
 </head>
 <body>
   <div class="confetti" aria-hidden="true"></div>
@@ -178,7 +164,6 @@
   <header>
     <h1 class="title">Happy Box <span class="gift">🎁</span></h1>
     <div class="edition">Kalavryta Edition</div>
-
     <p class="sub">
       Are you a traveler looking to make your trip unforgettable?
       Don’t wait—tap to unlock your gift: <strong>one of 100 limited-edition NFT photos of Kalavryta</strong>,
@@ -187,25 +172,20 @@
     </p>
   </header>
 
-  <!-- Single, central slideshow card -->
-  <section class="hero">
-    <div class="hero-card" id="heroCard" aria-live="polite">
+  <!-- ONE big, centered frame that alternates images -->
+  <section class="hero-wrap">
+    <div class="hero-frame" id="heroFrame">
       <div class="badge">Kalavryta preview</div>
-      <div class="stack">
-        <img class="slide active" id="slideA" alt="Preview image"/>
-        <img class="slide" id="slideB" alt="Preview image"/>
-      </div>
+      <img id="heroImg" class="hero-img" src="public/images/7-.png" alt="Kalavryta preview" />
+      <div class="nav prev" id="prevBtn" aria-label="Previous">‹</div>
+      <div class="nav next" id="nextBtn" aria-label="Next">›</div>
     </div>
   </section>
 
-  <!-- Static example bundle (1-.png) -->
+  <!-- Static indicative bundle image -->
   <section class="example">
-    <figure class="example-card">
-      <div class="example-frame">
-        <img src="public/images/1-.png" alt="Example bundle — art + original"/>
-      </div>
-      <figcaption>Example bundle (art + original)</figcaption>
-    </figure>
+    <h4>Bundle example</h4>
+    <img class="example-img" src="public/images/1-.png" alt="Bundle Minted example" />
   </section>
 
   <section class="cta">
@@ -217,78 +197,62 @@
   <footer>© 2025 Happy Box. All rights reserved.</footer>
 
   <!-- Modal -->
-  <div class="modal" id="soonModal" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
     <div class="modal-card">
       <h3 id="soonTitle">Soon</h3>
-      <p>Claiming opens shortly. Thanks for your patience!</p>
-      <button id="closeModal">OK</button>
+      <p>Minting opens shortly. Check back in a bit!</p>
+      <button class="close" id="closeModal">Close</button>
     </div>
   </div>
 
-  <script>
-    /* ---------------- Slideshow images (χωρίς κόψιμο) ---------------- */
-    const IMAGES = [
-      "public/images/7-.png",
-      "public/images/8-.png",
-      "public/images/9-.png",
-      "public/images/10-.png",
-      "public/images/11-.png",
-      "public/images/12-.png",
-    ];
+<script>
+  // ====== Image rotation (one centered frame) ======
+  const IMG_PATH = "public/images/";
+  const slides = [
+    IMG_PATH + "7-.png",
+    IMG_PATH + "8-.png",
+    IMG_PATH + "9-.png",
+    IMG_PATH + "10-.png",
+    IMG_PATH + "11-.png",
+    IMG_PATH + "12-.png"
+  ];
 
-    const slideA = document.getElementById("slideA");
-    const slideB = document.getElementById("slideB");
-    const hero = document.getElementById("heroCard");
+  const heroImg = document.getElementById("heroImg");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
 
-    let idx = Math.floor(Math.random() * IMAGES.length);
-    let showingA = true;
+  let i = 0;
+  let timer;
 
-    function preload(src){ const img = new Image(); img.src = src; }
-    function setSrc(el, src){ el.src = src; }
+  function show(idx){
+    i = (idx + slides.length) % slides.length;
+    // quick fade
+    heroImg.style.opacity = 0;
+    setTimeout(()=>{
+      heroImg.src = slides[i];
+      heroImg.onload = ()=>{ heroImg.style.opacity = 1; };
+    }, 180);
+  }
+  function start(){ timer = setInterval(()=>show(i+1), 4000); }
+  function stop(){ clearInterval(timer); }
 
-    if (IMAGES.length > 0) {
-      setSrc(slideA, IMAGES[idx]);
-      preload(IMAGES[(idx + 1) % IMAGES.length]);
-    }
+  prevBtn.addEventListener("click", ()=>{ stop(); show(i-1); start(); });
+  nextBtn.addEventListener("click", ()=>{ stop(); show(i+1); start(); });
 
-    let timer = null;
-    const INTERVAL = 4000;
+  // pause rotate while mouse is over the frame
+  document.getElementById("heroFrame").addEventListener("mouseenter", stop);
+  document.getElementById("heroFrame").addEventListener("mouseleave", start);
 
-    function next(){
-      if (!IMAGES.length) return;
-      const nextIdx = (idx + 1) % IMAGES.length;
-      const nextSrc = IMAGES[nextIdx];
+  // init
+  show(0);
+  start();
 
-      if (showingA){
-        setSrc(slideB, nextSrc);
-        slideB.classList.add("active");
-        slideA.classList.remove("active");
-      } else {
-        setSrc(slideA, nextSrc);
-        slideA.classList.add("active");
-        slideB.classList.remove("active");
-      }
-      showingA = !showingA;
-      idx = nextIdx;
-      preload(IMAGES[(idx + 1) % IMAGES.length]);
-    }
-
-    function start(){ if(!timer) timer = setInterval(next, INTERVAL); }
-    function stop(){ clearInterval(timer); timer = null; }
-
-    hero.addEventListener("mouseenter", stop);
-    hero.addEventListener("mouseleave", start);
-    start();
-
-    // Modal
-    const claimBtn = document.getElementById("claimBtn");
-    const soonModal = document.getElementById("soonModal");
-    const closeModal = document.getElementById("closeModal");
-
-    claimBtn.addEventListener("click", () => { soonModal.classList.add("open"); });
-    closeModal.addEventListener("click", () => { soonModal.classList.remove("open"); });
-    soonModal.addEventListener("click", (e) => { if (e.target === soonModal) soonModal.classList.remove("open"); });
-    window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") soonModal.classList.remove("open"); });
-  </script>
+  // ====== Modal logic ("Soon") ======
+  const modal = document.getElementById("modal");
+  document.getElementById("claimBtn").addEventListener("click", ()=> modal.classList.add("show"));
+  document.getElementById("closeModal").addEventListener("click", ()=> modal.classList.remove("show"));
+  modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.classList.remove("show"); });
+  window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") modal.classList.remove("show"); });
+</script>
 </body>
 </html>
