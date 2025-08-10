@@ -22,7 +22,6 @@
     color:var(--ink);
     overflow-x:hidden;
   }
-
   .confetti{
     position:fixed; inset:0; pointer-events:none; opacity:.18;
     background:
@@ -32,125 +31,37 @@
     animation: floaty 14s linear infinite;
   }
   @keyframes floaty{from{transform:translateY(0)}to{transform:translateY(-120px)}}
-
   header{ text-align:center; padding:56px 20px 24px; animation:drop .8s ease forwards; }
   @keyframes drop{from{opacity:0; transform:translateY(-24px)}to{opacity:1; transform:translateY(0)}}
-
-  .title{
-    margin:0;
-    font-size:clamp(32px,6vw,56px);
-    color:var(--brand);
-    letter-spacing:.4px;
-    display:flex; align-items:center; justify-content:center; gap:.4rem;
-  }
+  .title{ margin:0; font-size:clamp(32px,6vw,56px); color:var(--brand); letter-spacing:.4px; display:flex; align-items:center; justify-content:center; gap:.4rem; }
   .gift{ font-size:.9em; filter:drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
+  .edition{ margin:.25rem 0 0; font-size:clamp(14px,2.6vw,20px); color:var(--brand-soft); font-style:italic; display:inline-block; transform:rotate(-2deg); background:#fff; padding:6px 12px; border:1px dashed var(--brand-soft); border-radius:999px; }
+  .sub{ margin:14px auto 0; max-width:940px; font-size:clamp(14px,2.1vw,18px); color:var(--muted); line-height:1.55; text-align:center; padding:0 16px; }
 
-  .edition{
-    margin:.25rem 0 0;
-    font-size:clamp(14px,2.6vw,20px);
-    color:var(--brand-soft);
-    font-style:italic;
-    display:inline-block;
-    transform:rotate(-2deg);
-    background:#fff; padding:6px 12px;
-    border:1px dashed var(--brand-soft);
-    border-radius:999px;
-  }
+  .hero-wrap{ display:flex; justify-content:center; padding:22px 16px 10px; }
+  .hero-frame{ width:min(1020px,90vw); height: clamp(260px, 48vw, 560px); background:#fff; border: 10px solid #fff; border-radius:18px; box-shadow:0 12px 36px rgba(0,0,0,.14); position:relative; overflow:hidden; }
+  .hero-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#fff; transition:opacity .5s ease; }
+  .badge{ position:absolute; top:10px; left:10px; background:rgba(255,255,255,.9); color:#444; font-size:12px; padding:4px 8px; border-radius:999px; backdrop-filter:blur(6px); }
+  .nav{ position:absolute; top:50%; transform:translateY(-50%); width:42px; height:42px; border-radius:50%; background:rgba(255,255,255,.9); display:grid; place-items:center; box-shadow:0 4px 16px rgba(0,0,0,.15); cursor:pointer; user-select:none; }
+  .nav:hover{ filter:brightness(1.03) } .nav.prev{ left:10px } .nav.next{ right:10px }
 
-  .sub{
-    margin:14px auto 0;
-    max-width:940px;
-    font-size:clamp(14px,2.1vw,18px);
-    color:var(--muted);
-    line-height:1.55;
-    text-align:center;
-    padding:0 16px;
-  }
-
-  .hero-wrap{
-    display:flex; justify-content:center;
-    padding:22px 16px 10px;
-  }
-  .hero-frame{
-    width:min(1020px,90vw);
-    height: clamp(260px, 48vw, 560px);
-    background:#fff;
-    border: 10px solid #fff;
-    border-radius:18px;
-    box-shadow:0 12px 36px rgba(0,0,0,.14);
-    position:relative; overflow:hidden;
-  }
-  .hero-img{
-    position:absolute; inset:0;
-    width:100%; height:100%;
-    object-fit:contain;
-    background:#fff;
-    transition:opacity .5s ease;
-  }
-  .badge{
-    position:absolute; top:10px; left:10px;
-    background:rgba(255,255,255,.9); color:#444;
-    font-size:12px; padding:4px 8px; border-radius:999px;
-    backdrop-filter:blur(6px);
-  }
-  .nav{
-    position:absolute; top:50%; transform:translateY(-50%);
-    width:42px; height:42px; border-radius:50%;
-    background:rgba(255,255,255,.9);
-    display:grid; place-items:center;
-    box-shadow:0 4px 16px rgba(0,0,0,.15);
-    cursor:pointer; user-select:none;
-  }
-  .nav:hover{ filter:brightness(1.03) }
-  .nav.prev{ left:10px }
-  .nav.next{ right:10px }
-
-  .example{
-    max-width:min(1020px,90vw);
-    margin:26px auto 0;
-    padding:18px 14px 8px;
-    border-radius:18px;
-    background:rgba(255,255,255,.65);
-    box-shadow:0 8px 26px rgba(0,0,0,.08);
-  }
-  .example h4{
-    margin:0 0 10px 6px; font-size:13px; color:#666; font-weight:600;
-  }
-  .example-img{
-    display:block; width:100%; height:auto; border-radius:12px;
-    background:#fff; border:10px solid #fff;
-    box-shadow:0 8px 26px rgba(0,0,0,.08);
-  }
+  .example{ max-width:min(1020px,90vw); margin:26px auto 0; padding:18px 14px 8px; border-radius:18px; background:rgba(255,255,255,.65); box-shadow:0 8px 26px rgba(0,0,0,.08); }
+  .example h4{ margin:0 0 10px 6px; font-size:13px; color:#666; font-weight:600; }
+  .example-img{ display:block; width:100%; height:auto; border-radius:12px; background:#fff; border:10px solid #fff; box-shadow:0 8px 26px rgba(0,0,0,.08); }
 
   .cta{ text-align:center; padding:42px 20px 70px }
   .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px) }
   .cta p{ margin:0 0 16px; color:var(--muted) }
-  .btn{
-    appearance:none; border:none; cursor:pointer; color:#fff; background:var(--brand);
-    padding:14px 22px; border-radius:12px; font-size:18px; font-weight:700;
-    box-shadow:0 8px 20px rgba(255,122,0,.35);
-    transition: transform .15s ease, filter .2s ease, box-shadow .2s ease;
-  }
+  .btn{ appearance:none; border:none; cursor:pointer; color:#fff; background:var(--brand); padding:14px 22px; border-radius:12px; font-size:18px; font-weight:700; box-shadow:0 8px 20px rgba(255,122,0,.35); transition: transform .15s ease, filter .2s ease, box-shadow .2s ease; }
   .btn:hover{ transform: translateY(-2px) scale(1.02); filter:brightness(1.03) }
   .btn:active{ transform: translateY(0) scale(.99) }
 
   footer{ text-align:center; padding:18px; color:#999; font-size:13px }
-
-  .modal{
-    position:fixed; inset:0; background:rgba(0,0,0,.45);
-    display:none; align-items:center; justify-content:center; z-index:50;
-  }
+  .modal{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:50; }
   .modal.show{ display:flex }
-  .modal-card{
-    background:#fff; border-radius:16px; padding:26px 28px;
-    box-shadow:0 20px 60px rgba(0,0,0,.25);
-    text-align:center; min-width:min(90vw,380px);
-  }
-  .modal-card h3{ margin:0 0 6px }
-  .modal-card p{ margin:0 0 16px; color:#666 }
-  .close{
-    border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer;
-  }
+  .modal-card{ background:#fff; border-radius:16px; padding:26px 28px; box-shadow:0 20px 60px rgba(0,0,0,.25); text-align:center; min-width:min(90vw,380px); }
+  .modal-card h3{ margin:0 0 6px } .modal-card p{ margin:0 0 16px; color:#666 }
+  .close{ border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -170,8 +81,7 @@
   <section class="hero-wrap">
     <div class="hero-frame" id="heroFrame">
       <div class="badge">Kalavryta preview</div>
-      <!-- ξεκινά όπως το είχες: 7 -->
-      <img id="heroImg" class="hero-img" src="/photos/7.png" alt="Kalavryta preview" />
+      <img id="heroImg" class="hero-img" src="photos/7.png" alt="Kalavryta preview" />
       <div class="nav prev" id="prevBtn" aria-label="Previous">‹</div>
       <div class="nav next" id="nextBtn" aria-label="Next">›</div>
     </div>
@@ -179,8 +89,7 @@
 
   <section class="example">
     <h4>Bundle example</h4>
-    <!-- παραμένει η 1.png -->
-    <img class="example-img" src="/photos/1.png" alt="Bundle Minted example" />
+    <img class="example-img" src="photos/1.png" alt="Bundle Minted example" />
   </section>
 
   <section class="cta">
@@ -200,38 +109,8 @@
   </div>
 
 <script>
-  // Vercel: ό,τι είναι στο /public σερβίρεται από τη ρίζα → /photos/
-  const IMG_PATH = "/photos/";
-  // Έχεις μέχρι 27 εικόνες
-  const slides = [
-    IMG_PATH + "1.png",
-    IMG_PATH + "2.png",
-    IMG_PATH + "3.png",
-    IMG_PATH + "4.png",
-    IMG_PATH + "5.png",
-    IMG_PATH + "6.png",
-    IMG_PATH + "7.png",
-    IMG_PATH + "8.png",
-    IMG_PATH + "9.png",
-    IMG_PATH + "10.png",
-    IMG_PATH + "11.png",
-    IMG_PATH + "12.png",
-    IMG_PATH + "13.png",
-    IMG_PATH + "14.png",
-    IMG_PATH + "15.png",
-    IMG_PATH + "16.png",
-    IMG_PATH + "17.png",
-    IMG_PATH + "18.png",
-    IMG_PATH + "19.png",
-    IMG_PATH + "20.png",
-    IMG_PATH + "21.png",
-    IMG_PATH + "22.png",
-    IMG_PATH + "23.png",
-    IMG_PATH + "24.png",
-    IMG_PATH + "25.png",
-    IMG_PATH + "26.png",
-    IMG_PATH + "27.png"
-  ];
+  const IMG_PATH = "photos/"; // ΣΧΕΤΙΚΟ path
+  const slides = Array.from({length: 27}, (_, i) => `${IMG_PATH}${i+1}.png`);
 
   const heroImg = document.getElementById("heroImg");
   const prevBtn = document.getElementById("prevBtn");
