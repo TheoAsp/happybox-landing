@@ -170,7 +170,7 @@
   <section class="hero-wrap">
     <div class="hero-frame" id="heroFrame">
       <div class="badge">Kalavryta preview</div>
-      <img id="heroImg" class="hero-img" src="public/photos/1.png" alt="Kalavryta preview" />
+      <img id="heroImg" class="hero-img" src="/photos/1.png" alt="Kalavryta preview" />
       <div class="nav prev" id="prevBtn" aria-label="Previous">‹</div>
       <div class="nav next" id="nextBtn" aria-label="Next">›</div>
     </div>
@@ -178,7 +178,7 @@
 
   <section class="example">
     <h4>Bundle example</h4>
-    <img class="example-img" src="public/photos/1.png" alt="Bundle Minted example" />
+    <img class="example-img" src="/photos/1.png" alt="Bundle Minted example" />
   </section>
 
   <section class="cta">
@@ -198,8 +198,8 @@
   </div>
 
 <script>
-  // Όλες οι εικόνες 1..31 από public/photos/
-  const IMG_PATH = "public/photos/";
+  // Vercel: ό,τι είναι στον /public σερβίρεται από τη ρίζα → /photos/...
+  const IMG_PATH = "/photos/";
   const numbers = Array.from({length: 31}, (_, i) => i + 1);
   const slides = numbers.map(n => `${IMG_PATH}${n}.png`);
 
@@ -211,7 +211,6 @@
   let timer;
 
   function setImage(src, onFail){
-    // Προσπάθησε να φορτώσεις. Αν αποτύχει (404), πήδα στην επόμενη.
     heroImg.style.opacity = 0;
     const test = new Image();
     test.onload = () => {
@@ -223,11 +222,9 @@
   }
 
   function show(idx){
-    // Κυκλική πλοήγηση
     i = (idx + slides.length) % slides.length;
-    setImage(slides[i], () => show(i + 1)); // αν λείπει, πήδα στην επόμενη
+    setImage(slides[i], () => show(i + 1)); // αν λείπει, προχώρα στην επόμενη
   }
-
   function start(){ timer = setInterval(() => show(i + 1), 4000); }
   function stop(){ clearInterval(timer); }
 
