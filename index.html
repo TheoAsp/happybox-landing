@@ -23,7 +23,6 @@
     overflow-x:hidden;
   }
 
-  /* subtle background dots */
   .confetti{
     position:fixed; inset:0; pointer-events:none; opacity:.18;
     background:
@@ -68,11 +67,7 @@
     padding:0 16px;
   }
 
-  /* ===== Hero slider (ONE frame) ===== */
-  .hero-wrap{
-    display:flex; justify-content:center;
-    padding:22px 16px 10px;
-  }
+  .hero-wrap{ display:flex; justify-content:center; padding:22px 16px 10px; }
   .hero-frame{
     width:min(1020px,90vw);
     height: clamp(260px, 48vw, 560px);
@@ -107,7 +102,6 @@
   .nav.prev{ left:10px }
   .nav.next{ right:10px }
 
-  /* ===== Static example card below ===== */
   .example{
     max-width:min(1020px,90vw);
     margin:26px auto 0;
@@ -116,16 +110,13 @@
     background:rgba(255,255,255,.65);
     box-shadow:0 8px 26px rgba(0,0,0,.08);
   }
-  .example h4{
-    margin:0 0 10px 6px; font-size:13px; color:#666; font-weight:600;
-  }
+  .example h4{ margin:0 0 10px 6px; font-size:13px; color:#666; font-weight:600; }
   .example-img{
     display:block; width:100%; height:auto; border-radius:12px;
     background:#fff; border:10px solid #fff;
     box-shadow:0 8px 26px rgba(0,0,0,.08);
   }
 
-  /* CTA */
   .cta{ text-align:center; padding:42px 20px 70px }
   .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px) }
   .cta p{ margin:0 0 16px; color:var(--muted) }
@@ -140,11 +131,8 @@
 
   footer{ text-align:center; padding:18px; color:#999; font-size:13px }
 
-  /* Modal “Soon” */
-  .modal{
-    position:fixed; inset:0; background:rgba(0,0,0,.45);
-    display:none; align-items:center; justify-content:center; z-index:50;
-  }
+  .modal{ position:fixed; inset:0; background:rgba(0,0,0,.45);
+    display:none; align-items:center; justify-content:center; z-index:50; }
   .modal.show{ display:flex }
   .modal-card{
     background:#fff; border-radius:16px; padding:26px 28px;
@@ -153,9 +141,7 @@
   }
   .modal-card h3{ margin:0 0 6px }
   .modal-card p{ margin:0 0 16px; color:#666 }
-  .close{
-    border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer;
-  }
+  .close{ border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -176,7 +162,9 @@
   <section class="hero-wrap">
     <div class="hero-frame" id="heroFrame">
       <div class="badge">Kalavryta preview</div>
-      <img id="heroImg" class="hero-img" src="public/photos/7-.png" alt="Kalavryta preview" />
+      <img id="heroImg" class="hero-img"
+           src="https://raw.githubusercontent.com/TheoAsp/happybox-landing/main/public/photos/7-.png"
+           alt="Kalavryta preview" />
       <div class="nav prev" id="prevBtn" aria-label="Previous">‹</div>
       <div class="nav next" id="nextBtn" aria-label="Next">›</div>
     </div>
@@ -185,7 +173,9 @@
   <!-- Static indicative bundle image -->
   <section class="example">
     <h4>Bundle example</h4>
-    <img class="example-img" src="public/photos/1-.png" alt="Bundle Minted example" />
+    <img class="example-img"
+         src="https://raw.githubusercontent.com/TheoAsp/happybox-landing/main/public/photos/1-.png"
+         alt="Bundle Minted example" />
   </section>
 
   <section class="cta">
@@ -207,7 +197,8 @@
 
 <script>
   // ====== Image rotation (one centered frame) ======
-  const IMG_PATH = "public/photos/";
+  const IMG_PATH = "https://raw.githubusercontent.com/TheoAsp/happybox-landing/main/public/photos/";
+
   const slides = [
     IMG_PATH + "2-.png",
     IMG_PATH + "1-.png",
