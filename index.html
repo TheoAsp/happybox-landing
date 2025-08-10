@@ -75,9 +75,9 @@
   }
   .hero-frame{
     width:min(1020px,90vw);
-    height: clamp(260px, 48vw, 560px);            /* responsive height */
-    background:#fff;                               /* ALWAYS PURE WHITE FRAME */
-    border: 10px solid #fff;                       /* ensure white border even over shadows */
+    height: clamp(260px, 48vw, 560px);
+    background:#fff;
+    border: 10px solid #fff;
     border-radius:18px;
     box-shadow:0 12px 36px rgba(0,0,0,.14);
     position:relative; overflow:hidden;
@@ -85,8 +85,8 @@
   .hero-img{
     position:absolute; inset:0;
     width:100%; height:100%;
-    object-fit:contain;                            /* show the whole image */
-    background:#fff;                               /* white “matt” behind image */
+    object-fit:contain;
+    background:#fff;
     transition:opacity .5s ease;
   }
   .badge{
@@ -121,7 +121,7 @@
   }
   .example-img{
     display:block; width:100%; height:auto; border-radius:12px;
-    background:#fff; border:10px solid #fff;        /* same white frame */
+    background:#fff; border:10px solid #fff;
     box-shadow:0 8px 26px rgba(0,0,0,.08);
   }
 
@@ -176,7 +176,7 @@
   <section class="hero-wrap">
     <div class="hero-frame" id="heroFrame">
       <div class="badge">Kalavryta preview</div>
-      <img id="heroImg" class="hero-img" src="public/images/7-.png" alt="Kalavryta preview" />
+      <img id="heroImg" class="hero-img" src="public/photos/7-.png" alt="Kalavryta preview" />
       <div class="nav prev" id="prevBtn" aria-label="Previous">‹</div>
       <div class="nav next" id="nextBtn" aria-label="Next">›</div>
     </div>
@@ -185,7 +185,7 @@
   <!-- Static indicative bundle image -->
   <section class="example">
     <h4>Bundle example</h4>
-    <img class="example-img" src="public/images/1-.png" alt="Bundle Minted example" />
+    <img class="example-img" src="public/photos/1-.png" alt="Bundle Minted example" />
   </section>
 
   <section class="cta">
@@ -207,14 +207,33 @@
 
 <script>
   // ====== Image rotation (one centered frame) ======
-  const IMG_PATH = "public/images/";
+  const IMG_PATH = "public/photos/";
   const slides = [
-    IMG_PATH + "7-.png",
-    IMG_PATH + "8-.png",
-    IMG_PATH + "9-.png",
-    IMG_PATH + "10-.png",
-    IMG_PATH + "11-.png",
-    IMG_PATH + "12-.png"
+    IMG_PATH + "2-.png",
+    IMG_PATH + "1-.png",
+    IMG_PATH + "13-.png",
+    IMG_PATH + "14-.png",
+    IMG_PATH + "15-.png",
+    IMG_PATH + "16-.png",
+    IMG_PATH + "17-.png",
+    IMG_PATH + "18-.png",
+    IMG_PATH + "19-.png",
+    IMG_PATH + "20-.png",
+    IMG_PATH + "21-.png",
+    IMG_PATH + "22-.png",
+    IMG_PATH + "23-.png",
+    IMG_PATH + "24-.png",
+    IMG_PATH + "25-.png",
+    IMG_PATH + "26-.png",
+    IMG_PATH + "27-.png",
+    IMG_PATH + "28-.png",
+    IMG_PATH + "29-.png",
+    IMG_PATH + "3-.png",
+    IMG_PATH + "30-.png",
+    IMG_PATH + "4-.png",
+    IMG_PATH + "5-.png",
+    IMG_PATH + "6-.png",
+    IMG_PATH + "7-.png"
   ];
 
   const heroImg = document.getElementById("heroImg");
@@ -226,7 +245,6 @@
 
   function show(idx){
     i = (idx + slides.length) % slides.length;
-    // quick fade
     heroImg.style.opacity = 0;
     setTimeout(()=>{
       heroImg.src = slides[i];
@@ -239,11 +257,9 @@
   prevBtn.addEventListener("click", ()=>{ stop(); show(i-1); start(); });
   nextBtn.addEventListener("click", ()=>{ stop(); show(i+1); start(); });
 
-  // pause rotate while mouse is over the frame
   document.getElementById("heroFrame").addEventListener("mouseenter", stop);
   document.getElementById("heroFrame").addEventListener("mouseleave", start);
 
-  // init
   show(0);
   start();
 
