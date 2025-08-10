@@ -67,7 +67,10 @@
     padding:0 16px;
   }
 
-  .hero-wrap{ display:flex; justify-content:center; padding:22px 16px 10px; }
+  .hero-wrap{
+    display:flex; justify-content:center;
+    padding:22px 16px 10px;
+  }
   .hero-frame{
     width:min(1020px,90vw);
     height: clamp(260px, 48vw, 560px);
@@ -110,7 +113,9 @@
     background:rgba(255,255,255,.65);
     box-shadow:0 8px 26px rgba(0,0,0,.08);
   }
-  .example h4{ margin:0 0 10px 6px; font-size:13px; color:#666; font-weight:600; }
+  .example h4{
+    margin:0 0 10px 6px; font-size:13px; color:#666; font-weight:600;
+  }
   .example-img{
     display:block; width:100%; height:auto; border-radius:12px;
     background:#fff; border:10px solid #fff;
@@ -131,8 +136,10 @@
 
   footer{ text-align:center; padding:18px; color:#999; font-size:13px }
 
-  .modal{ position:fixed; inset:0; background:rgba(0,0,0,.45);
-    display:none; align-items:center; justify-content:center; z-index:50; }
+  .modal{
+    position:fixed; inset:0; background:rgba(0,0,0,.45);
+    display:none; align-items:center; justify-content:center; z-index:50;
+  }
   .modal.show{ display:flex }
   .modal-card{
     background:#fff; border-radius:16px; padding:26px 28px;
@@ -141,7 +148,9 @@
   }
   .modal-card h3{ margin:0 0 6px }
   .modal-card p{ margin:0 0 16px; color:#666 }
-  .close{ border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer; }
+  .close{
+    border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer;
+  }
 </style>
 </head>
 <body>
@@ -158,24 +167,18 @@
     </p>
   </header>
 
-  <!-- ONE big, centered frame that alternates images -->
   <section class="hero-wrap">
     <div class="hero-frame" id="heroFrame">
       <div class="badge">Kalavryta preview</div>
-      <img id="heroImg" class="hero-img"
-           src="https://raw.githubusercontent.com/TheoAsp/happybox-landing/main/public/photos/7-.png"
-           alt="Kalavryta preview" />
+      <img id="heroImg" class="hero-img" src="public/photos/7-.png" alt="Kalavryta preview" />
       <div class="nav prev" id="prevBtn" aria-label="Previous">‹</div>
       <div class="nav next" id="nextBtn" aria-label="Next">›</div>
     </div>
   </section>
 
-  <!-- Static indicative bundle image -->
   <section class="example">
     <h4>Bundle example</h4>
-    <img class="example-img"
-         src="https://raw.githubusercontent.com/TheoAsp/happybox-landing/main/public/photos/1-.png"
-         alt="Bundle Minted example" />
+    <img class="example-img" src="public/photos/1-.png" alt="Bundle Minted example" />
   </section>
 
   <section class="cta">
@@ -186,7 +189,6 @@
 
   <footer>© 2025 Happy Box. All rights reserved.</footer>
 
-  <!-- Modal -->
   <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
     <div class="modal-card">
       <h3 id="soonTitle">Soon</h3>
@@ -196,12 +198,20 @@
   </div>
 
 <script>
-  // ====== Image rotation (one centered frame) ======
-  const IMG_PATH = "https://raw.githubusercontent.com/TheoAsp/happybox-landing/main/public/photos/";
-
+  const IMG_PATH = "public/photos/";
   const slides = [
-    IMG_PATH + "2-.png",
     IMG_PATH + "1-.png",
+    IMG_PATH + "2-.png",
+    IMG_PATH + "3-.png",
+    IMG_PATH + "4-.png",
+    IMG_PATH + "5-.png",
+    IMG_PATH + "6-.png",
+    IMG_PATH + "7-.png",
+    IMG_PATH + "8-.png",
+    IMG_PATH + "9-.png",
+    IMG_PATH + "10-.png",
+    IMG_PATH + "11-.png",
+    IMG_PATH + "12-.png",
     IMG_PATH + "13-.png",
     IMG_PATH + "14-.png",
     IMG_PATH + "15-.png",
@@ -219,12 +229,7 @@
     IMG_PATH + "27-.png",
     IMG_PATH + "28-.png",
     IMG_PATH + "29-.png",
-    IMG_PATH + "3-.png",
-    IMG_PATH + "30-.png",
-    IMG_PATH + "4-.png",
-    IMG_PATH + "5-.png",
-    IMG_PATH + "6-.png",
-    IMG_PATH + "7-.png"
+    IMG_PATH + "30-.png"
   ];
 
   const heroImg = document.getElementById("heroImg");
@@ -254,7 +259,6 @@
   show(0);
   start();
 
-  // ====== Modal logic ("Soon") ======
   const modal = document.getElementById("modal");
   document.getElementById("claimBtn").addEventListener("click", ()=> modal.classList.add("show"));
   document.getElementById("closeModal").addEventListener("click", ()=> modal.classList.remove("show"));
@@ -263,3 +267,4 @@
 </script>
 </body>
 </html>
+
