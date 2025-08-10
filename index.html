@@ -170,7 +170,8 @@
   <section class="hero-wrap">
     <div class="hero-frame" id="heroFrame">
       <div class="badge">Kalavryta preview</div>
-      <img id="heroImg" class="hero-img" src="/photos/1.png" alt="Kalavryta preview" />
+      <!-- ξεκινά όπως το είχες: 7 -->
+      <img id="heroImg" class="hero-img" src="/photos/7.png" alt="Kalavryta preview" />
       <div class="nav prev" id="prevBtn" aria-label="Previous">‹</div>
       <div class="nav next" id="nextBtn" aria-label="Next">›</div>
     </div>
@@ -178,6 +179,7 @@
 
   <section class="example">
     <h4>Bundle example</h4>
+    <!-- παραμένει η 1.png -->
     <img class="example-img" src="/photos/1.png" alt="Bundle Minted example" />
   </section>
 
@@ -198,10 +200,38 @@
   </div>
 
 <script>
-  // Vercel: ό,τι είναι στον /public σερβίρεται από τη ρίζα → /photos/...
+  // Vercel: ό,τι είναι στο /public σερβίρεται από τη ρίζα → /photos/
   const IMG_PATH = "/photos/";
-  const numbers = Array.from({length: 31}, (_, i) => i + 1);
-  const slides = numbers.map(n => `${IMG_PATH}${n}.png`);
+  // Έχεις μέχρι 27 εικόνες
+  const slides = [
+    IMG_PATH + "1.png",
+    IMG_PATH + "2.png",
+    IMG_PATH + "3.png",
+    IMG_PATH + "4.png",
+    IMG_PATH + "5.png",
+    IMG_PATH + "6.png",
+    IMG_PATH + "7.png",
+    IMG_PATH + "8.png",
+    IMG_PATH + "9.png",
+    IMG_PATH + "10.png",
+    IMG_PATH + "11.png",
+    IMG_PATH + "12.png",
+    IMG_PATH + "13.png",
+    IMG_PATH + "14.png",
+    IMG_PATH + "15.png",
+    IMG_PATH + "16.png",
+    IMG_PATH + "17.png",
+    IMG_PATH + "18.png",
+    IMG_PATH + "19.png",
+    IMG_PATH + "20.png",
+    IMG_PATH + "21.png",
+    IMG_PATH + "22.png",
+    IMG_PATH + "23.png",
+    IMG_PATH + "24.png",
+    IMG_PATH + "25.png",
+    IMG_PATH + "26.png",
+    IMG_PATH + "27.png"
+  ];
 
   const heroImg = document.getElementById("heroImg");
   const prevBtn = document.getElementById("prevBtn");
@@ -210,40 +240,31 @@
   let i = 0;
   let timer;
 
-  function setImage(src, onFail){
-    heroImg.style.opacity = 0;
-    const test = new Image();
-    test.onload = () => {
-      heroImg.src = src;
-      heroImg.onload = () => { heroImg.style.opacity = 1; };
-    };
-    test.onerror = onFail;
-    test.src = src;
-  }
-
   function show(idx){
     i = (idx + slides.length) % slides.length;
-    setImage(slides[i], () => show(i + 1)); // αν λείπει, προχώρα στην επόμενη
+    heroImg.style.opacity = 0;
+    setTimeout(()=>{
+      heroImg.src = slides[i];
+      heroImg.onload = ()=>{ heroImg.style.opacity = 1; };
+    }, 180);
   }
-  function start(){ timer = setInterval(() => show(i + 1), 4000); }
+  function start(){ timer = setInterval(()=>show(i+1), 4000); }
   function stop(){ clearInterval(timer); }
 
-  prevBtn.addEventListener("click", () => { stop(); show(i - 1); start(); });
-  nextBtn.addEventListener("click", () => { stop(); show(i + 1); start(); });
+  prevBtn.addEventListener("click", ()=>{ stop(); show(i-1); start(); });
+  nextBtn.addEventListener("click", ()=>{ stop(); show(i+1); start(); });
 
   document.getElementById("heroFrame").addEventListener("mouseenter", stop);
   document.getElementById("heroFrame").addEventListener("mouseleave", start);
 
-  // init
   show(0);
   start();
 
-  // Modal
   const modal = document.getElementById("modal");
-  document.getElementById("claimBtn").addEventListener("click", () => modal.classList.add("show"));
-  document.getElementById("closeModal").addEventListener("click", () => modal.classList.remove("show"));
-  modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("show"); });
-  window.addEventListener("keydown", (e) => { if (e.key === "Escape") modal.classList.remove("show"); });
+  document.getElementById("claimBtn").addEventListener("click", ()=> modal.classList.add("show"));
+  document.getElementById("closeModal").addEventListener("click", ()=> modal.classList.remove("show"));
+  modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.classList.remove("show"); });
+  window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") modal.classList.remove("show"); });
 </script>
 </body>
 </html>
