@@ -81,7 +81,7 @@
   <section class="hero-wrap">
     <div class="hero-frame" id="heroFrame">
       <div class="badge">Kalavryta preview</div>
-      <img id="heroImg" class="hero-img" src="photos/7.png" alt="Kalavryta preview" />
+      <img id="heroImg" class="hero-img" src="public/photos/7.png" alt="Kalavryta preview" />
       <div class="nav prev" id="prevBtn" aria-label="Previous">‹</div>
       <div class="nav next" id="nextBtn" aria-label="Next">›</div>
     </div>
@@ -89,7 +89,7 @@
 
   <section class="example">
     <h4>Bundle example</h4>
-    <img class="example-img" src="photos/1.png" alt="Bundle Minted example" />
+    <img class="example-img" src="public/photos/1.png" alt="Bundle Minted example" />
   </section>
 
   <section class="cta">
@@ -109,7 +109,7 @@
   </div>
 
 <script>
-  const IMG_PATH = "photos/"; // ΣΧΕΤΙΚΟ path
+  const IMG_PATH = "public/photos/"; // τώρα δείχνει στον σωστό φάκελο
   const slides = Array.from({length: 27}, (_, i) => `${IMG_PATH}${i+1}.png`);
 
   const heroImg = document.getElementById("heroImg");
