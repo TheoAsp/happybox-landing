@@ -23,7 +23,6 @@
     overflow-x:hidden;
   }
 
-  /* subtle floating dots */
   .confetti{
     position:fixed; inset:0; pointer-events:none; opacity:.18;
     background:
@@ -39,25 +38,18 @@
 
   .title{
     margin:0;
-    display:flex; align-items:center; justify-content:center; gap:.5rem;
+    display:flex; align-items:center; justify-content:center; gap:.4rem;
     line-height:1.05;
     letter-spacing:.4px;
     flex-wrap:wrap;
-  }
-  .brand-pre{
-    font-size: clamp(18px, 2.6vw, 24px);
-    color:#666;
-    font-weight:700;
-    padding:.25rem .55rem;
-    background:#fff;
-    border:1px solid #eee;
-    border-radius:999px;
-    transform:translateY(-2px);
-  }
-  .brand{
+    font-weight:800;
     font-size: clamp(32px, 6vw, 56px);
     color:var(--brand);
-    font-weight:800;
+  }
+  .title .my{
+    font-size: 0.55em;
+    font-weight:600;
+    color:#555;
   }
   .gift{ font-size: clamp(24px, 5vw, 40px); filter:drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
 
@@ -83,13 +75,12 @@
     padding:0 16px;
   }
 
-  /* ===== SINGLE hero slider ===== */
   .hero-wrap{ display:flex; justify-content:center; padding:22px 16px 10px; }
   .hero-frame{
     width:min(1020px,90vw);
     height: clamp(260px, 48vw, 560px);
-    background:#fff;                 /* pure white frame */
-    border: 10px solid #fff;         /* keep white border */
+    background:#fff;
+    border: 10px solid #fff;
     border-radius:18px;
     box-shadow:0 12px 36px rgba(0,0,0,.14);
     position:relative; overflow:hidden;
@@ -97,8 +88,8 @@
   .hero-img{
     position:absolute; inset:0;
     width:100%; height:100%;
-    object-fit:contain;              /* show whole image */
-    background:#fff;                 /* white matt */
+    object-fit:contain;
+    background:#fff;
     transition:opacity .5s ease;
   }
   .badge{
@@ -118,7 +109,6 @@
   .nav:hover{ filter:brightness(1.03) }
   .nav.prev{ left:10px } .nav.next{ right:10px }
 
-  /* example bundle below */
   .example{
     max-width:min(1020px,90vw);
     margin:26px auto 0;
@@ -148,7 +138,6 @@
 
   footer{ text-align:center; padding:18px; color:#999; font-size:13px }
 
-  /* Modal "Soon" */
   .modal{
     position:fixed; inset:0; background:rgba(0,0,0,.45);
     display:none; align-items:center; justify-content:center; z-index:50;
@@ -169,8 +158,7 @@
 
   <header>
     <h1 class="title">
-      <span class="brand-pre">my</span>
-      <span class="brand">Happy Box</span>
+      <span class="my">my</span> Happy Box
       <span class="gift">🎁</span>
     </h1>
     <div class="edition">Kalavryta Edition</div>
@@ -182,18 +170,15 @@
     </p>
   </header>
 
-  <!-- ONE big, centered frame that alternates images -->
   <section class="hero-wrap">
     <div class="hero-frame" id="heroFrame">
       <div class="badge">Kalavryta preview</div>
-      <!-- start with 2.png; 1.png is reserved for the bundle example -->
       <img id="heroImg" class="hero-img" src="public/photos/2.png" alt="Kalavryta preview" />
       <div class="nav prev" id="prevBtn" aria-label="Previous">‹</div>
       <div class="nav next" id="nextBtn" aria-label="Next">›</div>
     </div>
   </section>
 
-  <!-- Static indicative bundle image -->
   <section class="example">
     <h4>Bundle example</h4>
     <img class="example-img" src="public/photos/1.png" alt="Bundle Minted example" />
@@ -207,7 +192,6 @@
 
   <footer>© 2025 Happy Box. All rights reserved.</footer>
 
-  <!-- Modal -->
   <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
     <div class="modal-card">
       <h3 id="soonTitle">Soon</h3>
@@ -217,8 +201,6 @@
   </div>
 
 <script>
-  // ====== Image rotation (one centered frame) ======
-  // Use all images except 1.png (kept only for the bundle example)
   const IMG_PATH = "public/photos/";
   const slides = Array.from({length: 27}, (_, i) => `${IMG_PATH}${i+1}.png`).filter(src => !src.endsWith("/1.png"));
 
@@ -243,15 +225,12 @@
   prevBtn.addEventListener("click", ()=>{ stop(); show(i-1); start(); });
   nextBtn.addEventListener("click", ()=>{ stop(); show(i+1); start(); });
 
-  // pause rotation on hover
   document.getElementById("heroFrame").addEventListener("mouseenter", stop);
   document.getElementById("heroFrame").addEventListener("mouseleave", start);
 
-  // init
   show(0);
   start();
 
-  // ====== Modal logic ("Soon") ======
   const modal = document.getElementById("modal");
   document.getElementById("claimBtn").addEventListener("click", ()=> modal.classList.add("show"));
   document.getElementById("closeModal").addEventListener("click", ()=> modal.classList.remove("show"));
