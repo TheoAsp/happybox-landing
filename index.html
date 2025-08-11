@@ -4,218 +4,408 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>my Happy Box — Kalavryta Edition</title>
+
 <style>
   :root{
-    --brand:#ff7a00; --brand-soft:#ffb84d; --bg1:#fef9f5; --bg2:#fff6eb;
-    --ink:#333; --muted:#555; --card:#fff; --ok:#1a7f37; --warn:#b54708;
+    --brand:#ff7a00;
+    --brand-soft:#ffb84d;
+    --bg1:#fef9f5;
+    --bg2:#fff6eb;
+    --ink:#333;
+    --muted:#555;
+    --ok:#1f9d55;
+    --warn:#e2a61f;
+    --err:#d33c3c;
   }
   *{box-sizing:border-box}
-  body{ margin:0; font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
-        background:linear-gradient(135deg,var(--bg1),var(--bg2)); color:var(--ink); overflow-x:hidden; }
-  .confetti{ position:fixed; inset:0; pointer-events:none; opacity:.18;
+  body{
+    margin:0;
+    font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+    background:linear-gradient(135deg,var(--bg1),var(--bg2));
+    color:var(--ink); overflow-x:hidden;
+  }
+
+  /* background dots */
+  .confetti{
+    position:fixed; inset:0; pointer-events:none; opacity:.18;
     background:
       radial-gradient(circle at 10% 20%, #ff7a00 2px, transparent 3px) 0 0/120px 120px,
       radial-gradient(circle at 80% 30%, #ffb84d 2px, transparent 3px) 0 0/140px 140px,
       radial-gradient(circle at 30% 80%, #ffd699 2px, transparent 3px) 0 0/160px 160px;
-    animation: floaty 14s linear infinite; }
+    animation: floaty 14s linear infinite;
+  }
   @keyframes floaty{from{transform:translateY(0)}to{transform:translateY(-120px)}}
-  header{ text-align:center; padding:56px 20px 16px; }
-  .title{ margin:0; font-size:clamp(32px,6vw,56px); letter-spacing:.4px; color:var(--brand); display:flex; gap:.5rem; justify-content:center; align-items:center;}
-  .mytag{ font-size:.6em; background:#222; color:#fff; border-radius:999px; padding:.1em .55em; opacity:.9 }
-  .gift{ filter:drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
-  .edition{ margin:.25rem 0 0; font-size:clamp(14px,2.5vw,20px); color:var(--brand-soft); font-style:italic; display:inline-block;
-    transform:rotate(-2deg); background:#fff; padding:6px 12px; border:1px dashed var(--brand-soft); border-radius:999px; }
-  .sub{ margin:14px auto 0; max-width:940px; font-size:clamp(14px,2.1vw,18px); color:var(--muted); line-height:1.55; padding:0 16px; text-align:center; }
 
-  .hero-wrap{display:flex; justify-content:center; padding:22px 16px 10px;}
-  .hero{ width:min(1020px,90vw); background:#fff; border-radius:18px; border:10px solid #fff; box-shadow:0 12px 36px rgba(0,0,0,.14); }
-  .hero > img{ width:100%; height:clamp(260px,48vw,560px); object-fit:contain; background:#fff; display:block; }
+  header{ text-align:center; padding:56px 20px 24px; animation:drop .8s ease forwards; }
+  @keyframes drop{from{opacity:0; transform:translateY(-24px)}to{opacity:1; transform:translateY(0)}}
 
-  .cta{ text-align:center; padding:18px 16px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap }
-  .btn{ appearance:none; border:none; cursor:pointer; color:#fff; background:var(--brand);
-        padding:14px 18px; border-radius:12px; font-size:16px; font-weight:700; box-shadow:0 8px 20px rgba(255,122,0,.35);}
-  .btn.secondary{ background:#222 }
-  .btn:disabled{ opacity:.6; cursor:not-allowed }
+  .title{
+    margin:0;
+    font-size:clamp(32px,6vw,56px);
+    color:var(--brand);
+    letter-spacing:.4px;
+    display:flex; align-items:center; justify-content:center; gap:.4rem;
+  }
+  .title .my{ font-weight:700; font-size:.65em; color:#a2a2a2; margin-right:.25rem }
+  .gift{ font-size:.9em; filter:drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
+  .edition{
+    margin:.25rem 0 0;
+    font-size:clamp(14px,2.6vw,20px);
+    color:var(--brand-soft); font-style:italic;
+    display:inline-block; transform:rotate(-2deg);
+    background:#fff; padding:6px 12px;
+    border:1px dashed var(--brand-soft); border-radius:999px;
+  }
+  .sub{
+    margin:14px auto 0; max-width:940px;
+    font-size:clamp(14px,2.1vw,18px);
+    color:var(--muted); line-height:1.55; text-align:center; padding:0 16px;
+  }
 
-  .panel{ max-width:min(1020px,92vw); margin:14px auto 28px; background:var(--card); border-radius:16px; padding:16px;
-          box-shadow:0 8px 26px rgba(0,0,0,.08); }
-  .panel h3{ margin:0 0 8px }
-  .grid{ display:grid; grid-template-columns: 1fr; gap:10px }
-  @media (min-width:720px){ .grid{ grid-template-columns: 1fr 1fr } }
-  .quest{ border:1px solid #eee; border-radius:12px; padding:12px 14px }
-  .quest h4{ margin:0 0 8px }
-  .steps{ margin:0; padding-left:18px }
-  .steps li{ margin:4px 0 }
-  .tag{ font-size:12px; border-radius:999px; padding:2px 8px; background:#eee; display:inline-block; margin-left:6px }
-  .ok{ color:var(--ok); font-weight:700 }
-  .warn{ color:var(--warn); font-weight:700 }
+  /* ===== Hero slider (ONE frame) ===== */
+  .hero-wrap{ display:flex; justify-content:center; padding:22px 16px 10px; }
+  .hero-frame{
+    width:min(1020px,90vw);
+    height: clamp(260px, 48vw, 560px);
+    background:#fff; border:10px solid #fff; border-radius:18px;
+    box-shadow:0 12px 36px rgba(0,0,0,.14);
+    position:relative; overflow:hidden;
+  }
+  .hero-img{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:contain; background:#fff; transition:opacity .5s ease;
+  }
+  .badge{
+    position:absolute; top:10px; left:10px; background:rgba(255,255,255,.9);
+    color:#444; font-size:12px; padding:4px 8px; border-radius:999px; backdrop-filter:blur(6px);
+  }
+  .nav{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:42px; height:42px; border-radius:50%;
+    background:rgba(255,255,255,.9);
+    display:grid; place-items:center; box-shadow:0 4px 16px rgba(0,0,0,.15);
+    cursor:pointer; user-select:none;
+  }
+  .nav:hover{ filter:brightness(1.03) }
+  .nav.prev{ left:10px } .nav.next{ right:10px }
 
-  .toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:16px; background:#111; color:#fff; padding:10px 14px; border-radius:10px; display:none }
-  .toast.show{ display:block }
-  footer{ text-align:center; padding:22px; color:#999; font-size:13px }
+  /* Example below */
+  .example{
+    max-width:min(1020px,90vw); margin:26px auto 0;
+    padding:18px 14px 8px; border-radius:18px;
+    background:rgba(255,255,255,.65); box-shadow:0 8px 26px rgba(0,0,0,.08);
+  }
+  .example h4{ margin:0 0 10px 6px; font-size:13px; color:#666; font-weight:600; }
+  .example-img{
+    display:block; width:100%; height:auto; border-radius:12px;
+    background:#fff; border:10px solid #fff; box-shadow:0 8px 26px rgba(0,0,0,.08);
+  }
+
+  /* ===== Quests ===== */
+  .quests{
+    max-width:min(1020px,90vw); margin:32px auto; padding:6px 6px 2px;
+  }
+  .qgrid{ display:grid; grid-template-columns:1fr; gap:14px; }
+  @media (min-width:840px){ .qgrid{ grid-template-columns:1fr 1fr; } }
+
+  .card{
+    background:#fff; border-radius:14px; padding:16px;
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+  }
+  .card h3{ margin:4px 0 6px; font-size:20px }
+  .card p{ margin:0 0 12px; color:#666 }
+  .row{ display:flex; gap:8px; align-items:center; margin:8px 0 }
+  .row input[type="text"]{
+    flex:1; padding:10px 12px; border:1px solid #e6e6e6; border-radius:10px; font-size:15px;
+  }
+  .btn{
+    appearance:none; border:none; cursor:pointer; color:#fff; background:var(--brand);
+    padding:10px 14px; border-radius:10px; font-weight:700; box-shadow:0 8px 20px rgba(255,122,0,.3);
+  }
+  .btn.alt{ background:#444; box-shadow:none }
+  .btn.ghost{ background:#fff; color:#333; border:1px solid #ddd }
+  .pill{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:6px 10px; border-radius:999px; font-size:13px; font-weight:600;
+  }
+  .ok{ background:#eaf7f0; color:var(--ok) }
+  .warn{ background:#fff6e0; color:var(--warn) }
+  .err{ background:#fdecec; color:var(--err) }
+
+  .status{ margin-top:8px; font-size:14px; color:#666 }
+  .small{ font-size:12px; color:#888 }
+
+  /* CTA */
+  .cta{ text-align:center; padding:42px 20px 70px }
+  .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px) }
+  .cta p{ margin:0 0 16px; color:var(--muted) }
+
+  footer{ text-align:center; padding:18px; color:#999; font-size:13px }
+
+  /* Modal “Soon” */
+  .modal{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:50; }
+  .modal.show{ display:flex }
+  .modal-card{
+    background:#fff; border-radius:16px; padding:26px 28px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25); text-align:center; min-width:min(90vw,380px);
+  }
+  .modal-card h3{ margin:0 0 6px } .modal-card p{ margin:0 0 16px; color:#666 }
+  .close{ border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer; }
 </style>
 </head>
 <body>
-<div class="confetti" aria-hidden="true"></div>
+  <div class="confetti" aria-hidden="true"></div>
 
-<header>
-  <h1 class="title"><span class="mytag">my</span> Happy Box <span class="gift">🎁</span></h1>
-  <div class="edition">Kalavryta Edition</div>
-  <p class="sub">
-    Unlock your gift: <strong>one of 100 limited-edition NFT photos of Kalavryta</strong>.  
-    Complete quests around town to upgrade your reward—no spoilers, only surprise!
-  </p>
-</header>
+  <header>
+    <h1 class="title"><span class="my">my</span> Happy Box <span class="gift">🎁</span></h1>
+    <div class="edition">Kalavryta Edition</div>
+    <p class="sub">
+      Are you a traveler looking to make your trip unforgettable?
+      Don’t wait—tap to unlock your gift: <strong>one of 100 limited-edition NFT photos of Kalavryta</strong>,
+      yours to keep for a lifetime. Plus, compete for <strong>rare images</strong> and surprise perks
+      from our partner hotels and restaurants. No spoilers—only surprise!
+    </p>
+  </header>
 
-<section class="hero-wrap">
-  <div class="hero">
-    <img id="heroImg" src="public/photos/7.png" alt="Kalavryta preview"/>
-  </div>
-</section>
-
-<section class="cta">
-  <button id="mintPass" class="btn">🎁 Mint Quest Pass (check-in)</button>
-  <button id="mintReward" class="btn secondary">🏁 Mint Reward (check-out)</button>
-</section>
-
-<section class="panel">
-  <h3>Progress</h3>
-  <div class="grid">
-    <div class="quest">
-      <h4>Quest 1 <span class="tag">2 tasks</span></h4>
-      <ol class="steps">
-        <li>Scan QR in <strong>Main Square</strong> <span id="q1s1"></span></li>
-        <li>Scan QR in <strong>Holocaust Museum</strong> <span id="q1s2"></span></li>
-      </ol>
-      <button class="btn" id="geoPlatia">📍 I’m at the square</button>
+  <!-- ONE big slider -->
+  <section class="hero-wrap">
+    <div class="hero-frame" id="heroFrame">
+      <div class="badge">Kalavryta preview</div>
+      <img id="heroImg" class="hero-img" src="public/photos/2.png" alt="Kalavryta preview" />
+      <div class="nav prev" id="prevBtn" aria-label="Previous">‹</div>
+      <div class="nav next" id="nextBtn" aria-label="Next">›</div>
     </div>
-    <div class="quest">
-      <h4>Quest 2 <span class="tag">3 tasks</span></h4>
-      <ol class="steps">
-        <li>Scan a QR in <strong>Shop X</strong> <span id="q2s1"></span></li>
-        <li>Scan a QR in <strong>Shop Y</strong> <span id="q2s2"></span></li>
-        <li>Scan QR at <strong>Hill of Kapi</strong> <span id="q2s3"></span></li>
-      </ol>
-      <button class="btn" id="geoKapi">📍 I’m at Hill of Kapi</button>
+  </section>
+
+  <!-- Bundle example (shows the original+edited card you mentioned) -->
+  <section class="example">
+    <h4>Bundle example</h4>
+    <img class="example-img" src="public/photos/1.png" alt="Bundle Minted example" />
+  </section>
+
+  <!-- QUESTS -->
+  <section class="quests">
+    <div class="qgrid">
+      <!-- QR quest -->
+      <div class="card" id="qrCard">
+        <h3>Quest: Scan a shop QR</h3>
+        <p class="small">Ask a participating shop for the QR. Type or paste the code here.</p>
+        <div class="row">
+          <input type="text" id="qrInput" placeholder="Enter QR code…">
+          <button class="btn" id="qrBtn">Verify QR</button>
+        </div>
+        <div class="status" id="qrStatus"></div>
+      </div>
+
+      <!-- GEO quest -->
+      <div class="card" id="geoCard">
+        <h3>Quest: Hill of Kapi photo (geo-check)</h3>
+        <p class="small">Go to Hill of Kapi, enable location, and press the button to verify you’re there.</p>
+        <div class="row">
+          <button class="btn" id="geoBtn">I’m at the Hill of Kapi</button>
+          <button class="btn ghost" id="geoShow">Why location?</button>
+        </div>
+        <div class="status" id="geoStatus"></div>
+      </div>
+
+      <!-- SOCIAL quest -->
+      <div class="card" id="socialCard">
+        <h3>Quest: Post with hashtag</h3>
+        <p class="small">Post a photo with <strong>#myhappybox</strong> and paste the public link of your post below.</p>
+        <div class="row">
+          <input type="text" id="postUrl" placeholder="https://instagram.com/p/...">
+          <button class="btn" id="postBtn">Submit link</button>
+        </div>
+        <div class="status" id="postStatus"></div>
+      </div>
+
+      <!-- PROGRESS -->
+      <div class="card" id="progressCard">
+        <h3>Your Progress</h3>
+        <div id="progressPills" class="row" style="flex-wrap:wrap"></div>
+        <p class="status" id="tierLine">Tier: —</p>
+        <div class="row">
+          <button class="btn alt" id="refreshBtn">Refresh</button>
+          <button class="btn" id="claimBtn">Claim award</button>
+        </div>
+        <div class="status" id="claimStatus"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2>Stayed in a hotel in Kalavryta?</h2>
+    <p>Grab your <strong>Happy Box</strong> — a unique, limited NFT photo from the area.</p>
+    <button id="mintBtn" class="btn">🎁 Claim your Happy Box</button>
+  </section>
+
+  <footer>© 2025 Happy Box. All rights reserved.</footer>
+
+  <!-- Modal -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
+    <div class="modal-card">
+      <h3 id="soonTitle">Soon</h3>
+      <p>Minting opens shortly. Check back in a bit!</p>
+      <button class="close" id="closeModal">Close</button>
     </div>
   </div>
-</section>
-
-<section class="panel">
-  <h3>Bundle example</h3>
-  <img src="public/photos/1.png" alt="Bundle example" style="width:100%;max-width:1020px;display:block;border-radius:12px;border:10px solid #fff;box-shadow:0 8px 26px rgba(0,0,0,.08);" />
-</section>
-
-<footer>© 2025 Happy Box. All rights reserved.</footer>
-
-<div id="toast" class="toast"></div>
 
 <script>
-  // ======== Config (frontend) ========
-  const API = {
-    progress: "/api/progress",
-    verifyQR: "/api/verify-qr",
-    geoCheck: "/api/geo-check",
-    award: "/api/award",
-  };
+/* ------------------ Utilities ------------------ */
+function uid(){ return 'u_' + Math.random().toString(36).slice(2) + Date.now().toString(36) }
+function getCookie(n){
+  const m=document.cookie.match(new RegExp('(^| )'+n+'=([^;]+)')); return m ? decodeURIComponent(m[2]) : null;
+}
+function setCookie(n,v,days){
+  const d=new Date(); d.setTime(d.getTime()+days*864e5);
+  document.cookie = n+'='+encodeURIComponent(v)+'; expires='+d.toUTCString()+'; path=/; SameSite=Lax';
+}
+let USER = getCookie('hb_uid'); if(!USER){ USER=uid(); setCookie('hb_uid',USER,3650); }
 
-  // very light "auth": ask email once, keep in localStorage (swap later with Paper Auth)
-  function getUserEmail(){
-    let email = localStorage.getItem("hb_email");
-    if(!email){
-      email = prompt("Enter your email to track progress (you can mint with this email later):") || "";
-      email = email.trim();
-      if(!email) return null;
-      localStorage.setItem("hb_email", email);
-    }
-    return email;
-  }
+/* ------------------ Slider (excludes 1.png) ------------------ */
+const heroImg = document.getElementById("heroImg");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const heroFrame = document.getElementById("heroFrame");
 
-  function toast(msg, ok=true){
-    const t = document.getElementById("toast");
-    t.textContent = msg;
-    t.style.background = ok ? "#111" : "#b54708";
-    t.classList.add("show");
-    setTimeout(()=>t.classList.remove("show"), 2500);
-  }
+// Build slides from 2..27 (if a file is missing, the image will just fail silently)
+const slides = Array.from({length: 26}, (_,i)=>`public/photos/${i+2}.png`);
+let i = 0, timer;
+function show(idx){
+  i = (idx + slides.length) % slides.length;
+  heroImg.style.opacity = 0;
+  setTimeout(()=>{
+    heroImg.src = slides[i];
+    heroImg.onload = ()=>{ heroImg.style.opacity = 1; };
+  }, 180);
+}
+function start(){ timer = setInterval(()=>show(i+1), 4000); }
+function stop(){ clearInterval(timer); }
+prevBtn.addEventListener("click", ()=>{ stop(); show(i-1); start(); });
+nextBtn.addEventListener("click", ()=>{ stop(); show(i+1); start(); });
+heroFrame.addEventListener("mouseenter", stop);
+heroFrame.addEventListener("mouseleave", start);
+show(0); start();
 
-  // ======== Progress UI ========
-  function setFlag(el, done){ el.textContent = done ? "✓" : "•"; el.className = done ? "ok" : "warn"; }
-  async function refreshProgress(){
-    const email = getUserEmail(); if(!email) return;
-    const res = await fetch(API.progress + "?email=" + encodeURIComponent(email));
-    const data = await res.json();
+/* ------------------ Modal ------------------ */
+const modal = document.getElementById("modal");
+document.getElementById("mintBtn").addEventListener("click", ()=> modal.classList.add("show"));
+document.getElementById("closeModal").addEventListener("click", ()=> modal.classList.remove("show"));
+modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.classList.remove("show"); });
+window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") modal.classList.remove("show"); });
 
-    const p = data.progress || {};
-    setFlag(document.getElementById("q1s1"), !!p.q1?.s1);
-    setFlag(document.getElementById("q1s2"), !!p.q1?.s2);
-    setFlag(document.getElementById("q2s1"), !!p.q2?.s1);
-    setFlag(document.getElementById("q2s2"), !!p.q2?.s2);
-    setFlag(document.getElementById("q2s3"), !!p.q2?.s3);
-  }
-
-  // ======== Handle QR token in URL (?c=...) ========
-  async function handleQRFromURL(){
-    const u = new URL(location.href);
-    const token = u.searchParams.get("c");
-    if(!token) return;
-    const email = getUserEmail(); if(!email) return;
-
-    const res = await fetch(API.verifyQR + "?c=" + encodeURIComponent(token) + "&email=" + encodeURIComponent(email));
-    const data = await res.json();
-    if(data.ok){ toast("Checkpoint recorded!"); await refreshProgress(); }
-    else { toast("Invalid/expired QR.", false); }
-    // clean URL
-    u.searchParams.delete("c");
-    history.replaceState({}, "", u.pathname + (u.searchParams.toString()?("?"+u.searchParams.toString()):""));
-  }
-
-  // ======== Geofence helpers (optional v1) ========
-  async function geoCheck(place){
-    const email = getUserEmail(); if(!email) return;
-    if(!("geolocation" in navigator)){ toast("Geolocation not available", false); return; }
-    navigator.geolocation.getCurrentPosition(async (pos)=>{
-      const payload = {
-        email,
-        place,
-        lat: pos.coords.latitude,
-        lon: pos.coords.longitude
-      };
-      const res = await fetch(API.geoCheck, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload)});
-      const data = await res.json();
-      if(data.ok){ toast("Location verified! Check the QR at this spot to complete the step."); refreshProgress(); }
-      else { toast(data.error || "Out of range.", false); }
-    }, ()=>toast("Location permission denied", false), {enableHighAccuracy:true, timeout:10000});
-  }
-
-  document.getElementById("geoPlatia").addEventListener("click", ()=>geoCheck("platia"));
-  document.getElementById("geoKapi").addEventListener("click", ()=>geoCheck("kapi"));
-
-  // ======== Mint buttons ========
-  document.getElementById("mintPass").addEventListener("click", async ()=>{
-    const email = getUserEmail(); if(!email) return;
-    // For v1 just show a message; wire to Paper/thirdweb in /api/award when you want.
-    const res = await fetch(API.award + "?email=" + encodeURIComponent(email) + "&type=pass");
-    const data = await res.json();
-    if(data.ok){
-      if(data.claimUrl){ location.href = data.claimUrl; }
-      else toast("Pass ready (integration stub).");
-    } else toast("Mint failed.", false);
+/* ------------------ Quests: API helpers ------------------ */
+async function api(path, method="GET", data){
+  const res = await fetch(path, {
+    method,
+    headers: { "Content-Type":"application/json" },
+    body: method==="GET" ? undefined : JSON.stringify({ user: USER, ...data })
   });
+  const json = await res.json().catch(()=> ({}));
+  if(!res.ok) throw new Error(json.error || ("HTTP "+res.status));
+  return json;
+}
+function pill(text, kind="ok"){
+  const el = document.createElement('span');
+  el.className = `pill ${kind}`; el.textContent = text; return el;
+}
 
-  document.getElementById("mintReward").addEventListener("click", async ()=>{
-    const email = getUserEmail(); if(!email) return;
-    const res = await fetch(API.award + "?email=" + encodeURIComponent(email) + "&type=reward");
-    const data = await res.json();
-    if(data.ok){
-      if(data.claimUrl){ location.href = data.claimUrl; }
-      else toast("Reward ready (integration stub).");
-    } else toast(data.error || "Not eligible yet.", false);
-  });
+/* ------------------ QR quest ------------------ */
+const qrInput = document.getElementById('qrInput');
+const qrBtn = document.getElementById('qrBtn');
+const qrStatus = document.getElementById('qrStatus');
+qrBtn.addEventListener('click', async ()=>{
+  const code = (qrInput.value||"").trim();
+  if(!code){ qrStatus.innerHTML = '<span class="pill err">Enter a code</span>'; return; }
+  qrBtn.disabled = true;
+  try{
+    const out = await api('/api/verify-qr','POST',{ code });
+    qrStatus.innerHTML = `<span class="pill ok">QR verified</span> <span class="small">(${out.checkpoint||'ok'})</span>`;
+    loadProgress();
+  }catch(e){
+    qrStatus.innerHTML = `<span class="pill err">${e.message}</span>`;
+  }finally{ qrBtn.disabled = false; }
+});
 
-  // init
-  refreshProgress();
-  handleQRFromURL();
+/* ------------------ GEO quest ------------------ */
+const geoBtn = document.getElementById('geoBtn');
+const geoShow = document.getElementById('geoShow');
+const geoStatus = document.getElementById('geoStatus');
+geoShow.addEventListener('click', ()=> alert('We check your GPS position (within a small radius) only once to confirm you visited the spot. Nothing is stored besides success/fail and a timestamp tied to your anonymous user id.'));
+geoBtn.addEventListener('click', ()=>{
+  if(!navigator.geolocation){ geoStatus.innerHTML='<span class="pill err">Geolocation not supported</span>'; return; }
+  geoBtn.disabled = true;
+  navigator.geolocation.getCurrentPosition(async (pos)=>{
+    try{
+      const {latitude, longitude} = pos.coords;
+      const out = await api('/api/geo-check','POST',{ checkpoint:'hill-of-kapi', lat:latitude, lng:longitude });
+      geoStatus.innerHTML = `<span class="pill ok">Location verified</span> <span class="small">dist ${out.distance_m?.toFixed?.(1)||'?'} m</span>`;
+      loadProgress();
+    }catch(e){
+      geoStatus.innerHTML = `<span class="pill err">${e.message}</span>`;
+    }finally{ geoBtn.disabled = false; }
+  }, (err)=>{
+    geoStatus.innerHTML = `<span class="pill err">${err.message}</span>`;
+    geoBtn.disabled = false;
+  }, { enableHighAccuracy:true, timeout:15000 });
+});
+
+/* ------------------ SOCIAL quest ------------------ */
+const postUrl = document.getElementById('postUrl');
+const postBtn = document.getElementById('postBtn');
+const postStatus = document.getElementById('postStatus');
+postBtn.addEventListener('click', async ()=>{
+  const url = (postUrl.value||"").trim();
+  if(!url){ postStatus.innerHTML = '<span class="pill err">Paste the post URL</span>'; return; }
+  postBtn.disabled = true;
+  try{
+    const out = await api('/api/_verify','POST',{ url });
+    postStatus.innerHTML = `<span class="pill ok">Submitted</span> <span class="small">status: ${out.status||'queued'}</span>`;
+    loadProgress();
+  }catch(e){
+    postStatus.innerHTML = `<span class="pill err">${e.message}</span>`;
+  }finally{ postBtn.disabled=false; }
+});
+
+/* ------------------ PROGRESS + CLAIM ------------------ */
+const progressPills = document.getElementById('progressPills');
+const tierLine = document.getElementById('tierLine');
+const refreshBtn = document.getElementById('refreshBtn');
+const claimBtn = document.getElementById('claimBtn');
+const claimStatus = document.getElementById('claimStatus');
+
+async function loadProgress(){
+  progressPills.innerHTML = 'Loading…';
+  try{
+    const p = await api('/api/progress','POST',{}); // POST to include user id
+    progressPills.innerHTML = '';
+    (p.completed||[]).forEach(k=>{
+      progressPills.appendChild(pill(k,'ok'));
+    });
+    (p.pending||[]).forEach(k=>{
+      progressPills.appendChild(pill(k,'warn'));
+    });
+    tierLine.textContent = 'Tier: ' + (p.tier||'—');
+  }catch(e){
+    progressPills.innerHTML = '';
+    progressPills.appendChild(pill(e.message,'err'));
+    tierLine.textContent = 'Tier: —';
+  }
+}
+refreshBtn.addEventListener('click', loadProgress);
+
+claimBtn.addEventListener('click', async ()=>{
+  claimBtn.disabled = true;
+  claimStatus.textContent = 'Submitting…';
+  try{
+    const out = await api('/api/award','POST',{});
+    claimStatus.innerHTML = `<span class="pill ok">Award: ${out.tier||'—'}</span> <span class="small">${out.message||''}</span>`;
+  }catch(e){
+    claimStatus.innerHTML = `<span class="pill err">${e.message}</span>`;
+  }finally{ claimBtn.disabled=false; }
+});
+
+loadProgress();
 </script>
 </body>
 </html>
