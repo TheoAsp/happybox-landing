@@ -7,150 +7,94 @@
 
 <style>
   :root{
-    --brand:#ff7a00;
-    --brand-soft:#ffb84d;
-    --bg1:#fef9f5;
-    --bg2:#fff6eb;
-    --ink:#333;
-    --muted:#555;
-    --ok:#1f9d55;
-    --warn:#e2a61f;
-    --err:#d33c3c;
+    --brand:#ff7a00; --brand-soft:#ffb84d;
+    --bg1:#fef9f5; --bg2:#fff6eb; --ink:#333; --muted:#555;
+    --ok:#1f9d55; --warn:#e2a61f; --err:#d33c3c; --ink2:#222;
   }
   *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
-    background:linear-gradient(135deg,var(--bg1),var(--bg2));
-    color:var(--ink); overflow-x:hidden;
-  }
+  body{ margin:0; font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+    background:linear-gradient(135deg,var(--bg1),var(--bg2)); color:var(--ink); overflow-x:hidden; }
 
-  /* background dots */
-  .confetti{
-    position:fixed; inset:0; pointer-events:none; opacity:.18;
+  .confetti{ position:fixed; inset:0; pointer-events:none; opacity:.18;
     background:
       radial-gradient(circle at 10% 20%, #ff7a00 2px, transparent 3px) 0 0/120px 120px,
       radial-gradient(circle at 80% 30%, #ffb84d 2px, transparent 3px) 0 0/140px 140px,
       radial-gradient(circle at 30% 80%, #ffd699 2px, transparent 3px) 0 0/160px 160px;
-    animation: floaty 14s linear infinite;
-  }
+    animation: floaty 14s linear infinite; }
   @keyframes floaty{from{transform:translateY(0)}to{transform:translateY(-120px)}}
 
   header{ text-align:center; padding:56px 20px 24px; animation:drop .8s ease forwards; }
   @keyframes drop{from{opacity:0; transform:translateY(-24px)}to{opacity:1; transform:translateY(0)}}
 
-  .title{
-    margin:0;
-    font-size:clamp(32px,6vw,56px);
-    color:var(--brand);
-    letter-spacing:.4px;
-    display:flex; align-items:center; justify-content:center; gap:.4rem;
-  }
-  .title .my{ font-weight:700; font-size:.65em; color:#a2a2a2; margin-right:.25rem }
+  .title{ margin:0; font-size:clamp(32px,6vw,56px); color:var(--brand);
+    letter-spacing:.4px; display:flex; align-items:center; justify-content:center; gap:.35rem; }
+  .title .my{ font-weight:700; font-size:.68em; color:#9a9a9a; margin-right:.15rem }
   .gift{ font-size:.9em; filter:drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
-  .edition{
-    margin:.25rem 0 0;
-    font-size:clamp(14px,2.6vw,20px);
-    color:var(--brand-soft); font-style:italic;
-    display:inline-block; transform:rotate(-2deg);
-    background:#fff; padding:6px 12px;
-    border:1px dashed var(--brand-soft); border-radius:999px;
-  }
-  .sub{
-    margin:14px auto 0; max-width:940px;
-    font-size:clamp(14px,2.1vw,18px);
-    color:var(--muted); line-height:1.55; text-align:center; padding:0 16px;
-  }
+  .edition{ margin:.25rem 0 0; font-size:clamp(14px,2.6vw,20px); color:var(--brand-soft);
+    font-style:italic; display:inline-block; transform:rotate(-2deg);
+    background:#fff; padding:6px 12px; border:1px dashed var(--brand-soft); border-radius:999px; }
+  .sub{ margin:14px auto 0; max-width:940px; font-size:clamp(14px,2.1vw,18px);
+    color:var(--muted); line-height:1.55; text-align:center; padding:0 16px; }
 
-  /* ===== Hero slider (ONE frame) ===== */
+  /* Slider */
   .hero-wrap{ display:flex; justify-content:center; padding:22px 16px 10px; }
-  .hero-frame{
-    width:min(1020px,90vw);
-    height: clamp(260px, 48vw, 560px);
-    background:#fff; border:10px solid #fff; border-radius:18px;
-    box-shadow:0 12px 36px rgba(0,0,0,.14);
-    position:relative; overflow:hidden;
-  }
-  .hero-img{
-    position:absolute; inset:0; width:100%; height:100%;
-    object-fit:contain; background:#fff; transition:opacity .5s ease;
-  }
-  .badge{
-    position:absolute; top:10px; left:10px; background:rgba(255,255,255,.9);
-    color:#444; font-size:12px; padding:4px 8px; border-radius:999px; backdrop-filter:blur(6px);
-  }
-  .nav{
-    position:absolute; top:50%; transform:translateY(-50%);
-    width:42px; height:42px; border-radius:50%;
-    background:rgba(255,255,255,.9);
-    display:grid; place-items:center; box-shadow:0 4px 16px rgba(0,0,0,.15);
-    cursor:pointer; user-select:none;
-  }
-  .nav:hover{ filter:brightness(1.03) }
+  .hero-frame{ width:min(1020px,90vw); height:clamp(260px,48vw,560px);
+    background:#fff; border:10px solid #fff; border-radius:18px; box-shadow:0 12px 36px rgba(0,0,0,.14);
+    position:relative; overflow:hidden; }
+  .hero-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
+    background:#fff; transition:opacity .5s ease; }
+  .badge{ position:absolute; top:10px; left:10px; background:rgba(255,255,255,.9);
+    color:#444; font-size:12px; padding:4px 8px; border-radius:999px; backdrop-filter:blur(6px); }
+  .nav{ position:absolute; top:50%; transform:translateY(-50%); width:42px; height:42px; border-radius:50%;
+    background:rgba(255,255,255,.9); display:grid; place-items:center; box-shadow:0 4px 16px rgba(0,0,0,.15);
+    cursor:pointer; user-select:none; } .nav:hover{ filter:brightness(1.03) }
   .nav.prev{ left:10px } .nav.next{ right:10px }
 
-  /* Example below */
-  .example{
-    max-width:min(1020px,90vw); margin:26px auto 0;
-    padding:18px 14px 8px; border-radius:18px;
-    background:rgba(255,255,255,.65); box-shadow:0 8px 26px rgba(0,0,0,.08);
-  }
+  /* Example */
+  .example{ max-width:min(1020px,90vw); margin:26px auto 0; padding:18px 14px 8px;
+    border-radius:18px; background:rgba(255,255,255,.65); box-shadow:0 8px 26px rgba(0,0,0,.08); }
   .example h4{ margin:0 0 10px 6px; font-size:13px; color:#666; font-weight:600; }
-  .example-img{
-    display:block; width:100%; height:auto; border-radius:12px;
-    background:#fff; border:10px solid #fff; box-shadow:0 8px 26px rgba(0,0,0,.08);
-  }
+  .example-img{ display:block; width:100%; height:auto; border-radius:12px;
+    background:#fff; border:10px solid #fff; box-shadow:0 8px 26px rgba(0,0,0,.08); }
 
-  /* ===== Quests ===== */
-  .quests{
-    max-width:min(1020px,90vw); margin:32px auto; padding:6px 6px 2px;
-  }
-  .qgrid{ display:grid; grid-template-columns:1fr; gap:14px; }
-  @media (min-width:840px){ .qgrid{ grid-template-columns:1fr 1fr; } }
+  /* Quests */
+  .quests{ max-width:min(1060px,92vw); margin:32px auto; padding:6px; }
+  .card{ background:#fff; border-radius:14px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.08); margin-bottom:14px; }
+  .card h3{ margin:4px 0 6px; font-size:20px } .card p{ margin:0 0 12px; color:#666 }
+  .row{ display:flex; gap:8px; align-items:center; margin:8px 0; flex-wrap:wrap }
+  .row input[type="text"]{ flex:1; min-width:260px; padding:10px 12px; border:1px solid #e6e6e6; border-radius:10px; font-size:15px; }
+  .btn{ appearance:none; border:none; cursor:pointer; color:#fff; background:var(--brand);
+    padding:10px 14px; border-radius:10px; font-weight:700; box-shadow:0 8px 20px rgba(255,122,0,.3); }
+  .btn.alt{ background:#444 } .btn.ghost{ background:#fff; color:#333; border:1px solid #ddd }
+  .pill{ display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; font-size:13px; font-weight:600; margin:3px 6px 0 0 }
+  .ok{ background:#eaf7f0; color:var(--ok) } .warn{ background:#fff6e0; color:var(--warn) } .err{ background:#fdecec; color:var(--err) }
+  .status{ margin-top:6px; font-size:14px; color:#666 }
 
-  .card{
-    background:#fff; border-radius:14px; padding:16px;
-    box-shadow:0 8px 24px rgba(0,0,0,.08);
-  }
-  .card h3{ margin:4px 0 6px; font-size:20px }
-  .card p{ margin:0 0 12px; color:#666 }
-  .row{ display:flex; gap:8px; align-items:center; margin:8px 0 }
-  .row input[type="text"]{
-    flex:1; padding:10px 12px; border:1px solid #e6e6e6; border-radius:10px; font-size:15px;
-  }
-  .btn{
-    appearance:none; border:none; cursor:pointer; color:#fff; background:var(--brand);
-    padding:10px 14px; border-radius:10px; font-weight:700; box-shadow:0 8px 20px rgba(255,122,0,.3);
-  }
-  .btn.alt{ background:#444; box-shadow:none }
-  .btn.ghost{ background:#fff; color:#333; border:1px solid #ddd }
-  .pill{
-    display:inline-flex; align-items:center; gap:6px;
-    padding:6px 10px; border-radius:999px; font-size:13px; font-weight:600;
-  }
-  .ok{ background:#eaf7f0; color:var(--ok) }
-  .warn{ background:#fff6e0; color:var(--warn) }
-  .err{ background:#fdecec; color:var(--err) }
-
-  .status{ margin-top:8px; font-size:14px; color:#666 }
-  .small{ font-size:12px; color:#888 }
+  /* Stage tracker */
+  .stage{ display:flex; align-items:center; gap:12px; margin:10px 0 6px }
+  .step{ display:flex; align-items:center; gap:8px; color:#666; }
+  .dot{ width:22px; height:22px; border-radius:50%; border:2px solid #ddd; display:grid; place-items:center; font-size:12px; background:#fff }
+  .step.done .dot{ border-color:var(--ok); background:#eaf7f0; color:var(--ok) }
+  .bar{ flex:1; height:4px; background:#eee; border-radius:999px; position:relative; overflow:hidden }
+  .bar > span{ position:absolute; inset:0 0 0 auto; width:0%; background:linear-gradient(90deg,#27c498,#ffb84d); transition:width .4s ease }
+  .sublabel{ font-size:12px; color:#888 }
 
   /* CTA */
   .cta{ text-align:center; padding:42px 20px 70px }
-  .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px) }
+  .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px); color:var(--ink2) }
   .cta p{ margin:0 0 16px; color:var(--muted) }
+  .hint{ font-size:12px; color:#777; margin-top:6px }
 
   footer{ text-align:center; padding:18px; color:#999; font-size:13px }
 
-  /* Modal “Soon” */
+  /* Modal (reused for both claim info & scanner) */
   .modal{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:50; }
   .modal.show{ display:flex }
-  .modal-card{
-    background:#fff; border-radius:16px; padding:26px 28px;
-    box-shadow:0 20px 60px rgba(0,0,0,.25); text-align:center; min-width:min(90vw,380px);
-  }
+  .modal-card{ background:#fff; border-radius:16px; padding:26px 28px; box-shadow:0 20px 60px rgba(0,0,0,.25);
+    text-align:center; min-width:min(90vw,420px); }
   .modal-card h3{ margin:0 0 6px } .modal-card p{ margin:0 0 16px; color:#666 }
   .close{ border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer; }
+  .disabled{ opacity:.55; cursor:not-allowed }
 </style>
 </head>
 <body>
@@ -160,14 +104,13 @@
     <h1 class="title"><span class="my">my</span> Happy Box <span class="gift">🎁</span></h1>
     <div class="edition">Kalavryta Edition</div>
     <p class="sub">
-      Are you a traveler looking to make your trip unforgettable?
-      Don’t wait—tap to unlock your gift: <strong>one of 100 limited-edition NFT photos of Kalavryta</strong>,
-      yours to keep for a lifetime. Plus, compete for <strong>rare images</strong> and surprise perks
-      from our partner hotels and restaurants. No spoilers—only surprise!
+      A joyful mini-game for travelers! Complete quests around Kalavryta to level-up your reward.  
+      Unlock one of <strong>1,000 limited-edition NFT photos</strong> — the rarer your tier, the rarer your art.
+      Have fun, explore, win surprises!
     </p>
   </header>
 
-  <!-- ONE big slider -->
+  <!-- Slider -->
   <section class="hero-wrap">
     <div class="hero-frame" id="heroFrame">
       <div class="badge">Kalavryta preview</div>
@@ -177,235 +120,450 @@
     </div>
   </section>
 
-  <!-- Bundle example (shows the original+edited card you mentioned) -->
+  <!-- Bundle example -->
   <section class="example">
     <h4>Bundle example</h4>
     <img class="example-img" src="public/photos/1.png" alt="Bundle Minted example" />
   </section>
 
-  <!-- QUESTS -->
+  <!-- GAME / QUESTS -->
   <section class="quests">
-    <div class="qgrid">
-      <!-- QR quest -->
-      <div class="card" id="qrCard">
-        <h3>Quest: Scan a shop QR</h3>
-        <p class="small">Ask a participating shop for the QR. Type or paste the code here.</p>
-        <div class="row">
-          <input type="text" id="qrInput" placeholder="Enter QR code…">
-          <button class="btn" id="qrBtn">Verify QR</button>
-        </div>
-        <div class="status" id="qrStatus"></div>
+    <!-- Stage tracker -->
+    <div class="card" id="stageCard">
+      <h3>Stage <span id="stageNum">1</span> — Play to unlock the next!</h3>
+      <div class="stage">
+        <div class="step" id="stStep1"><div class="dot">1</div><div>Photo post</div></div>
+        <div class="bar"><span id="barFill"></span></div>
+        <div class="step" id="stStep2"><div class="dot">2</div><div>QR A</div></div>
+        <div class="bar" style="max-width:120px"><span></span></div>
+        <div class="step" id="stStep3"><div class="dot">3</div><div>Extra</div></div>
       </div>
+      <div class="sublabel" id="stageHint">Finish all three to unlock Stage 2 (QR A + QR B + Hill of Kapi)</div>
+    </div>
 
-      <!-- GEO quest -->
-      <div class="card" id="geoCard">
-        <h3>Quest: Hill of Kapi photo (geo-check)</h3>
-        <p class="small">Go to Hill of Kapi, enable location, and press the button to verify you’re there.</p>
-        <div class="row">
-          <button class="btn" id="geoBtn">I’m at the Hill of Kapi</button>
-          <button class="btn ghost" id="geoShow">Why location?</button>
-        </div>
-        <div class="status" id="geoStatus"></div>
+    <!-- Social quest -->
+    <div class="card" id="socialCard">
+      <h3>Quest: Post with hashtag</h3>
+      <p>Share a photo with <strong>#myhappybox</strong> and paste the public URL of your post.</p>
+      <div class="row">
+        <input type="text" id="postUrl" placeholder="https://instagram.com/p/...">
+        <button class="btn" id="postBtn">Submit link</button>
       </div>
+      <div class="status" id="postStatus"></div>
+    </div>
 
-      <!-- SOCIAL quest -->
-      <div class="card" id="socialCard">
-        <h3>Quest: Post with hashtag</h3>
-        <p class="small">Post a photo with <strong>#myhappybox</strong> and paste the public link of your post below.</p>
-        <div class="row">
-          <input type="text" id="postUrl" placeholder="https://instagram.com/p/...">
-          <button class="btn" id="postBtn">Submit link</button>
-        </div>
-        <div class="status" id="postStatus"></div>
+    <!-- QR quest A/B (now with camera scan) -->
+    <div class="card" id="qrCard">
+      <h3>Quest: Scan shop QR</h3>
+      <p>Ask a participating shop for their code. (Demo codes: <code>HAPPY-A</code> &amp; <code>HAPPY-B</code>)</p>
+      <div class="row">
+        <input type="text" id="qrInput" placeholder="Enter QR code…">
+        <select id="qrSlot">
+          <option value="A">Checkpoint A</option>
+          <option value="B" disabled>Checkpoint B (unlocks in Stage 2)</option>
+        </select>
+        <button class="btn" id="qrBtn">Verify QR</button>
+        <button class="btn ghost" id="qrScanBtn" title="Scan with camera">📷 Scan</button>
       </div>
+      <div class="status" id="qrStatus"></div>
+    </div>
 
-      <!-- PROGRESS -->
-      <div class="card" id="progressCard">
-        <h3>Your Progress</h3>
-        <div id="progressPills" class="row" style="flex-wrap:wrap"></div>
-        <p class="status" id="tierLine">Tier: —</p>
-        <div class="row">
-          <button class="btn alt" id="refreshBtn">Refresh</button>
-          <button class="btn" id="claimBtn">Claim award</button>
-        </div>
-        <div class="status" id="claimStatus"></div>
+    <!-- GEO quest (client-side) -->
+    <div class="card" id="geoCard">
+      <h3>Quest: Hill of Kapi photo (geo-check)</h3>
+      <p>Go to the Hill of Kapi, enable location, then press verify.</p>
+      <div class="row">
+        <button class="btn" id="geoBtn">I’m at the Hill of Kapi</button>
+        <button class="btn ghost" id="geoExplain">Why location?</button>
       </div>
+      <div class="status" id="geoStatus"></div>
+    </div>
+
+    <!-- Progress & Tier -->
+    <div class="card" id="progressCard">
+      <h3>Your Progress</h3>
+      <div id="progressPills" class="row" style="flex-wrap:wrap"></div>
+      <p class="status" id="tierLine">Tier: —</p>
+      <div class="row">
+        <button class="btn alt" id="resetBtn">Reset demo</button>
+        <button class="btn disabled" id="claimBtn" title="Unlocks at checkout based on your Tier">🎁 Claim your Happy Box</button>
+      </div>
+      <p class="hint">The claim button activates at <strong>check-out</strong> and your NFT rarity depends on your Tier.</p>
+      <div class="status" id="claimStatus"></div>
     </div>
   </section>
 
   <section class="cta">
-    <h2>Stayed in a hotel in Kalavryta?</h2>
-    <p>Grab your <strong>Happy Box</strong> — a unique, limited NFT photo from the area.</p>
-    <button id="mintBtn" class="btn">🎁 Claim your Happy Box</button>
+    <h2>Explore • Play • Win</h2>
+    <p>It’s a friendly treasure-hunt across Kalavryta. Finish Stage 1 to unlock Stage 2 and go for rarer rewards!</p>
+    <button id="mintInfoBtn" class="btn">How claiming works</button>
   </section>
 
   <footer>© 2025 Happy Box. All rights reserved.</footer>
 
-  <!-- Modal -->
+  <!-- Claiming Modal -->
   <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
     <div class="modal-card">
-      <h3 id="soonTitle">Soon</h3>
-      <p>Minting opens shortly. Check back in a bit!</p>
+      <h3 id="soonTitle">Claiming</h3>
+      <p>Minting is enabled at the hotel desk during <strong>check-out</strong>. Your Tier (Common → Legendary) is computed automatically from your quests. Ask reception to help you scan and mint!</p>
       <button class="close" id="closeModal">Close</button>
     </div>
   </div>
 
+  <!-- QR Camera Scanner Modal -->
+  <div id="qrModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="qrTitle" style="display:none">
+    <div class="modal-card" style="max-width: min(92vw,560px)">
+      <h3 id="qrTitle">Scan QR</h3>
+      <p style="margin-top:-4px;color:#666">Point your camera at the shop’s QR.</p>
+      <div style="position:relative;overflow:hidden;border-radius:12px">
+        <video id="qrVideo" playsinline autoplay muted style="width:100%;height:auto;background:#000;border-radius:12px"></video>
+        <div style="position:absolute;inset:0;pointer-events:none;border:2px dashed rgba(255,255,255,.6);border-radius:12px"></div>
+      </div>
+      <p id="qrScanMsg" class="status" style="margin-top:10px">Initializing camera…</p>
+      <div class="row" style="justify-content:space-between">
+        <button class="close" id="qrCloseBtn">Close</button>
+        <button class="btn" id="qrFlipBtn">Flip camera</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- === Ambient music (no files needed) === -->
+  <button id="musicToggle" aria-label="Toggle music"
+    style="position:fixed;right:16px;bottom:16px;z-index:9999;
+           border:none;border-radius:999px;padding:10px 14px;
+           background:rgba(255,255,255,.9);box-shadow:0 6px 18px rgba(0,0,0,.18);
+           cursor:pointer;font-size:18px;">🔊</button>
+
 <script>
-/* ------------------ Utilities ------------------ */
+/* ------------------ basic utils & demo storage ------------------ */
+const LS_KEY = 'hb_demo_progress_v1';
+function loadStore(){ try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}')}catch(e){return{}} }
+function saveStore(obj){ localStorage.setItem(LS_KEY, JSON.stringify(obj||{})) }
+function clearStore(){ localStorage.removeItem(LS_KEY) }
+
 function uid(){ return 'u_' + Math.random().toString(36).slice(2) + Date.now().toString(36) }
-function getCookie(n){
-  const m=document.cookie.match(new RegExp('(^| )'+n+'=([^;]+)')); return m ? decodeURIComponent(m[2]) : null;
-}
-function setCookie(n,v,days){
-  const d=new Date(); d.setTime(d.getTime()+days*864e5);
-  document.cookie = n+'='+encodeURIComponent(v)+'; expires='+d.toUTCString()+'; path=/; SameSite=Lax';
-}
-let USER = getCookie('hb_uid'); if(!USER){ USER=uid(); setCookie('hb_uid',USER,3650); }
+function getCookie(n){ const m=document.cookie.match(new RegExp('(^| )'+n+'=([^;]+)')); return m?decodeURIComponent(m[2]):null; }
+function setCookie(n,v,days){ const d=new Date(); d.setTime(d.getTime()+days*864e5);
+  document.cookie=n+'='+encodeURIComponent(v)+'; expires='+d.toUTCString()+'; path=/; SameSite=Lax'; }
+let USER=getCookie('hb_uid'); if(!USER){ USER=uid(); setCookie('hb_uid',USER,3650); }
 
-/* ------------------ Slider (excludes 1.png) ------------------ */
-const heroImg = document.getElementById("heroImg");
-const prevBtn = document.getElementById("prevBtn");
-const nextBtn = document.getElementById("nextBtn");
-const heroFrame = document.getElementById("heroFrame");
+/* ------------------ slider ------------------ */
+const slides=Array.from({length:26},(_,i)=>`public/photos/${i+2}.png`); // 2..27
+let s=0,timer; const heroImg=document.getElementById('heroImg'); const heroFrame=document.getElementById('heroFrame');
+function show(n){ s=(n+slides.length)%slides.length; heroImg.style.opacity=0;
+  setTimeout(()=>{ heroImg.src=slides[s]; heroImg.onload=()=>heroImg.style.opacity=1; },180); }
+function start(){ timer=setInterval(()=>show(s+1),4000) } function stop(){ clearInterval(timer) }
+document.getElementById('prevBtn').onclick=()=>{stop();show(s-1);start()};
+document.getElementById('nextBtn').onclick=()=>{stop();show(s+1);start()};
+heroFrame.onmouseenter=stop; heroFrame.onmouseleave=start; show(0); start();
 
-// Build slides from 2..27 (if a file is missing, the image will just fail silently)
-const slides = Array.from({length: 26}, (_,i)=>`public/photos/${i+2}.png`);
-let i = 0, timer;
-function show(idx){
-  i = (idx + slides.length) % slides.length;
-  heroImg.style.opacity = 0;
-  setTimeout(()=>{
-    heroImg.src = slides[i];
-    heroImg.onload = ()=>{ heroImg.style.opacity = 1; };
-  }, 180);
+/* ------------------ modal info ------------------ */
+const modal=document.getElementById('modal'); document.getElementById('mintInfoBtn').onclick=()=>modal.classList.add('show');
+document.getElementById('closeModal').onclick=()=>modal.classList.remove('show');
+modal.onclick=(e)=>{if(e.target===modal)modal.classList.remove('show')}
+window.addEventListener('keydown',(e)=>{if(e.key==='Escape')modal.classList.remove('show')});
+
+/* ------------------ stage & tier helpers ------------------ */
+const stageNum=document.getElementById('stageNum');
+const st1=document.getElementById('stStep1'), st2=document.getElementById('stStep2'), st3=document.getElementById('stStep3');
+const barFill=document.getElementById('barFill'); const stageHint=document.getElementById('stageHint');
+
+function computeStage(progress){
+  const done=new Set(progress.completed||[]);
+  const hasPost=done.has('social:post');
+  const hasQrA=done.has('qr:A'); const hasQrB=done.has('qr:B');
+  const hasGeo=done.has('geo:hill-of-kapi');
+  const s1Done = hasPost && hasQrA && (hasQrB || hasGeo);
+  return { stage: s1Done ? 2 : 1, doneSet:done, hasPost, hasQrA, hasQrB, hasGeo };
 }
-function start(){ timer = setInterval(()=>show(i+1), 4000); }
-function stop(){ clearInterval(timer); }
-prevBtn.addEventListener("click", ()=>{ stop(); show(i-1); start(); });
-nextBtn.addEventListener("click", ()=>{ stop(); show(i+1); start(); });
-heroFrame.addEventListener("mouseenter", stop);
-heroFrame.addEventListener("mouseleave", start);
-show(0); start();
-
-/* ------------------ Modal ------------------ */
-const modal = document.getElementById("modal");
-document.getElementById("mintBtn").addEventListener("click", ()=> modal.classList.add("show"));
-document.getElementById("closeModal").addEventListener("click", ()=> modal.classList.remove("show"));
-modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.classList.remove("show"); });
-window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") modal.classList.remove("show"); });
-
-/* ------------------ Quests: API helpers ------------------ */
-async function api(path, method="GET", data){
-  const res = await fetch(path, {
-    method,
-    headers: { "Content-Type":"application/json" },
-    body: method==="GET" ? undefined : JSON.stringify({ user: USER, ...data })
-  });
-  const json = await res.json().catch(()=> ({}));
-  if(!res.ok) throw new Error(json.error || ("HTTP "+res.status));
-  return json;
+function calcTier(done){
+  const d=done.size;
+  if(d>=4) return 'Legendary';
+  if(d===3) return 'Ultra Rare';
+  if(d===2) return 'Rare';
+  if(d===1) return 'Uncommon';
+  return 'Common';
 }
-function pill(text, kind="ok"){
-  const el = document.createElement('span');
-  el.className = `pill ${kind}`; el.textContent = text; return el;
+function paintStage(state){
+  stageNum.textContent = state.stage;
+  st1.classList.toggle('done', state.doneSet.has('social:post'));
+  st2.classList.toggle('done', state.doneSet.has('qr:A'));
+  st3.classList.toggle('done', state.doneSet.has('qr:B') || state.doneSet.has('geo:hill-of-kapi'));
+  const pct = (st1.classList.contains('done')?1:0) + (st2.classList.contains('done')?1:0) + (st3.classList.contains('done')?1:0);
+  barFill.style.width = (Math.min(pct,3)/3*100)+'%';
+  stageHint.textContent = state.stage===1
+    ? 'Finish all three to unlock Stage 2 (QR A + QR B + Hill of Kapi)'
+    : 'Stage 2 unlocked! Aim for Rare • Ultra Rare • Legendary';
+  document.querySelector('#qrSlot option[value="B"]').disabled = (state.stage===1);
 }
 
-/* ------------------ QR quest ------------------ */
-const qrInput = document.getElementById('qrInput');
-const qrBtn = document.getElementById('qrBtn');
-const qrStatus = document.getElementById('qrStatus');
-qrBtn.addEventListener('click', async ()=>{
-  const code = (qrInput.value||"").trim();
-  if(!code){ qrStatus.innerHTML = '<span class="pill err">Enter a code</span>'; return; }
-  qrBtn.disabled = true;
-  try{
-    const out = await api('/api/verify-qr','POST',{ code });
-    qrStatus.innerHTML = `<span class="pill ok">QR verified</span> <span class="small">(${out.checkpoint||'ok'})</span>`;
-    loadProgress();
-  }catch(e){
-    qrStatus.innerHTML = `<span class="pill err">${e.message}</span>`;
-  }finally{ qrBtn.disabled = false; }
-});
+/* ------------------ quests (demo) ------------------ */
+// storage model: { completed: [keys], urls:{post:''} }
+const progressPills=document.getElementById('progressPills');
+const tierLine=document.getElementById('tierLine');
+const claimBtn=document.getElementById('claimBtn');
 
-/* ------------------ GEO quest ------------------ */
-const geoBtn = document.getElementById('geoBtn');
-const geoShow = document.getElementById('geoShow');
-const geoStatus = document.getElementById('geoStatus');
-geoShow.addEventListener('click', ()=> alert('We check your GPS position (within a small radius) only once to confirm you visited the spot. Nothing is stored besides success/fail and a timestamp tied to your anonymous user id.'));
-geoBtn.addEventListener('click', ()=>{
-  if(!navigator.geolocation){ geoStatus.innerHTML='<span class="pill err">Geolocation not supported</span>'; return; }
-  geoBtn.disabled = true;
-  navigator.geolocation.getCurrentPosition(async (pos)=>{
-    try{
-      const {latitude, longitude} = pos.coords;
-      const out = await api('/api/geo-check','POST',{ checkpoint:'hill-of-kapi', lat:latitude, lng:longitude });
-      geoStatus.innerHTML = `<span class="pill ok">Location verified</span> <span class="small">dist ${out.distance_m?.toFixed?.(1)||'?'} m</span>`;
-      loadProgress();
-    }catch(e){
-      geoStatus.innerHTML = `<span class="pill err">${e.message}</span>`;
-    }finally{ geoBtn.disabled = false; }
-  }, (err)=>{
-    geoStatus.innerHTML = `<span class="pill err">${err.message}</span>`;
-    geoBtn.disabled = false;
-  }, { enableHighAccuracy:true, timeout:15000 });
-});
+function tag(text,kind){ const el=document.createElement('span'); el.className='pill '+kind; el.textContent=text; return el; }
 
-/* ------------------ SOCIAL quest ------------------ */
-const postUrl = document.getElementById('postUrl');
-const postBtn = document.getElementById('postBtn');
-const postStatus = document.getElementById('postStatus');
-postBtn.addEventListener('click', async ()=>{
-  const url = (postUrl.value||"").trim();
-  if(!url){ postStatus.innerHTML = '<span class="pill err">Paste the post URL</span>'; return; }
-  postBtn.disabled = true;
-  try{
-    const out = await api('/api/_verify','POST',{ url });
-    postStatus.innerHTML = `<span class="pill ok">Submitted</span> <span class="small">status: ${out.status||'queued'}</span>`;
-    loadProgress();
-  }catch(e){
-    postStatus.innerHTML = `<span class="pill err">${e.message}</span>`;
-  }finally{ postBtn.disabled=false; }
-});
+function renderProgress(){
+  const store=loadStore(); const done=new Set(store.completed||[]);
+  progressPills.innerHTML='';
+  (store.completed||[]).forEach(k=>progressPills.appendChild(tag(k,'ok')));
+  const tier=calcTier(done); tierLine.textContent='Tier: '+tier;
+}
 
-/* ------------------ PROGRESS + CLAIM ------------------ */
-const progressPills = document.getElementById('progressPills');
-const tierLine = document.getElementById('tierLine');
-const refreshBtn = document.getElementById('refreshBtn');
-const claimBtn = document.getElementById('claimBtn');
-const claimStatus = document.getElementById('claimStatus');
+document.getElementById('resetBtn').onclick=()=>{ clearStore(); renderAll(); };
 
-async function loadProgress(){
-  progressPills.innerHTML = 'Loading…';
-  try{
-    const p = await api('/api/progress','POST',{}); // POST to include user id
-    progressPills.innerHTML = '';
-    (p.completed||[]).forEach(k=>{
-      progressPills.appendChild(pill(k,'ok'));
-    });
-    (p.pending||[]).forEach(k=>{
-      progressPills.appendChild(pill(k,'warn'));
-    });
-    tierLine.textContent = 'Tier: ' + (p.tier||'—');
-  }catch(e){
-    progressPills.innerHTML = '';
-    progressPills.appendChild(pill(e.message,'err'));
-    tierLine.textContent = 'Tier: —';
+// social post
+document.getElementById('postBtn').onclick=()=>{
+  const url=(document.getElementById('postUrl').value||'').trim();
+  const st=document.getElementById('postStatus');
+  if(!url){ st.innerHTML='<span class="pill err">Paste the post URL</span>'; return; }
+  const ok = /^https?:\/\//i.test(url) && /myhappybox/i.test(url);
+  if(!ok){ st.innerHTML='<span class="pill warn">Use a public link with #myhappybox</span>'; return; }
+  const store=loadStore();
+  store.urls = store.urls||{}; store.urls.post=url;
+  store.completed = Array.from(new Set([...(store.completed||[]),'social:post']));
+  saveStore(store);
+  st.innerHTML='<span class="pill ok">Submitted</span>';
+  renderAll();
+};
+
+// QR demo codes
+const DEMO_QR = { A:'HAPPY-A', B:'HAPPY-B' };
+document.getElementById('qrBtn').onclick=()=>{
+  const code=(document.getElementById('qrInput').value||'').trim().toUpperCase();
+  const slot=document.getElementById('qrSlot').value;
+  const st=document.getElementById('qrStatus');
+  if(!code){ st.innerHTML='<span class="pill err">Enter code</span>'; return; }
+  const store=loadStore(); const stage=computeStage(store).stage;
+  if(slot==='B' && stage===1){ st.innerHTML='<span class="pill warn">Unlock Stage 2 first</span>'; return; }
+  if(code===DEMO_QR[slot]){
+    store.completed = Array.from(new Set([...(store.completed||[]),`qr:${slot}`]));
+    saveStore(store);
+    st.innerHTML=`<span class="pill ok">QR ${slot} verified</span>`;
+    renderAll();
+  } else {
+    st.innerHTML='<span class="pill err">Invalid code</span>';
   }
+};
+
+// GEO check (Hill of Kapi)
+const HILL = { lat:38.04952, lng:22.11163 }; // approx
+document.getElementById('geoExplain').onclick=()=>alert('We briefly read GPS to confirm you visited the spot. Nothing personally identifying is stored—only success/fail with your anonymous session.');
+document.getElementById('geoBtn').onclick=()=>{
+  const st=document.getElementById('geoStatus');
+  if(!navigator.geolocation){ st.innerHTML='<span class="pill err">Geolocation not supported</span>'; return; }
+  st.innerHTML='Checking…';
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const {latitude,longitude}=pos.coords;
+    const d = haversine(latitude, longitude, HILL.lat, HILL.lng);
+    if(d<=0.25){
+      const store=loadStore();
+      store.completed = Array.from(new Set([...(store.completed||[]),'geo:hill-of-kapi']));
+      saveStore(store);
+      st.innerHTML=`<span class="pill ok">Location verified</span> <span class="sublabel">${(d*1000).toFixed(0)} m</span>`;
+      renderAll();
+    }else{
+      st.innerHTML=`<span class="pill warn">You seem ${d.toFixed(2)} km away — move closer</span>`;
+    }
+  }, err=>{ st.innerHTML=`<span class="pill err">${err.message}</span>`; }, {enableHighAccuracy:true, timeout:15000});
+};
+function haversine(lat1,lon1,lat2,lon2){
+  const R=6371, toRad=x=>x*Math.PI/180;
+  const dLat=toRad(lat2-lat1), dLon=toRad(lon2-lon1);
+  const a=Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(a<1?1-a:0)); // safe
 }
-refreshBtn.addEventListener('click', loadProgress);
 
-claimBtn.addEventListener('click', async ()=>{
-  claimBtn.disabled = true;
-  claimStatus.textContent = 'Submitting…';
-  try{
-    const out = await api('/api/award','POST',{});
-    claimStatus.innerHTML = `<span class="pill ok">Award: ${out.tier||'—'}</span> <span class="small">${out.message||''}</span>`;
-  }catch(e){
-    claimStatus.innerHTML = `<span class="pill err">${e.message}</span>`;
-  }finally{ claimBtn.disabled=false; }
-});
+/* ------------------ stage refresh ------------------ */
+function renderStage(){
+  const store=loadStore();
+  const state=computeStage(store);
+  paintStage(state);
+}
+function renderAll(){ renderStage(); renderProgress(); }
+renderAll();
 
-loadProgress();
+/* ------------------ claim (info only) ------------------ */
+const claimBtn=document.getElementById('claimBtn');
+claimBtn.onclick=()=>alert('Claim is enabled at check-out with hotel assistance. Your Tier will determine your NFT rarity.');
+
+/* ------------------ Ambient music via Web Audio (no files) ------------------ */
+(() => {
+  let ctx, master, isMuted = false, started = false;
+  const btn = document.getElementById('musicToggle');
+
+  function initAudio() {
+    if (started) return;
+    started = true;
+
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    master = ctx.createGain();
+    master.gain.value = 0.15;
+    master.connect(ctx.destination);
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass'; filter.frequency.value = 1200; filter.Q.value = 0.7; filter.connect(master);
+
+    const oscA = ctx.createOscillator(), oscB = ctx.createOscillator();
+    oscA.type = 'sawtooth'; oscB.type = 'sawtooth'; oscB.detune.value = +7;
+    const padGain = ctx.createGain(); padGain.gain.value = 0.15;
+    oscA.connect(padGain); oscB.connect(padGain); padGain.connect(filter);
+
+    const noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+    const data = noiseBuf.getChannelData(0);
+    for (let i=0;i<data.length;i++) data[i] = (Math.random()*2-1)*0.02;
+    const noise = ctx.createBufferSource(); noise.buffer = noiseBuf; noise.loop = true;
+    const noiseFilter = ctx.createBiquadFilter(); noiseFilter.type = 'highpass'; noiseFilter.frequency.value = 800;
+    const noiseGain = ctx.createGain(); noiseGain.gain.value = 0.05;
+    noise.connect(noiseFilter); noiseFilter.connect(noiseGain); noiseGain.connect(master);
+
+    const lfo = ctx.createOscillator(), lfoGain = ctx.createGain();
+    lfo.frequency.value = 0.06; lfoGain.gain.value = 500; lfo.connect(lfoGain); lfoGain.connect(filter.frequency);
+
+    const chords = [
+      [261.63, 329.63], [293.66, 369.99], [246.94, 329.63], [261.63, 392.00],
+    ];
+    let step = 0;
+    function setChord([f1,f2]){ oscA.frequency.setTargetAtTime(f1, ctx.currentTime, 0.5); oscB.frequency.setTargetAtTime(f2, ctx.currentTime, 0.5); }
+    setChord(chords[0]);
+    function loopChord(){ step=(step+1)%chords.length; setChord(chords[step]); setTimeout(loopChord,8000); }
+    setTimeout(loopChord,8000);
+
+    oscA.start(); oscB.start(); lfo.start(); noise.start();
+  }
+
+  const prime = () => { initAudio(); window.removeEventListener('pointerdown', prime); };
+  window.addEventListener('pointerdown', prime, { once: true });
+
+  btn.addEventListener('click', async () => {
+    if (!started) initAudio();
+    if (ctx.state === 'suspended') await ctx.resume();
+    isMuted = !isMuted;
+    master.gain.linearRampToValueAtTime(isMuted ? 0 : 0.15, (ctx?.currentTime||0)+0.03);
+    btn.textContent = isMuted ? '🔇' : '🔊';
+  });
+})();
+
+/* ------------------ QR Camera Scanner (BarcodeDetector + jsQR fallback) ------------------ */
+(() => {
+  const qrScanBtn = document.getElementById('qrScanBtn');
+  const qrModal = document.getElementById('qrModal');
+  const qrCloseBtn = document.getElementById('qrCloseBtn');
+  const qrFlipBtn = document.getElementById('qrFlipBtn');
+  const qrVideo = document.getElementById('qrVideo');
+  const qrScanMsg = document.getElementById('qrScanMsg');
+  const qrInput = document.getElementById('qrInput');
+  const qrVerifyBtn = document.getElementById('qrBtn');
+
+  let stream = null;
+  let usingFront = false;
+  let rafId = null;
+  let detector = null;
+  let useBarcodeDetector = 'BarcodeDetector' in window;
+  let jsQRLoaded = false;
+
+  async function ensureJsQR() {
+    if (jsQRLoaded) return true;
+    return new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';
+      s.onload = () => { jsQRLoaded = true; res(true); };
+      s.onerror = () => rej(new Error('Failed to load jsQR'));
+      document.head.appendChild(s);
+    });
+  }
+
+  async function openScanner() {
+    qrModal.classList.add('show');
+    qrScanMsg.textContent = 'Initializing camera…';
+
+    const facingMode = usingFront ? 'user' : 'environment';
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
+    } catch (e) {
+      qrScanMsg.innerHTML = '<span class="pill err">Camera access denied</span>';
+      return;
+    }
+    qrVideo.srcObject = stream;
+
+    if (useBarcodeDetector) {
+      try { detector = new BarcodeDetector({ formats: ['qr_code'] }); }
+      catch { useBarcodeDetector = false; }
+    }
+
+    if (useBarcodeDetector) {
+      qrScanMsg.textContent = 'Scanning…';
+      loopBarcodeDetector();
+    } else {
+      try {
+        await ensureJsQR();
+        qrScanMsg.textContent = 'Scanning…';
+        loopJsQR();
+      } catch (e) {
+        qrScanMsg.innerHTML = '<span class="pill err">QR engine failed to load</span>';
+      }
+    }
+  }
+
+  function stopScanner() {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = null;
+    if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+    qrModal.classList.remove('show');
+  }
+
+  async function loopBarcodeDetector() {
+    try {
+      const barcodes = await detector.detect(qrVideo);
+      if (barcodes && barcodes.length) {
+        const value = barcodes[0].rawValue || barcodes[0].displayValue;
+        onCode(value);
+        return;
+      }
+    } catch {}
+    rafId = requestAnimationFrame(loopBarcodeDetector);
+  }
+
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  function loopJsQR() {
+    if (!qrVideo.videoWidth) { rafId = requestAnimationFrame(loopJsQR); return; }
+    canvas.width = qrVideo.videoWidth;
+    canvas.height = qrVideo.videoHeight;
+    ctx.drawImage(qrVideo, 0, 0, canvas.width, canvas.height);
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = window.jsQR ? window.jsQR(imgData.data, canvas.width, canvas.height) : null;
+    if (code && code.data) { onCode(code.data); return; }
+    rafId = requestAnimationFrame(loopJsQR);
+  }
+
+  function onCode(value) {
+    stopScanner();
+    const v = (value || '').trim();
+    qrInput.value = v;
+    qrScanMsg.textContent = 'QR found: ' + v;
+    qrVerifyBtn.click(); // reuse existing verify flow
+  }
+
+  if (qrScanBtn) {
+    qrScanBtn.addEventListener('click', async () => {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        alert('Camera API not supported in this browser.');
+        return;
+      }
+      openScanner();
+    });
+  }
+  if (qrCloseBtn) qrCloseBtn.addEventListener('click', stopScanner);
+  if (qrModal) qrModal.addEventListener('click', (e) => { if (e.target === qrModal) stopScanner(); });
+  if (qrFlipBtn) qrFlipBtn.addEventListener('click', async () => {
+    usingFront = !usingFront;
+    stopScanner();
+    openScanner();
+  });
+})();
 </script>
 </body>
 </html>
