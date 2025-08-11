@@ -4,238 +4,218 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>my Happy Box — Kalavryta Edition</title>
-
 <style>
   :root{
-    --brand:#ff7a00;
-    --brand-soft:#ffb84d;
-    --bg1:#fef9f5;
-    --bg2:#fff6eb;
-    --ink:#333;
-    --muted:#555;
+    --brand:#ff7a00; --brand-soft:#ffb84d; --bg1:#fef9f5; --bg2:#fff6eb;
+    --ink:#333; --muted:#555; --card:#fff; --ok:#1a7f37; --warn:#b54708;
   }
   *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
-    background:linear-gradient(135deg,var(--bg1),var(--bg2));
-    color:var(--ink);
-    overflow-x:hidden;
-  }
-
-  .confetti{
-    position:fixed; inset:0; pointer-events:none; opacity:.18;
+  body{ margin:0; font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+        background:linear-gradient(135deg,var(--bg1),var(--bg2)); color:var(--ink); overflow-x:hidden; }
+  .confetti{ position:fixed; inset:0; pointer-events:none; opacity:.18;
     background:
       radial-gradient(circle at 10% 20%, #ff7a00 2px, transparent 3px) 0 0/120px 120px,
       radial-gradient(circle at 80% 30%, #ffb84d 2px, transparent 3px) 0 0/140px 140px,
       radial-gradient(circle at 30% 80%, #ffd699 2px, transparent 3px) 0 0/160px 160px;
-    animation: floaty 14s linear infinite;
-  }
+    animation: floaty 14s linear infinite; }
   @keyframes floaty{from{transform:translateY(0)}to{transform:translateY(-120px)}}
+  header{ text-align:center; padding:56px 20px 16px; }
+  .title{ margin:0; font-size:clamp(32px,6vw,56px); letter-spacing:.4px; color:var(--brand); display:flex; gap:.5rem; justify-content:center; align-items:center;}
+  .mytag{ font-size:.6em; background:#222; color:#fff; border-radius:999px; padding:.1em .55em; opacity:.9 }
+  .gift{ filter:drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
+  .edition{ margin:.25rem 0 0; font-size:clamp(14px,2.5vw,20px); color:var(--brand-soft); font-style:italic; display:inline-block;
+    transform:rotate(-2deg); background:#fff; padding:6px 12px; border:1px dashed var(--brand-soft); border-radius:999px; }
+  .sub{ margin:14px auto 0; max-width:940px; font-size:clamp(14px,2.1vw,18px); color:var(--muted); line-height:1.55; padding:0 16px; text-align:center; }
 
-  header{ text-align:center; padding:56px 20px 24px; animation:drop .8s ease forwards; }
-  @keyframes drop{from{opacity:0; transform:translateY(-24px)}to{opacity:1; transform:translateY(0)}}
+  .hero-wrap{display:flex; justify-content:center; padding:22px 16px 10px;}
+  .hero{ width:min(1020px,90vw); background:#fff; border-radius:18px; border:10px solid #fff; box-shadow:0 12px 36px rgba(0,0,0,.14); }
+  .hero > img{ width:100%; height:clamp(260px,48vw,560px); object-fit:contain; background:#fff; display:block; }
 
-  .title{
-    margin:0;
-    display:flex; align-items:center; justify-content:center; gap:.4rem;
-    line-height:1.05;
-    letter-spacing:.4px;
-    flex-wrap:wrap;
-    font-weight:800;
-    font-size: clamp(32px, 6vw, 56px);
-    color:var(--brand);
-  }
-  .title .my{
-    font-size: 0.55em;
-    font-weight:600;
-    color:#555;
-  }
-  .gift{ font-size: clamp(24px, 5vw, 40px); filter:drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
+  .cta{ text-align:center; padding:18px 16px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap }
+  .btn{ appearance:none; border:none; cursor:pointer; color:#fff; background:var(--brand);
+        padding:14px 18px; border-radius:12px; font-size:16px; font-weight:700; box-shadow:0 8px 20px rgba(255,122,0,.35);}
+  .btn.secondary{ background:#222 }
+  .btn:disabled{ opacity:.6; cursor:not-allowed }
 
-  .edition{
-    margin:.35rem 0 0;
-    font-size:clamp(14px,2.6vw,20px);
-    color:var(--brand-soft);
-    font-style:italic;
-    display:inline-block;
-    transform:rotate(-2deg);
-    background:#fff; padding:6px 12px;
-    border:1px dashed var(--brand-soft);
-    border-radius:999px;
-  }
+  .panel{ max-width:min(1020px,92vw); margin:14px auto 28px; background:var(--card); border-radius:16px; padding:16px;
+          box-shadow:0 8px 26px rgba(0,0,0,.08); }
+  .panel h3{ margin:0 0 8px }
+  .grid{ display:grid; grid-template-columns: 1fr; gap:10px }
+  @media (min-width:720px){ .grid{ grid-template-columns: 1fr 1fr } }
+  .quest{ border:1px solid #eee; border-radius:12px; padding:12px 14px }
+  .quest h4{ margin:0 0 8px }
+  .steps{ margin:0; padding-left:18px }
+  .steps li{ margin:4px 0 }
+  .tag{ font-size:12px; border-radius:999px; padding:2px 8px; background:#eee; display:inline-block; margin-left:6px }
+  .ok{ color:var(--ok); font-weight:700 }
+  .warn{ color:var(--warn); font-weight:700 }
 
-  .sub{
-    margin:14px auto 0;
-    max-width:940px;
-    font-size:clamp(14px,2.1vw,18px);
-    color:var(--muted);
-    line-height:1.55;
-    text-align:center;
-    padding:0 16px;
-  }
-
-  .hero-wrap{ display:flex; justify-content:center; padding:22px 16px 10px; }
-  .hero-frame{
-    width:min(1020px,90vw);
-    height: clamp(260px, 48vw, 560px);
-    background:#fff;
-    border: 10px solid #fff;
-    border-radius:18px;
-    box-shadow:0 12px 36px rgba(0,0,0,.14);
-    position:relative; overflow:hidden;
-  }
-  .hero-img{
-    position:absolute; inset:0;
-    width:100%; height:100%;
-    object-fit:contain;
-    background:#fff;
-    transition:opacity .5s ease;
-  }
-  .badge{
-    position:absolute; top:10px; left:10px;
-    background:rgba(255,255,255,.9); color:#444;
-    font-size:12px; padding:4px 8px; border-radius:999px;
-    backdrop-filter:blur(6px);
-  }
-  .nav{
-    position:absolute; top:50%; transform:translateY(-50%);
-    width:42px; height:42px; border-radius:50%;
-    background:rgba(255,255,255,.9);
-    display:grid; place-items:center;
-    box-shadow:0 4px 16px rgba(0,0,0,.15);
-    cursor:pointer; user-select:none;
-  }
-  .nav:hover{ filter:brightness(1.03) }
-  .nav.prev{ left:10px } .nav.next{ right:10px }
-
-  .example{
-    max-width:min(1020px,90vw);
-    margin:26px auto 0;
-    padding:18px 14px 8px;
-    border-radius:18px;
-    background:rgba(255,255,255,.65);
-    box-shadow:0 8px 26px rgba(0,0,0,.08);
-  }
-  .example h4{ margin:0 0 10px 6px; font-size:13px; color:#666; font-weight:600; }
-  .example-img{
-    display:block; width:100%; height:auto; border-radius:12px;
-    background:#fff; border:10px solid #fff;
-    box-shadow:0 8px 26px rgba(0,0,0,.08);
-  }
-
-  .cta{ text-align:center; padding:42px 20px 70px }
-  .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px) }
-  .cta p{ margin:0 0 16px; color:var(--muted) }
-  .btn{
-    appearance:none; border:none; cursor:pointer; color:#fff; background:var(--brand);
-    padding:14px 22px; border-radius:12px; font-size:18px; font-weight:700;
-    box-shadow:0 8px 20px rgba(255,122,0,.35);
-    transition: transform .15s ease, filter .2s ease, box-shadow .2s ease;
-  }
-  .btn:hover{ transform: translateY(-2px) scale(1.02); filter:brightness(1.03) }
-  .btn:active{ transform: translateY(0) scale(.99) }
-
-  footer{ text-align:center; padding:18px; color:#999; font-size:13px }
-
-  .modal{
-    position:fixed; inset:0; background:rgba(0,0,0,.45);
-    display:none; align-items:center; justify-content:center; z-index:50;
-  }
-  .modal.show{ display:flex }
-  .modal-card{
-    background:#fff; border-radius:16px; padding:26px 28px;
-    box-shadow:0 20px 60px rgba(0,0,0,.25);
-    text-align:center; min-width:min(90vw,380px);
-  }
-  .modal-card h3{ margin:0 0 6px }
-  .modal-card p{ margin:0 0 16px; color:#666 }
-  .close{ border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer; }
+  .toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:16px; background:#111; color:#fff; padding:10px 14px; border-radius:10px; display:none }
+  .toast.show{ display:block }
+  footer{ text-align:center; padding:22px; color:#999; font-size:13px }
 </style>
 </head>
 <body>
-  <div class="confetti" aria-hidden="true"></div>
+<div class="confetti" aria-hidden="true"></div>
 
-  <header>
-    <h1 class="title">
-      <span class="my">my</span> Happy Box
-      <span class="gift">🎁</span>
-    </h1>
-    <div class="edition">Kalavryta Edition</div>
-    <p class="sub">
-      Are you a traveler looking to make your trip unforgettable?
-      Don’t wait—tap to unlock your gift: <strong>one of 100 limited-edition NFT photos of Kalavryta</strong>,
-      yours to keep for a lifetime. Plus, compete for <strong>rare images</strong> and surprise perks
-      from our partner hotels and restaurants. No spoilers—only surprise!
-    </p>
-  </header>
+<header>
+  <h1 class="title"><span class="mytag">my</span> Happy Box <span class="gift">🎁</span></h1>
+  <div class="edition">Kalavryta Edition</div>
+  <p class="sub">
+    Unlock your gift: <strong>one of 100 limited-edition NFT photos of Kalavryta</strong>.  
+    Complete quests around town to upgrade your reward—no spoilers, only surprise!
+  </p>
+</header>
 
-  <section class="hero-wrap">
-    <div class="hero-frame" id="heroFrame">
-      <div class="badge">Kalavryta preview</div>
-      <img id="heroImg" class="hero-img" src="public/photos/2.png" alt="Kalavryta preview" />
-      <div class="nav prev" id="prevBtn" aria-label="Previous">‹</div>
-      <div class="nav next" id="nextBtn" aria-label="Next">›</div>
+<section class="hero-wrap">
+  <div class="hero">
+    <img id="heroImg" src="public/photos/7.png" alt="Kalavryta preview"/>
+  </div>
+</section>
+
+<section class="cta">
+  <button id="mintPass" class="btn">🎁 Mint Quest Pass (check-in)</button>
+  <button id="mintReward" class="btn secondary">🏁 Mint Reward (check-out)</button>
+</section>
+
+<section class="panel">
+  <h3>Progress</h3>
+  <div class="grid">
+    <div class="quest">
+      <h4>Quest 1 <span class="tag">2 tasks</span></h4>
+      <ol class="steps">
+        <li>Scan QR in <strong>Main Square</strong> <span id="q1s1"></span></li>
+        <li>Scan QR in <strong>Holocaust Museum</strong> <span id="q1s2"></span></li>
+      </ol>
+      <button class="btn" id="geoPlatia">📍 I’m at the square</button>
     </div>
-  </section>
-
-  <section class="example">
-    <h4>Bundle example</h4>
-    <img class="example-img" src="public/photos/1.png" alt="Bundle Minted example" />
-  </section>
-
-  <section class="cta">
-    <h2>Stayed in a hotel in Kalavryta?</h2>
-    <p>Grab your <strong>Happy Box</strong> — a unique, limited NFT photo from the area.</p>
-    <button id="claimBtn" class="btn">🎁 Claim your Happy Box</button>
-  </section>
-
-  <footer>© 2025 Happy Box. All rights reserved.</footer>
-
-  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
-    <div class="modal-card">
-      <h3 id="soonTitle">Soon</h3>
-      <p>Minting opens shortly. Check back in a bit!</p>
-      <button class="close" id="closeModal">Close</button>
+    <div class="quest">
+      <h4>Quest 2 <span class="tag">3 tasks</span></h4>
+      <ol class="steps">
+        <li>Scan a QR in <strong>Shop X</strong> <span id="q2s1"></span></li>
+        <li>Scan a QR in <strong>Shop Y</strong> <span id="q2s2"></span></li>
+        <li>Scan QR at <strong>Hill of Kapi</strong> <span id="q2s3"></span></li>
+      </ol>
+      <button class="btn" id="geoKapi">📍 I’m at Hill of Kapi</button>
     </div>
   </div>
+</section>
+
+<section class="panel">
+  <h3>Bundle example</h3>
+  <img src="public/photos/1.png" alt="Bundle example" style="width:100%;max-width:1020px;display:block;border-radius:12px;border:10px solid #fff;box-shadow:0 8px 26px rgba(0,0,0,.08);" />
+</section>
+
+<footer>© 2025 Happy Box. All rights reserved.</footer>
+
+<div id="toast" class="toast"></div>
 
 <script>
-  const IMG_PATH = "public/photos/";
-  const slides = Array.from({length: 27}, (_, i) => `${IMG_PATH}${i+1}.png`).filter(src => !src.endsWith("/1.png"));
+  // ======== Config (frontend) ========
+  const API = {
+    progress: "/api/progress",
+    verifyQR: "/api/verify-qr",
+    geoCheck: "/api/geo-check",
+    award: "/api/award",
+  };
 
-  const heroImg = document.getElementById("heroImg");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
-
-  let i = 0;
-  let timer;
-
-  function show(idx){
-    i = (idx + slides.length) % slides.length;
-    heroImg.style.opacity = 0;
-    setTimeout(()=>{
-      heroImg.src = slides[i];
-      heroImg.onload = ()=>{ heroImg.style.opacity = 1; };
-    }, 180);
+  // very light "auth": ask email once, keep in localStorage (swap later with Paper Auth)
+  function getUserEmail(){
+    let email = localStorage.getItem("hb_email");
+    if(!email){
+      email = prompt("Enter your email to track progress (you can mint with this email later):") || "";
+      email = email.trim();
+      if(!email) return null;
+      localStorage.setItem("hb_email", email);
+    }
+    return email;
   }
-  function start(){ timer = setInterval(()=>show(i+1), 4000); }
-  function stop(){ clearInterval(timer); }
 
-  prevBtn.addEventListener("click", ()=>{ stop(); show(i-1); start(); });
-  nextBtn.addEventListener("click", ()=>{ stop(); show(i+1); start(); });
+  function toast(msg, ok=true){
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.background = ok ? "#111" : "#b54708";
+    t.classList.add("show");
+    setTimeout(()=>t.classList.remove("show"), 2500);
+  }
 
-  document.getElementById("heroFrame").addEventListener("mouseenter", stop);
-  document.getElementById("heroFrame").addEventListener("mouseleave", start);
+  // ======== Progress UI ========
+  function setFlag(el, done){ el.textContent = done ? "✓" : "•"; el.className = done ? "ok" : "warn"; }
+  async function refreshProgress(){
+    const email = getUserEmail(); if(!email) return;
+    const res = await fetch(API.progress + "?email=" + encodeURIComponent(email));
+    const data = await res.json();
 
-  show(0);
-  start();
+    const p = data.progress || {};
+    setFlag(document.getElementById("q1s1"), !!p.q1?.s1);
+    setFlag(document.getElementById("q1s2"), !!p.q1?.s2);
+    setFlag(document.getElementById("q2s1"), !!p.q2?.s1);
+    setFlag(document.getElementById("q2s2"), !!p.q2?.s2);
+    setFlag(document.getElementById("q2s3"), !!p.q2?.s3);
+  }
 
-  const modal = document.getElementById("modal");
-  document.getElementById("claimBtn").addEventListener("click", ()=> modal.classList.add("show"));
-  document.getElementById("closeModal").addEventListener("click", ()=> modal.classList.remove("show"));
-  modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.classList.remove("show"); });
-  window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") modal.classList.remove("show"); });
+  // ======== Handle QR token in URL (?c=...) ========
+  async function handleQRFromURL(){
+    const u = new URL(location.href);
+    const token = u.searchParams.get("c");
+    if(!token) return;
+    const email = getUserEmail(); if(!email) return;
+
+    const res = await fetch(API.verifyQR + "?c=" + encodeURIComponent(token) + "&email=" + encodeURIComponent(email));
+    const data = await res.json();
+    if(data.ok){ toast("Checkpoint recorded!"); await refreshProgress(); }
+    else { toast("Invalid/expired QR.", false); }
+    // clean URL
+    u.searchParams.delete("c");
+    history.replaceState({}, "", u.pathname + (u.searchParams.toString()?("?"+u.searchParams.toString()):""));
+  }
+
+  // ======== Geofence helpers (optional v1) ========
+  async function geoCheck(place){
+    const email = getUserEmail(); if(!email) return;
+    if(!("geolocation" in navigator)){ toast("Geolocation not available", false); return; }
+    navigator.geolocation.getCurrentPosition(async (pos)=>{
+      const payload = {
+        email,
+        place,
+        lat: pos.coords.latitude,
+        lon: pos.coords.longitude
+      };
+      const res = await fetch(API.geoCheck, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload)});
+      const data = await res.json();
+      if(data.ok){ toast("Location verified! Check the QR at this spot to complete the step."); refreshProgress(); }
+      else { toast(data.error || "Out of range.", false); }
+    }, ()=>toast("Location permission denied", false), {enableHighAccuracy:true, timeout:10000});
+  }
+
+  document.getElementById("geoPlatia").addEventListener("click", ()=>geoCheck("platia"));
+  document.getElementById("geoKapi").addEventListener("click", ()=>geoCheck("kapi"));
+
+  // ======== Mint buttons ========
+  document.getElementById("mintPass").addEventListener("click", async ()=>{
+    const email = getUserEmail(); if(!email) return;
+    // For v1 just show a message; wire to Paper/thirdweb in /api/award when you want.
+    const res = await fetch(API.award + "?email=" + encodeURIComponent(email) + "&type=pass");
+    const data = await res.json();
+    if(data.ok){
+      if(data.claimUrl){ location.href = data.claimUrl; }
+      else toast("Pass ready (integration stub).");
+    } else toast("Mint failed.", false);
+  });
+
+  document.getElementById("mintReward").addEventListener("click", async ()=>{
+    const email = getUserEmail(); if(!email) return;
+    const res = await fetch(API.award + "?email=" + encodeURIComponent(email) + "&type=reward");
+    const data = await res.json();
+    if(data.ok){
+      if(data.claimUrl){ location.href = data.claimUrl; }
+      else toast("Reward ready (integration stub).");
+    } else toast(data.error || "Not eligible yet.", false);
+  });
+
+  // init
+  refreshProgress();
+  handleQRFromURL();
 </script>
 </body>
 </html>
