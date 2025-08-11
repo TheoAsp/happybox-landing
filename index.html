@@ -81,7 +81,7 @@
   <section class="hero-wrap">
     <div class="hero-frame" id="heroFrame">
       <div class="badge">Kalavryta preview</div>
-      <img id="heroImg" class="hero-img" src="public/photos/7.png" alt="Kalavryta preview" />
+      <img id="heroImg" class="hero-img" src="public/photos/2.png" alt="Kalavryta preview" />
       <div class="nav prev" id="prevBtn" aria-label="Previous">‹</div>
       <div class="nav next" id="nextBtn" aria-label="Next">›</div>
     </div>
@@ -109,8 +109,9 @@
   </div>
 
 <script>
-  const IMG_PATH = "public/photos/"; // τώρα δείχνει στον σωστό φάκελο
-  const slides = Array.from({length: 27}, (_, i) => `${IMG_PATH}${i+1}.png`);
+  const IMG_PATH = "public/photos/";
+  // Παράγουμε λίστα από 2.png έως 27.png
+  const slides = Array.from({length: 26}, (_, i) => `${IMG_PATH}${i+2}.png`);
 
   const heroImg = document.getElementById("heroImg");
   const prevBtn = document.getElementById("prevBtn");
