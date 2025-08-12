@@ -15,12 +15,6 @@
   body{ margin:0; font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
     background:linear-gradient(135deg,var(--bg1),var(--bg2)); color:var(--ink); overflow-x:hidden; }
 
-  /* header language switch */
-  .topbar{ display:flex; justify-content:flex-end; align-items:center; gap:8px;
-    padding:10px 16px; }
-  .lang{ border:1px solid #eee; background:#fff; border-radius:10px; padding:8px 10px; cursor:pointer; }
-  .lang select{ border:none; background:transparent; font-weight:600; }
-
   /* confetti bg */
   .confetti{ position:fixed; inset:0; pointer-events:none; opacity:.18;
     background:
@@ -30,7 +24,7 @@
     animation: floaty 14s linear infinite; }
   @keyframes floaty{from{transform:translateY(0)}to{transform:translateY(-120px)}}
 
-  header{ text-align:center; padding:24px 20px 24px; animation:drop .8s ease forwards; }
+  header{ text-align:center; padding:56px 20px 24px; animation:drop .8s ease forwards; }
   @keyframes drop{from{opacity:0; transform:translateY(-24px)}to{opacity:1; transform:translateY(0)}}
 
   .title{ margin:0; font-size:clamp(32px,6vw,56px); color:var(--brand);
@@ -77,7 +71,7 @@
   .ok{ background:#eaf7f0; color:var(--ok) } .warn{ background:#fff6e0; color:var(--warn) } .err{ background:#fdecec; color:var(--err) }
   .status{ margin-top:6px; font-size:14px; color:#666 }
 
-  /* Stage tracker (top of quests) */
+  /* Stage tracker */
   .stage{ display:flex; align-items:center; gap:12px; margin:10px 0 6px }
   .step{ display:flex; align-items:center; gap:8px; color:#666; }
   .dot{ width:22px; height:22px; border-radius:50%; border:2px solid #ddd; display:grid; place-items:center; font-size:12px; background:#fff }
@@ -109,26 +103,32 @@
   .modal-card .mini{ font-size:12px; color:#777; margin-top:4px }
   .close{ border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer; }
   .disabled{ opacity:.55; cursor:not-allowed }
+
+  /* Victory overlay */
+  #victory{ position:fixed; inset:0; display:none; align-items:center; justify-content:center;
+    background:rgba(0,0,0,.55); z-index:9999; }
+  #victory.show{ display:flex; animation:fadeIn .25s ease }
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .victory-card{ position:relative; text-align:center; background:#fff; border-radius:20px;
+    padding:28px 28px 22px; box-shadow:0 24px 80px rgba(0,0,0,.35); overflow:hidden; }
+  .victory-card h2{ margin:0 0 6px; font-size:clamp(22px,4vw,32px); color:#222 }
+  .victory-card p{ margin:0 0 14px; color:#666 }
+  .trophy{ font-size:64px; margin-bottom:8px; animation:pop .5s ease both }
+  @keyframes pop{ from{ transform:scale(.7); opacity:.2 } to{ transform:scale(1); opacity:1 } }
+  .confetti-fx{ position:absolute; inset:-20px; pointer-events:none }
+  .piece{ position:absolute; width:10px; height:14px; border-radius:2px; opacity:.9;
+    animation:fall 1.2s linear forwards, spin 1.2s linear forwards; }
+  @keyframes fall{ from{ transform:translateY(-40vh) } to{ transform:translateY(60vh) } }
+  @keyframes spin{ from{ transform:rotate(0) } to{ transform:rotate(720deg) } }
 </style>
 </head>
 <body>
   <div class="confetti" aria-hidden="true"></div>
 
-  <!-- Language switch -->
-  <div class="topbar">
-    <div class="lang">
-      <label for="langSel" style="margin-right:6px; color:#666; font-size:13px;" data-i18n="ui.languageLabel">Language</label>
-      <select id="langSel" aria-label="Language">
-        <option value="en">English</option>
-        <option value="el">Ελληνικά</option>
-      </select>
-    </div>
-  </div>
-
   <header>
     <h1 class="title"><span class="my">my</span> Happy Box <span class="gift">🎁</span></h1>
-    <div class="edition" data-i18n="hero.edition">Kalavryta Edition</div>
-    <p class="sub" data-i18n-html="hero.sub">
+    <div class="edition">Kalavryta Edition</div>
+    <p class="sub">
       A joyful mini-game for travelers! Complete quests around Kalavryta to level-up your reward.  
       Unlock one of <strong>1,000 limited-edition NFT photos</strong> — the rarer your tier, the rarer your art.
       Have fun, explore, win surprises!
@@ -138,7 +138,7 @@
   <!-- Slider -->
   <section class="hero-wrap">
     <div class="hero-frame" id="heroFrame">
-      <div class="badge" data-i18n="slider.badge">Kalavryta preview</div>
+      <div class="badge">Kalavryta preview</div>
       <img id="heroImg" class="hero-img" src="public/photos/2.png" alt="Kalavryta preview" />
       <div class="nav prev" id="prevBtn" aria-label="Previous">‹</div>
       <div class="nav next" id="nextBtn" aria-label="Next">›</div>
@@ -147,7 +147,7 @@
 
   <!-- Bundle example -->
   <section class="example">
-    <h4 data-i18n="bundle.title">Bundle example</h4>
+    <h4>Bundle example</h4>
     <img class="example-img" src="public/photos/1.png" alt="Bundle Minted example" />
   </section>
 
@@ -155,90 +155,117 @@
   <section class="quests">
     <!-- Stage tracker -->
     <div class="card" id="stageCard">
-      <h3><span data-i18n="stage.title">Stage</span> <span id="stageNum">1</span> — <span data-i18n="stage.subtitle">Play to unlock the next!</span></h3>
+      <h3>Stage <span id="stageNum">1</span> — Play to unlock the next!</h3>
       <div class="stage">
-        <div class="step" id="stStep1"><div class="dot">1</div><div data-i18n="stage.s1">Stage 1</div></div>
+        <div class="step" id="stStep1"><div class="dot">1</div><div>Stage 1</div></div>
         <div class="bar"><span id="barFill"></span></div>
-        <div class="step" id="stStep2"><div class="dot">2</div><div data-i18n="stage.s2">Stage 2</div></div>
+        <div class="step" id="stStep2"><div class="dot">2</div><div>Stage 2</div></div>
         <div class="bar" style="max-width:120px"><span></span></div>
-        <div class="step" id="stStep3"><div class="dot">3</div><div data-i18n="stage.s3">Stage 3</div></div>
+        <div class="step" id="stStep3"><div class="dot">3</div><div>Stage 3</div></div>
       </div>
-      <div class="sublabel" id="stageHint" data-i18n="stage.hint1">Finish Stage 1 to unlock Stage 2 — and aim for rarer tiers.</div>
+      <div class="sublabel" id="stageHint">Finish Stage 1 to unlock Stage 2 — and aim for rarer tiers.</div>
     </div>
 
     <!-- Stage 1 card -->
     <div class="card" id="s1Card">
-      <h3 data-i18n="s1.title">Stage 1 — Warm-up (🎯 complete 3/3)</h3>
-      <p data-i18n="s1.desc">Pick your path — you need: 1 social + 1 shop + 1 of the sights.</p>
+      <h3>Stage 1 — Warm-up (🎯 complete 3/3)</h3>
+      <p>You need: 1 social + 1 shop + <strong>1 of the attractions</strong> (extra attractions = bonus).</p>
 
       <!-- Social -->
-      <div class="row"><span data-i18n="s1.socialLabel">📸 Post with hashtag #myhappybox</span></div>
+      <div class="row"><span>📸 Post with hashtag #myhappybox</span></div>
       <div class="row">
         <input type="text" id="s1PostUrl" placeholder="Public post URL (e.g. Instagram)">
-        <button class="btn" id="s1PostBtn" data-i18n="ui.submitLink">Submit link</button>
+        <button class="btn" id="s1PostBtn">Submit link</button>
       </div>
       <div class="status" id="s1PostStatus"></div>
 
       <!-- Shop (1) -->
-      <div class="row" style="margin-top:10px"><span data-i18n="s1.shopLabel">🏪 Partner Shop (Stage 1)</span></div>
+      <div class="row" style="margin-top:10px"><span>🏪 Partner Shop (Stage 1)</span></div>
       <div class="row">
-        <input type="text" id="s1Qr" data-i18n-ph="ui.enterQr">
-        <button class="btn" id="s1QrBtn" data-i18n="ui.verifyQr">Verify QR</button>
+        <input type="text" id="s1Qr" placeholder="Enter QR code (placeholder)">
+        <button class="btn" id="s1QrBtn">Verify QR</button>
       </div>
       <div class="status" id="s1QrStatus"></div>
 
-      <!-- Sights (choose one) -->
-      <div class="row" style="margin-top:10px"><span data-i18n="s1.sightsLabel">🗺️ Visit one: </span></div>
+      <!-- Attractions (choose ≥1) -->
+      <div class="row" style="margin-top:10px"><span>🗺️ Attractions — pick at least one:</span></div>
       <div class="row">
-        <label><input type="checkbox" id="s1SightA"> <span data-i18n="s1.sightA">Agia Lavra ⛪</span></label>
-        <label><input type="checkbox" id="s1SightB"> <span data-i18n="s1.sightB">Mega Spilaio Monastery 🕍</span></label>
-        <button class="btn ghost" id="s1SightBtn" data-i18n="ui.markVisited">Mark visited</button>
+        <label><input type="checkbox" id="s1A_museum"> Δημοτικό Μουσείο Καλαβρυτινού Ολοκαυτώματος 🏛️</label>
+        <label><input type="checkbox" id="s1A_agialavra"> Μονή Αγίας Λαύρας ⛪</label>
+        <label><input type="checkbox" id="s1A_square"> Πλατεία Πετμεζαίων 🏞️</label>
+        <button class="btn ghost" id="s1AttrBtn">Mark visited</button>
       </div>
-      <div class="status" id="s1SightStatus"></div>
+      <div class="status" id="s1AttrStatus"></div>
     </div>
 
-    <!-- Stage 2 card (unlocks) -->
+    <!-- Stage 2 card -->
     <div class="card" id="s2Card">
-      <h3 data-i18n="s2.title">Stage 2 — Explore more (🎯 complete 3/3)</h3>
-      <p data-i18n="s2.desc">Requires Stage 1 complete. You need: 2 shops + 1 of (Hill geo ✔ OR rack-railway photo).</p>
+      <h3>Stage 2 — Explore more (🎯 complete 3/3)</h3>
+      <p>Requires Stage 1 complete. You need: 2 shops + <strong>1 of the attractions</strong> (extras = bonus).</p>
 
       <!-- Shops (2) -->
-      <div class="row"><span data-i18n="s2.shopsLabel">🏪 Partner Shops (Stage 2)</span></div>
+      <div class="row"><span>🏪 Partner Shops (Stage 2)</span></div>
       <div class="row">
-        <input type="text" id="s2QrA" data-i18n-ph="s2.qrA">
-        <input type="text" id="s2QrB" data-i18n-ph="s2.qrB">
-        <button class="btn" id="s2QrBtn" data-i18n="s2.verifyBoth">Verify both</button>
+        <input type="text" id="s2QrA" placeholder="Enter QR code for Shop 2A">
+        <input type="text" id="s2QrB" placeholder="Enter QR code for Shop 2B">
+        <button class="btn" id="s2QrBtn">Verify both</button>
       </div>
       <div class="status" id="s2QrStatus"></div>
 
-      <!-- Geo OR Photo -->
-      <div class="row" style="margin-top:10px"><span data-i18n="s2.altLabel">🧭 One of: Hill of Kapi (geo) OR Rack-Railway photo URL</span></div>
-      <div class="row">
-        <button class="btn" id="s2GeoBtn" data-i18n="s2.geoBtn">I’m at the Hill of Kapi</button>
-        <input type="text" id="s2RailUrl" data-i18n-ph="s2.railPh">
-        <button class="btn ghost" id="s2RailBtn" data-i18n="ui.submitUrl">Submit URL</button>
+      <!-- Attractions (choose ≥1) -->
+      <div class="row" style="margin-top:10px"><span>🧭 Attractions — pick at least one:</span></div>
+      <div class="row" style="gap:14px; align-items:flex-start">
+        <div style="display:flex; flex-direction:column; gap:6px">
+          <label><input type="checkbox" id="s2A_hill"> Τόπος Θυσίας / Λόφος του Καπι ⛰️</label>
+          <button class="btn" id="s2GeoBtn">Verify my location</button>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px; flex:1">
+          <label><input type="checkbox" id="s2A_odontotos"> Odontotos Rack Railway 🚆</label>
+          <div class="row">
+            <input type="text" id="s2RailUrl" placeholder="Public photo URL with #myhappybox">
+            <button class="btn ghost" id="s2RailBtn">Submit URL</button>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px">
+          <label><input type="checkbox" id="s2A_heroes"> Μνημείο Ηρώων Αγωνιστών του 1821 🗿</label>
+          <button class="btn ghost" id="s2MarkBtn">Mark visited</button>
+        </div>
       </div>
-      <div class="status" id="s2GeoStatus"></div>
+      <div class="status" id="s2AttrStatus"></div>
     </div>
 
-    <!-- Stage 3 card (final) -->
+    <!-- Stage 3 card -->
     <div class="card" id="s3Card">
-      <h3 data-i18n="s3.title">Stage 3 — The finale (🎯 complete 3/3)</h3>
-      <p data-i18n="s3.desc">Requires Stage 2 complete. You need: 3 shop scans.</p>
+      <h3>Stage 3 — The finale (🎯 complete 4/4)</h3>
+      <p>Requires Stage 2 complete. You need: 3 shops + <strong>1 of the attractions</strong> (extras = bonus).</p>
 
-      <div class="row"><span data-i18n="s3.shopsLabel">🏪 Partner Shops (Stage 3)</span></div>
+      <!-- Shops (3) -->
+      <div class="row"><span>🏪 Partner Shops (Stage 3)</span></div>
       <div class="row">
-        <input type="text" id="s3QrA" data-i18n-ph="s3.qrA">
-        <input type="text" id="s3QrB" data-i18n-ph="s3.qrB">
-        <input type="text" id="s3QrC" data-i18n-ph="s3.qrC">
-        <button class="btn" id="s3QrBtn" data-i18n="s3.verifyAll">Verify all</button>
+        <input type="text" id="s3QrA" placeholder="QR for Shop 3A">
+        <input type="text" id="s3QrB" placeholder="QR for Shop 3B">
+        <input type="text" id="s3QrC" placeholder="QR for Shop 3C">
+        <button class="btn" id="s3QrBtn">Verify all</button>
       </div>
       <div class="status" id="s3QrStatus"></div>
+
+      <!-- Attractions (choose ≥1) -->
+      <div class="row" style="margin-top:10px"><span>🗺️ Attractions — pick at least one:</span></div>
+      <div class="row" style="flex-direction:column; align-items:flex-start">
+        <label><input type="checkbox" id="s3A_cave"> Σπήλαιο των Λιμνών 🕳️</label>
+        <label><input type="checkbox" id="s3A_gorge"> Φαράγγι του Βουραϊκού 🏞️</label>
+        <label><input type="checkbox" id="s3A_ski"> Χιονοδρομικό κέντρο Καλαβρύτων 🎿</label>
+        <label><input type="checkbox" id="s3A_makellaria"> Ιερά Μονή Μακελλαριάς ⛪</label>
+        <label><input type="checkbox" id="s3A_tower"> Πύργος Πετμεζαίων 🏰</label>
+        <button class="btn ghost" id="s3AttrBtn" style="margin-top:6px">Mark visited</button>
+      </div>
+      <div class="status" id="s3AttrStatus"></div>
     </div>
 
     <!-- Progress & Tier -->
     <div class="card" id="progressCard">
-      <h3 data-i18n="progress.title">Your Progress</h3>
+      <h3>Your Progress</h3>
+
       <!-- Overall progress bar -->
       <div class="overall" style="margin:8px 0 10px">
         <div class="meter"><span id="overallFill"></span></div>
@@ -248,17 +275,17 @@
       <div id="progressPills" class="row" style="flex-wrap:wrap"></div>
       <p class="status" id="tierLine">Tier: —</p>
       <div class="row">
-        <button class="btn alt" id="resetBtn" data-i18n="ui.reset">Reset demo</button>
-        <button class="btn" id="claimBtn" data-i18n="ui.claim">🎁 Claim your Happy Box</button>
+        <button class="btn alt" id="resetBtn">Reset demo</button>
+        <button class="btn" id="claimBtn">🎁 Claim your Happy Box</button>
       </div>
-      <p class="status" data-i18n="progress.claimInfo">Claim becomes available once you complete <strong>Stage 1</strong>. You can keep playing for rarer tiers!</p>
+      <p class="status">Claim becomes available once you complete <strong>Stage 1</strong>. You can keep playing for rarer tiers!</p>
     </div>
   </section>
 
   <section class="cta">
-    <h2 data-i18n="cta.title">Explore • Play • Win</h2>
-    <p data-i18n="cta.desc">It’s a friendly treasure-hunt across Kalavryta. Finish Stage 1 to unlock Stage 2 and go for rarer rewards!</p>
-    <button id="mintInfoBtn" class="btn" data-i18n="ui.howClaiming">How claiming works</button>
+    <h2>Explore • Play • Win</h2>
+    <p>It’s a friendly treasure-hunt across Kalavryta. Finish Stage 1 to unlock Stage 2 and go for rarer rewards!</p>
+    <button id="mintInfoBtn" class="btn">How claiming works</button>
   </section>
 
   <footer>© 2025 Happy Box. All rights reserved.</footer>
@@ -268,398 +295,110 @@
     <div class="modal-card">
       <h3 id="modalTitle">Claiming</h3>
       <div id="modalBody"></div>
-      <p class="mini" data-i18n="modal.mini">Your tier is calculated automatically from your completed quests.</p>
-      <button class="close" id="closeModal" data-i18n="ui.close">Close</button>
+      <p class="mini">Your tier is calculated automatically from your completed quests.</p>
+      <button class="close" id="closeModal">Close</button>
+    </div>
+  </div>
+
+  <!-- Victory overlay -->
+  <div id="victory" aria-hidden="true">
+    <div class="victory-card">
+      <div class="confetti-fx" id="confettiFx"></div>
+      <div class="trophy">🏆</div>
+      <h2>All quests complete!</h2>
+      <p>You’ve reached 100% progress. Time to claim your top reward! 🎉</p>
+      <button class="btn" id="victoryClose">Awesome!</button>
     </div>
   </div>
 
 <script>
-/* ================== i18n ================== */
-const I18N = {
-  en: {
-    "ui.languageLabel":"Language",
-    "hero.edition":"Kalavryta Edition",
-    "hero.sub":"A joyful mini-game for travelers! Complete quests around Kalavryta to level-up your reward.  <br>Unlock one of <strong>1,000 limited-edition NFT photos</strong> — the rarer your tier, the rarer your art.  <br>Have fun, explore, win surprises!",
-    "slider.badge":"Kalavryta preview",
-    "bundle.title":"Bundle example",
-
-    "stage.title":"Stage",
-    "stage.subtitle":"Play to unlock the next!",
-    "stage.s1":"Stage 1",
-    "stage.s2":"Stage 2",
-    "stage.s3":"Stage 3",
-    "stage.hint1":"Finish Stage 1 to unlock Stage 2 — and aim for rarer tiers.",
-    "stage.hint2":"Great! Stage 2 unlocked — complete it to reach Stage 3.",
-    "stage.hint3":"Final stretch! Complete Stage 3 for the top tier.",
-
-    "s1.title":"Stage 1 — Warm-up (🎯 complete 3/3)",
-    "s1.desc":"Pick your path — you need: 1 social + 1 shop + 1 of the sights.",
-    "s1.socialLabel":"📸 Post with hashtag #myhappybox",
-    "s1.shopLabel":"🏪 Partner Shop (Stage 1)",
-    "s1.sightsLabel":"🗺️ Visit one:",
-    "s1.sightA":"Agia Lavra ⛪",
-    "s1.sightB":"Mega Spilaio Monastery 🕍",
-
-    "s2.title":"Stage 2 — Explore more (🎯 complete 3/3)",
-    "s2.desc":"Requires Stage 1 complete. You need: 2 shops + 1 of (Hill geo ✔ OR rack-railway photo).",
-    "s2.shopsLabel":"🏪 Partner Shops (Stage 2)",
-    "s2.qrA":"Enter QR code for Shop 2A",
-    "s2.qrB":"Enter QR code for Shop 2B",
-    "s2.verifyBoth":"Verify both",
-    "s2.altLabel":"🧭 One of: Hill of Kapi (geo) OR Rack-Railway photo URL",
-    "s2.geoBtn":"I’m at the Hill of Kapi",
-    "s2.railPh":"Public photo URL of Odontotos",
-
-    "s3.title":"Stage 3 — The finale (🎯 complete 3/3)",
-    "s3.desc":"Requires Stage 2 complete. You need: 3 shop scans.",
-    "s3.shopsLabel":"🏪 Partner Shops (Stage 3)",
-    "s3.qrA":"QR for Shop 3A",
-    "s3.qrB":"QR for Shop 3B",
-    "s3.qrC":"QR for Shop 3C",
-    "s3.verifyAll":"Verify all",
-
-    "progress.title":"Your Progress",
-    "progress.claimInfo":"Claim becomes available once you complete <strong>Stage 1</strong>. You can keep playing for rarer tiers!",
-
-    "cta.title":"Explore • Play • Win",
-    "cta.desc":"It’s a friendly treasure-hunt across Kalavryta. Finish Stage 1 to unlock Stage 2 and go for rarer rewards!",
-
-    "ui.submitLink":"Submit link",
-    "ui.enterQr":"Enter QR code (placeholder)",
-    "ui.verifyQr":"Verify QR",
-    "ui.markVisited":"Mark visited",
-    "ui.submitUrl":"Submit URL",
-    "ui.reset":"Reset demo",
-    "ui.claim":"🎁 Claim your Happy Box",
-    "ui.howClaiming":"How claiming works",
-    "ui.close":"Close",
-
-    "modal.lockedTitle":"Claiming",
-    "modal.lockedBody":"To claim your gift, please complete <strong>Stage 1</strong> first:<ul style='text-align:left;line-height:1.5'><li>📸 Make a public post (#myhappybox)</li><li>🏪 Scan one partner shop QR</li><li>🗺️ Visit one sight (Agia Lavra or Mega Spilaio)</li></ul><p>Once done, you can claim a <strong>Common / Uncommon</strong> NFT — or keep playing for rarer tiers.</p>",
-    "modal.unlockedTitle":"Claiming",
-    "modal.unlockedBody":"Nice! You’ve unlocked claiming. You can mint a <strong>{tier}</strong> NFT based on your progress. Continue to Stage 2 & 3 for <strong>Rare / Ultra Rare / Legendary</strong> rewards — or claim now.<p class='mini'>In production, this button would open the secure mint flow or a QR at reception.</p>",
-
-    "toast.validUrl":"Paste a valid public URL",
-    "toast.hashtag":"Make sure your post includes #myhappybox",
-    "toast.enterCode":"Enter code",
-    "toast.pickOne":"Pick at least one",
-    "toast.stage1First":"Complete Stage 1 first",
-    "toast.stage2First":"Complete Stage 2 first",
-    "toast.okSubmitted":"Submitted",
-    "toast.okVerified":"Verified",
-    "toast.okBoth":"Both verified",
-    "toast.geoUnsupported":"Geolocation not supported",
-    "toast.geoFar":"You seem too far (~{km} km)",
-    "toast.geoOk":"Location verified"
-  },
-  el: {
-    "ui.languageLabel":"Γλώσσα",
-    "hero.edition":"Έκδοση Καλάβρυτα",
-    "hero.sub":"Ένα χαρούμενο mini-game για ταξιδιώτες! Ολοκλήρωσε αποστολές στα Καλάβρυτα και ανέβασε το έπαθλό σου. <br>Ξεκλείδωσε ένα από τα <strong>1.000 συλλεκτικά NFT</strong> — όσο υψηλότερο το tier, τόσο πιο σπάνιο το έργο. <br>Διασκέδασε, εξερεύνησε, κέρδισε εκπλήξεις!",
-    "slider.badge":"Προεπισκόπηση Καλαβρύτων",
-    "bundle.title":"Παράδειγμα Bundle",
-
-    "stage.title":"Στάδιο",
-    "stage.subtitle":"Παίξε για να ξεκλειδώσεις το επόμενο!",
-    "stage.s1":"Στάδιο 1",
-    "stage.s2":"Στάδιο 2",
-    "stage.s3":"Στάδιο 3",
-    "stage.hint1":"Ολοκλήρωσε το Στάδιο 1 για να ανοίξει το Στάδιο 2 — στόχευσε σε πιο σπάνια tiers.",
-    "stage.hint2":"Τέλεια! Το Στάδιο 2 άνοιξε — ολοκλήρωσέ το για να φτάσεις στο Στάδιο 3.",
-    "stage.hint3":"Τελική ευθεία! Ολοκλήρωσε το Στάδιο 3 για το κορυφαίο tier.",
-
-    "s1.title":"Στάδιο 1 — Ζέσταμα (🎯 ολοκλήρωσε 3/3)",
-    "s1.desc":"Διάλεξε διαδρομή — χρειάζεσαι: 1 social + 1 κατάστημα + 1 από τα σημεία.",
-    "s1.socialLabel":"📸 Ανέβασε post με #myhappybox",
-    "s1.shopLabel":"🏪 Συνεργαζόμενο κατάστημα (Στάδιο 1)",
-    "s1.sightsLabel":"🗺️ Επίσκεψη σε ένα:",
-    "s1.sightA":"Αγία Λαύρα ⛪",
-    "s1.sightB":"Μέγα Σπήλαιο 🕍",
-
-    "s2.title":"Στάδιο 2 — Εξερεύνησε (🎯 ολοκλήρωσε 3/3)",
-    "s2.desc":"Απαιτεί ολοκλήρωση Σταδίου 1. Χρειάζεσαι: 2 καταστήματα + 1 από (Λόφος Καπι geo ✔ ή φωτό Οδοντωτού).",
-    "s2.shopsLabel":"🏪 Συνεργαζόμενα καταστήματα (Στάδιο 2)",
-    "s2.qrA":"Κωδικός QR Κατάστημα 2Α",
-    "s2.qrB":"Κωδικός QR Κατάστημα 2Β",
-    "s2.verifyBoth":"Επιβεβαίωση και των δύο",
-    "s2.altLabel":"🧭 Ένα από: Λόφος του Καπι (geo) ή URL φωτό Οδοντωτού",
-    "s2.geoBtn":"Είμαι στον Λόφο του Καπι",
-    "s2.railPh":"Δημόσιο URL φωτογραφίας Οδοντωτού",
-
-    "s3.title":"Στάδιο 3 — Τελικό (🎯 ολοκλήρωσε 3/3)",
-    "s3.desc":"Απαιτεί ολοκλήρωση Σταδίου 2. Χρειάζεσαι: 3 QR καταστημάτων.",
-    "s3.shopsLabel":"🏪 Συνεργαζόμενα καταστήματα (Στάδιο 3)",
-    "s3.qrA":"QR Κατάστημα 3Α",
-    "s3.qrB":"QR Κατάστημα 3Β",
-    "s3.qrC":"QR Κατάστημα 3Γ",
-    "s3.verifyAll":"Επιβεβαίωση όλων",
-
-    "progress.title":"Η πρόοδός σου",
-    "progress.claimInfo":"Το claim γίνεται διαθέσιμο μόλις ολοκληρώσεις το <strong>Στάδιο 1</strong>. Συνέχισε για σπανιότερα tiers!",
-
-    "cta.title":"Εξερεύνηση • Παιχνίδι • Έπαθλα",
-    "cta.desc":"Ένα φιλικό κυνήγι θησαυρού στα Καλάβρυτα. Τελείωσε το Στάδιο 1 για να ανοίξει το Στάδιο 2 και κυνήγησε σπανιότερα έπαθλα!",
-
-    "ui.submitLink":"Υποβολή συνδέσμου",
-    "ui.enterQr":"Εισάγετε κωδικό QR (δοκιμαστικό)",
-    "ui.verifyQr":"Επιβεβαίωση QR",
-    "ui.markVisited":"Σήμανση επίσκεψης",
-    "ui.submitUrl":"Υποβολή URL",
-    "ui.reset":"Επαναφορά demo",
-    "ui.claim":"🎁 Ζήτα το Happy Box σου",
-    "ui.howClaiming":"Πώς λειτουργεί το claim",
-    "ui.close":"Κλείσιμο",
-
-    "modal.lockedTitle":"Claim",
-    "modal.lockedBody":"Για να παραλάβεις το δώρο σου, ολοκλήρωσε πρώτα το <strong>Στάδιο 1</strong>:<ul style='text-align:left;line-height:1.5'><li>📸 Δημόσιο post με #myhappybox</li><li>🏪 Σκάναρε ένα QR συνεργάτη</li><li>🗺️ Επίσκεψη σε ένα σημείο (Αγία Λαύρα ή Μέγα Σπήλαιο)</li></ul><p>Μετά θα μπορείς να κάνεις claim ένα <strong>Common / Uncommon</strong> NFT — ή να συνεχίσεις για σπανιότερα tiers.</p>",
-    "modal.unlockedTitle":"Claim",
-    "modal.unlockedBody":"Υπέροχα! Ξεκλείδωσες το claim. Μπορείς να κάνεις mint ένα <strong>{tier}</strong> NFT βάσει προόδου. Συνέχισε στα Στάδια 2 & 3 για <strong>Rare / Ultra Rare / Legendary</strong> — ή κάνε claim τώρα.<p class='mini'>Στην παραγωγή, αυτό θα άνοιγε την ασφαλή ροή mint ή QR στη ρεσεψιόν.</p>",
-
-    "toast.validUrl":"Επικόλλησε έγκυρο δημόσιο URL",
-    "toast.hashtag":"Βεβαιώσου ότι το post έχει #myhappybox",
-    "toast.enterCode":"Εισήγαγε κωδικό",
-    "toast.pickOne":"Διάλεξε τουλάχιστον ένα",
-    "toast.stage1First":"Ολοκλήρωσε πρώτα το Στάδιο 1",
-    "toast.stage2First":"Ολοκλήρωσε πρώτα το Στάδιο 2",
-    "toast.okSubmitted":"Υποβλήθηκε",
-    "toast.okVerified":"Επιβεβαιώθηκε",
-    "toast.okBoth":"Επιβεβαιώθηκαν και τα δύο",
-    "toast.geoUnsupported":"Δεν υποστηρίζεται γεωεντοπισμός",
-    "toast.geoFar":"Φαίνεσαι μακριά (~{km} km)",
-    "toast.geoOk":"Η τοποθεσία επιβεβαιώθηκε"
-  }
-};
-
-const LANG_KEY='hb_lang';
-function getLang(){ return localStorage.getItem(LANG_KEY) || (navigator.language||'en').slice(0,2).toLowerCase().startsWith('el') ? 'el' : 'en'; }
-function setLang(l){ localStorage.setItem(LANG_KEY,l); applyLang(l); }
-function t(lang, key){ return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key; }
-function applyLang(lang){
-  // textContent targets
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    el.textContent = t(lang, el.getAttribute('data-i18n'));
-  });
-  // innerHTML targets
-  document.querySelectorAll('[data-i18n-html]').forEach(el=>{
-    el.innerHTML = t(lang, el.getAttribute('data-i18n-html'));
-  });
-  // placeholders
-  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
-    const key = el.getAttribute('data-i18n-ph');
-    el.placeholder = t(lang, key);
-  });
-
-  // Stage hint swap based on current stage later in render()
-  render(); // re-render to update hint lines with correct language
-}
-
-const langSel=document.getElementById('langSel');
-langSel.value=getLang();
-langSel.addEventListener('change', e=>setLang(e.target.value));
-
-/* ================== helpers & store ================== */
-const LS_KEY='hb_demo_progress_v2';
+/* ========= helpers & store ========= */
+const LS_KEY='hb_demo_progress_v3';
+const LS_VICTORY='hb_demo_victory_once';
 function loadStore(){ try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}')}catch(e){return{}} }
 function saveStore(o){ localStorage.setItem(LS_KEY, JSON.stringify(o||{})) }
-function clearStore(){ localStorage.removeItem(LS_KEY) }
+function clearStore(){ localStorage.removeItem(LS_KEY); localStorage.removeItem(LS_VICTORY); }
 function addDone(key){ const s=loadStore(); s.completed=Array.from(new Set([...(s.completed||[]), key])); saveStore(s); }
 
-/* ================== slider (2..27) ================== */
+/* ========= slider (2..27) ========= */
 const slides=Array.from({length:26},(_,i)=>`public/photos/${i+2}.png`);
-let sIdx=0, timer; const heroImg=document.getElementById('heroImg'), frame=document.getElementById('heroFrame');
-function show(n){ sIdx=(n+slides.length)%slides.length; heroImg.style.opacity=0;
-  setTimeout(()=>{ heroImg.src=slides[sIdx]; heroImg.onload=()=>heroImg.style.opacity=1; },180); }
-function start(){ timer=setInterval(()=>show(sIdx+1),4000) } function stop(){ clearInterval(timer) }
-document.getElementById('prevBtn').onclick=()=>{stop();show(sIdx-1);start()};
-document.getElementById('nextBtn').onclick=()=>{stop();show(sIdx+1);start()};
+let s=0,timer; const heroImg=document.getElementById('heroImg'), frame=document.getElementById('heroFrame');
+function show(n){ s=(n+slides.length)%slides.length; heroImg.style.opacity=0;
+  setTimeout(()=>{ heroImg.src=slides[s]; heroImg.onload=()=>heroImg.style.opacity=1; },180); }
+function start(){ timer=setInterval(()=>show(s+1),4000) } function stop(){ clearInterval(timer) }
+document.getElementById('prevBtn').onclick=()=>{stop();show(s-1);start()};
+document.getElementById('nextBtn').onclick=()=>{stop();show(s+1);start()};
 frame.onmouseenter=stop; frame.onmouseleave=start; show(0); start();
 
-/* ================== stage / completion model ==================
- Stage 1 needs 3/3:
-   - s1:post
-   - s1:shop
-   - one of (s1:sightA, s1:sightB)
- Stage 2 needs 3/3 (unlocks when Stage 1 ok):
-   - s2:shopA
-   - s2:shopB
-   - one of (s2:geo, s2:rail)
- Stage 3 needs 3/3 (unlocks when Stage 2 ok):
-   - s3:shopA, s3:shopB, s3:shopC
- Overall progress bar counts minimal required tasks (3 + 3 + 3 = 9)
-===================================================== */
+/* ========= state model =========
+ Stage 1 (need 3): s1:post, s1:shop, any(s1 attractions*)
+ Stage 2 (need 3): s2:shopA, s2:shopB, any(s2 attractions*)
+ Stage 3 (need 4): s3:shopA, s3:shopB, s3:shopC, any(s3 attractions*)
+ Overall minimal = 10
+================================= */
 function getState(){
   const done=new Set((loadStore().completed)||[]);
-  const s1 = { post: done.has('s1:post'), shop: done.has('s1:shop'), sight: (done.has('s1:sightA') || done.has('s1:sightB')) };
-  const s1ok = s1.post && s1.shop && s1.sight;
+  // S1 attractions
+  const s1Attr = {
+    museum: done.has('s1:attr:museum'),
+    agialavra: done.has('s1:attr:agialavra'),
+    square: done.has('s1:attr:square'),
+  };
+  const s1 = {
+    post: done.has('s1:post'),
+    shop: done.has('s1:shop'),
+    attrOk: (s1Attr.museum || s1Attr.agialavra || s1Attr.square)
+  };
+  const s1ok = s1.post && s1.shop && s1.attrOk;
 
-  const s2 = { shopA: done.has('s2:shopA'), shopB: done.has('s2:shopB'), alt: (done.has('s2:geo') || done.has('s2:rail')) };
-  const s2ok = s1ok && s2.shopA && s2.shopB && s2.alt;
+  // S2 attractions
+  const s2Attr = {
+    hill: done.has('s2:attr:hill'),
+    odontotos: done.has('s2:attr:odontotos'),
+    heroes: done.has('s2:attr:heroes'),
+  };
+  const s2 = {
+    shopA: done.has('s2:shopA'),
+    shopB: done.has('s2:shopB'),
+    attrOk: (s2Attr.hill || s2Attr.odontotos || s2Attr.heroes)
+  };
+  const s2ok = s1ok && s2.shopA && s2.shopB && s2.attrOk;
 
-  const s3 = { shopA: done.has('s3:shopA'), shopB: done.has('s3:shopB'), shopC: done.has('s3:shopC') };
-  const s3ok = s2ok && s3.shopA && s3.shopB && s3.shopC;
+  // S3 attractions
+  const s3Attr = {
+    cave: done.has('s3:attr:cave'),
+    gorge: done.has('s3:attr:gorge'),
+    ski: done.has('s3:attr:ski'),
+    makellaria: done.has('s3:attr:makellaria'),
+    tower: done.has('s3:attr:tower'),
+  };
+  const s3 = {
+    shopA: done.has('s3:shopA'),
+    shopB: done.has('s3:shopB'),
+    shopC: done.has('s3:shopC'),
+    attrOk: (s3Attr.cave || s3Attr.gorge || s3Attr.ski || s3Attr.makellaria || s3Attr.tower)
+  };
+  const s3ok = s2ok && s3.shopA && s3.shopB && s3.shopC && s3.attrOk;
 
+  // minimal required for 100%
   const overallCount =
-    (s1.post?1:0) + (s1.shop?1:0) + (s1.sight?1:0) +
-    (s2.shopA?1:0) + (s2.shopB?1:0) + (s2.alt?1:0) +
-    (s3.shopA?1:0) + (s3.shopB?1:0) + (s3.shopC?1:0);
+    (s1.post?1:0)+(s1.shop?1:0)+(s1.attrOk?1:0)+
+    (s2.shopA?1:0)+(s2.shopB?1:0)+(s2.attrOk?1:0)+
+    (s3.shopA?1:0)+(s3.shopB?1:0)+(s3.shopC?1:0)+(s3.attrOk?1:0);
 
   let stage=1; if(s1ok) stage=2; if(s2ok) stage=3; if(s3ok) stage=3;
 
-  // Tier suggestion: S1=Common/Uncommon, S2=Rare/Ultra Rare, S3=Legendary
+  // Tier hint (extras help IRL)
   const tier = s3ok ? 'Legendary'
-              : s2ok ? 'Rare → Ultra Rare'
-              : s1ok ? 'Common → Uncommon'
-              : '—';
+            : s2ok ? 'Rare → Ultra Rare'
+            : s1ok ? 'Common → Uncommon'
+            : '—';
 
-  return {done, s1, s2, s3, s1ok, s2ok, s3ok, stage, overallCount, tier};
+  return {done, s1, s2, s3, s1ok, s2ok, s3ok, stage, overallCount, tier,
+          s1Attr, s2Attr, s3Attr};
 }
 
-/* ================== render UI ================== */
+/* ========= render UI ========= */
 const st1El=document.getElementById('stStep1'), st2El=document.getElementById('stStep2'), st3El=document.getElementById('stStep3');
 const barFill=document.getElementById('barFill'), stageNum=document.getElementById('stageNum'), stageHint=document.getElementById('stageHint');
-const pills=document.getElementById('progressPills'), tierLine=document.getElementById('tierLine');
-const overallFill=document.getElementById('overallFill'), overallPct=document.getElementById('overallPct');
-
-function pill(text){ const el=document.createElement('span'); el.className='pill ok'; el.textContent=text; return el; }
-
-function render(){
-  const st=getState();
-  const lang = langSel.value;
-
-  // Stage tracker
-  st1El.classList.toggle('done', st.s1ok);
-  st2El.classList.toggle('done', st.s2ok);
-  st3El.classList.toggle('done', st.s3ok);
-  const trackerSteps = (st.s1ok?1:0)+(st.s2ok?1:0)+(st.s3ok?1:0);
-  barFill.style.width = (trackerSteps/3*100)+'%';
-  stageNum.textContent = st.stage;
-  stageHint.textContent =
-    st.stage===1 ? t(lang,'stage.hint1') :
-    st.stage===2 ? t(lang,'stage.hint2') : t(lang,'stage.hint3');
-
-  // Show/hide stage cards gating
-  document.getElementById('s2Card').style.display = st.s1ok ? '' : 'none';
-  document.getElementById('s3Card').style.display = st.s2ok ? '' : 'none';
-
-  // Progress pills
-  pills.innerHTML='';
-  st.done.forEach(k=>pills.appendChild(pill(k)));
-
-  // Overall progress (out of 9)
-  const pct = Math.round(st.overallCount/9*100);
-  overallFill.style.width = pct+'%';
-  overallPct.textContent = pct+'%';
-
-  // Tier
-  tierLine.textContent = 'Tier: ' + st.tier;
-}
-
-/* ================== interactions ================== */
-// Stage 1: social
-document.getElementById('s1PostBtn').onclick=()=>{
-  const url=document.getElementById('s1PostUrl').value.trim();
-  const stEl=document.getElementById('s1PostStatus');
-  const lang=langSel.value;
-  if(!/^https?:\/\//i.test(url)){ stEl.innerHTML='<span class="pill err">'+t(lang,'toast.validUrl')+'</span>'; return; }
-  if(!/#?myhappybox/i.test(url)){ stEl.innerHTML='<span class="pill warn">'+t(lang,'toast.hashtag')+'</span>'; }
-  addDone('s1:post'); stEl.innerHTML='<span class="pill ok">'+t(lang,'toast.okSubmitted')+'</span>'; render();
-};
-// Stage 1: shop (1)
-document.getElementById('s1QrBtn').onclick=()=>{
-  const code=(document.getElementById('s1Qr').value||'').trim().toUpperCase();
-  const stEl=document.getElementById('s1QrStatus'); const lang=langSel.value;
-  if(!code){ stEl.innerHTML='<span class="pill err">'+t(lang,'toast.enterCode')+'</span>'; return; }
-  addDone('s1:shop'); stEl.innerHTML='<span class="pill ok">'+t(lang,'toast.okVerified')+'</span>'; render();
-};
-// Stage 1: sights (choose one)
-document.getElementById('s1SightBtn').onclick=()=>{
-  const A=document.getElementById('s1SightA').checked;
-  const B=document.getElementById('s1SightB').checked;
-  const stEl=document.getElementById('s1SightStatus'); const lang=langSel.value;
-  if(!A && !B){ stEl.innerHTML='<span class="pill warn">'+t(lang,'toast.pickOne')+'</span>'; return; }
-  if(A) addDone('s1:sightA'); if(B) addDone('s1:sightB');
-  stEl.innerHTML='<span class="pill ok">'+t(lang,'toast.okSubmitted')+'</span>'; render();
-};
-
-// Stage 2: shops (2)
-document.getElementById('s2QrBtn').onclick=()=>{
-  const a=document.getElementById('s2QrA').value.trim().toUpperCase();
-  const b=document.getElementById('s2QrB').value.trim().toUpperCase();
-  const stEl=document.getElementById('s2QrStatus'); const lang=langSel.value;
-  const G=getState();
-  if(!G.s1ok){ stEl.innerHTML='<span class="pill warn">'+t(lang,'toast.stage1First')+'</span>'; return; }
-  if(!a || !b){ stEl.innerHTML='<span class="pill err">'+t(lang,'toast.enterCode')+'</span>'; return; }
-  addDone('s2:shopA'); addDone('s2:shopB');
-  stEl.innerHTML='<span class="pill ok">'+t(lang,'toast.okBoth')+'</span>'; render();
-};
-// Stage 2: geo OR rack-railway url
-document.getElementById('s2GeoBtn').onclick=()=>{
-  const stEl=document.getElementById('s2GeoStatus'); const lang=langSel.value;
-  const G=getState(); if(!G.s1ok){ stEl.innerHTML='<span class="pill warn">'+t(lang,'toast.stage1First')+'</span>'; return; }
-  if(!navigator.geolocation){ stEl.innerHTML='<span class="pill err">'+t(lang,'toast.geoUnsupported')+'</span>'; return; }
-  stEl.textContent='Checking…';
-  const HILL={lat:38.04952, lng:22.11163};
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const d=haversine(pos.coords.latitude,pos.coords.longitude,HILL.lat,HILL.lng);
-    if(d<=0.25){ addDone('s2:geo'); stEl.innerHTML='<span class="pill ok">'+t(lang,'toast.geoOk')+'</span>'; render(); }
-    else{ stEl.innerHTML='<span class="pill warn">'+t(lang,'toast.geoFar').replace('{km}', d.toFixed(2))+'</span>'; }
-  },err=>{ stEl.innerHTML='<span class="pill err">'+err.message+'</span>'; },{enableHighAccuracy:true,timeout:15000});
-};
-document.getElementById('s2RailBtn').onclick=()=>{
-  const url=document.getElementById('s2RailUrl').value.trim();
-  const stEl=document.getElementById('s2GeoStatus'); const lang=langSel.value;
-  const G=getState(); if(!G.s1ok){ stEl.innerHTML='<span class="pill warn">'+t(lang,'toast.stage1First')+'</span>'; return; }
-  if(!/^https?:\/\//i.test(url)){ stEl.innerHTML='<span class="pill err">'+t(lang,'toast.validUrl')+'</span>'; return; }
-  addDone('s2:rail'); stEl.innerHTML='<span class="pill ok">'+t(lang,'toast.okSubmitted')+'</span>'; render();
-};
-
-// Stage 3: shops (3)
-document.getElementById('s3QrBtn').onclick=()=>{
-  const a=document.getElementById('s3QrA').value.trim().toUpperCase();
-  const b=document.getElementById('s3QrB').value.trim().toUpperCase();
-  const c=document.getElementById('s3QrC').value.trim().toUpperCase();
-  const stEl=document.getElementById('s3QrStatus'); const lang=langSel.value;
-  const G=getState(); if(!G.s2ok){ stEl.innerHTML='<span class="pill warn">'+t(lang,'toast.stage2First')+'</span>'; return; }
-  if(!a||!b||!c){ stEl.innerHTML='<span class="pill err">'+t(lang,'toast.enterCode')+'</span>'; return; }
-  addDone('s3:shopA'); addDone('s3:shopB'); addDone('s3:shopC');
-  stEl.innerHTML='<span class="pill ok">'+t(lang,'toast.okVerified')+'</span>'; render();
-};
-
-/* ================== claim flow ================== */
-const modal=document.getElementById('modal');
-document.getElementById('mintInfoBtn').onclick=()=>openClaimInfo(false);
-document.getElementById('claimBtn').onclick=()=>openClaimInfo(true);
-document.getElementById('closeModal').onclick=()=>modal.classList.remove('show');
-modal.onclick=(e)=>{ if(e.target===modal) modal.classList.remove('show'); };
-
-function openClaimInfo(fromButton){
-  const G=getState();
-  const body=document.getElementById('modalBody');
-  const lang=langSel.value;
-
-  if(!G.s1ok){
-    document.getElementById('modalTitle').textContent = t(lang,'modal.lockedTitle');
-    body.innerHTML = t(lang,'modal.lockedBody');
-  } else {
-    document.getElementById('modalTitle').textContent = t(lang,'modal.unlockedTitle');
-    body.innerHTML = t(lang,'modal.unlockedBody').replace('{tier}', G.tier==='—'?'Common → Uncommon':G.tier);
-  }
-  modal.classList.add('show');
-}
-
-/* ================== reset ================== */
-document.getElementById('resetBtn').onclick=()=>{ clearStore(); render(); };
-
-/* ================== utils ================== */
-function haversine(lat1,lon1,lat2,lon2){
-  const R=6371, toRad=x=>x*Math.PI/180;
-  const dLat=toRad(lat2-lat1), dLon=toRad(lon2-lon1);
-  const a=Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); // km
-}
-
-/* ================== init ================== */
-applyLang(langSel.value);
-</script>
-</body>
-</html>
+const
