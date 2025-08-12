@@ -71,7 +71,7 @@
   .ok{ background:#eaf7f0; color:var(--ok) } .warn{ background:#fff6e0; color:var(--warn) } .err{ background:#fdecec; color:var(--err) }
   .status{ margin-top:6px; font-size:14px; color:#666 }
 
-  /* Stage tracker */
+  /* Stage tracker (top of quests) */
   .stage{ display:flex; align-items:center; gap:12px; margin:10px 0 6px }
   .step{ display:flex; align-items:center; gap:8px; color:#666; }
   .dot{ width:22px; height:22px; border-radius:50%; border:2px solid #ddd; display:grid; place-items:center; font-size:12px; background:#fff }
@@ -81,15 +81,15 @@
   .sublabel{ font-size:12px; color:#888 }
 
   /* Overall progress bar */
-  .overall{ margin:10px 0 0; }
-  .overall .track{ height:10px; border-radius:999px; background:#eee; overflow:hidden }
-  .overall .fill{ height:100%; width:0%; background:linear-gradient(90deg,#27c498,#ffb84d); transition:width .4s ease }
-  .overall small{ display:block; color:#666; margin-top:6px }
+  .overall{ display:flex; align-items:center; gap:12px; }
+  .overall .meter{ flex:1; height:10px; background:#eee; border-radius:999px; overflow:hidden; }
+  .overall .meter > span{ display:block; height:100%; width:0%; background:linear-gradient(90deg,#1f9d55,#ff7a00); transition:width .35s ease; }
+  .overall .pct{ min-width:42px; font-weight:700; color:#444 }
 
   /* CTA */
   .cta{ text-align:center; padding:42px 20px 70px }
   .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px); color:var(--ink2) }
-  .cta p{ margin:0 0 16px; color:var(--muted) }
+  .cta p{ margin:0 0 16px; color:#muted }
 
   footer{ text-align:center; padding:18px; color:#999; font-size:13px }
 
@@ -97,8 +97,10 @@
   .modal{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:50; }
   .modal.show{ display:flex }
   .modal-card{ background:#fff; border-radius:16px; padding:26px 28px; box-shadow:0 20px 60px rgba(0,0,0,.25);
-    text-align:center; min-width:min(90vw,420px); }
-  .modal-card h3{ margin:0 0 6px } .modal-card p{ margin:0 0 16px; color:#666 }
+    text-align:center; min-width:min(90vw,520px); }
+  .modal-card h3{ margin:0 0 10px }
+  .modal-card p{ margin:0 0 10px; color:#555 }
+  .modal-card .mini{ font-size:12px; color:#777; margin-top:4px }
   .close{ border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer; }
   .disabled{ opacity:.55; cursor:not-allowed }
 </style>
@@ -126,85 +128,117 @@
     </div>
   </section>
 
-  <!-- Bundle example: ΜΟΝΟ η 1.png -->
+  <!-- Bundle example -->
   <section class="example">
     <h4>Bundle example</h4>
     <img class="example-img" src="public/photos/1.png" alt="Bundle Minted example" />
   </section>
 
-  <!-- GAME / QUESTS -->
+  <!-- ===== GAME / QUESTS ===== -->
   <section class="quests">
     <!-- Stage tracker -->
     <div class="card" id="stageCard">
       <h3>Stage <span id="stageNum">1</span> — Play to unlock the next!</h3>
       <div class="stage">
-        <div class="step" id="stStep1"><div class="dot">1</div><div>Photo post</div></div>
+        <div class="step" id="stStep1"><div class="dot">1</div><div>Stage 1</div></div>
         <div class="bar"><span id="barFill"></span></div>
-        <div class="step" id="stStep2"><div class="dot">2</div><div>QR A</div></div>
+        <div class="step" id="stStep2"><div class="dot">2</div><div>Stage 2</div></div>
         <div class="bar" style="max-width:120px"><span></span></div>
-        <div class="step" id="stStep3"><div class="dot">3</div><div>Extra</div></div>
+        <div class="step" id="stStep3"><div class="dot">3</div><div>Stage 3</div></div>
       </div>
-      <div class="sublabel" id="stageHint">Finish all three to unlock Stage 2 (QR A + QR B + Hill of Kapi)</div>
+      <div class="sublabel" id="stageHint">Finish Stage 1 to unlock Stage 2 — and aim for rarer tiers.</div>
     </div>
 
-    <!-- Social quest -->
-    <div class="card" id="socialCard">
-      <h3>Quest: Post with hashtag</h3>
-      <p>Share a photo with <strong>#myhappybox</strong> and paste the public URL of your post.</p>
+    <!-- Stage 1 card -->
+    <div class="card" id="s1Card">
+      <h3>Stage 1 — Warm-up (🎯 complete 3/3)</h3>
+      <p>Pick your path — you need: 1 social + 1 shop + 1 of the sights.</p>
+
+      <!-- Social -->
       <div class="row">
-        <input type="text" id="postUrl" placeholder="https://instagram.com/p/...">
-        <button class="btn" id="postBtn">Submit link</button>
+        <span>📸 Post with hashtag #myhappybox</span>
       </div>
-      <div class="status" id="postStatus"></div>
+      <div class="row">
+        <input type="text" id="s1PostUrl" placeholder="Public post URL (e.g. Instagram)">
+        <button class="btn" id="s1PostBtn">Submit link</button>
+      </div>
+      <div class="status" id="s1PostStatus"></div>
+
+      <!-- Shop (1) -->
+      <div class="row" style="margin-top:10px">
+        <span>🏪 Partner Shop (Stage 1)</span>
+      </div>
+      <div class="row">
+        <input type="text" id="s1Qr" placeholder="Enter QR code (placeholder)">
+        <button class="btn" id="s1QrBtn">Verify QR</button>
+      </div>
+      <div class="status" id="s1QrStatus"></div>
+
+      <!-- Sights (choose one) -->
+      <div class="row" style="margin-top:10px"><span>🗺️ Visit one: </span></div>
+      <div class="row">
+        <label><input type="checkbox" id="s1SightA"> Agia Lavra ⛪</label>
+        <label><input type="checkbox" id="s1SightB"> Mega Spilaio Monastery 🕍</label>
+        <button class="btn ghost" id="s1SightBtn">Mark visited</button>
+      </div>
+      <div class="status" id="s1SightStatus"></div>
     </div>
 
-    <!-- QR quest A/B -->
-    <div class="card" id="qrCard">
-      <h3>Quest: Scan shop QR</h3>
-      <p>Ask a participating shop for their code. (Demo codes: <code>HAPPY-A</code> & <code>HAPPY-B</code>)</p>
+    <!-- Stage 2 card (unlocks) -->
+    <div class="card" id="s2Card">
+      <h3>Stage 2 — Explore more (🎯 complete 3/3)</h3>
+      <p>Requires Stage 1 complete. You need: 2 shops + 1 of (Hill geo ✔ OR rack-railway photo).</p>
+
+      <!-- Shops (2) -->
+      <div class="row"><span>🏪 Partner Shops (Stage 2)</span></div>
       <div class="row">
-        <input type="text" id="qrInput" placeholder="Enter QR code…">
-        <select id="qrSlot">
-          <option value="A">Checkpoint A</option>
-          <option value="B" disabled>Checkpoint B (unlocks in Stage 2)</option>
-        </select>
-        <button class="btn" id="qrBtn">Verify QR</button>
+        <input type="text" id="s2QrA" placeholder="Enter QR code for Shop 2A">
+        <input type="text" id="s2QrB" placeholder="Enter QR code for Shop 2B">
+        <button class="btn" id="s2QrBtn">Verify both</button>
       </div>
-      <div class="status" id="qrStatus"></div>
+      <div class="status" id="s2QrStatus"></div>
+
+      <!-- Geo OR Photo -->
+      <div class="row" style="margin-top:10px"><span>🧭 One of: Hill of Kapi (geo) OR Rack-Railway photo URL</span></div>
+      <div class="row">
+        <button class="btn" id="s2GeoBtn">I’m at the Hill of Kapi</button>
+        <input type="text" id="s2RailUrl" placeholder="Public photo URL of Odontotos">
+        <button class="btn ghost" id="s2RailBtn">Submit URL</button>
+      </div>
+      <div class="status" id="s2GeoStatus"></div>
     </div>
 
-    <!-- GEO quest -->
-    <div class="card" id="geoCard">
-      <h3>Quest: Hill of Kapi photo (geo-check)</h3>
-      <p>Go to the Hill of Kapi, enable location, then press verify.</p>
+    <!-- Stage 3 card (final) -->
+    <div class="card" id="s3Card">
+      <h3>Stage 3 — The finale (🎯 complete 3/3)</h3>
+      <p>Requires Stage 2 complete. You need: 3 shop scans.</p>
+
+      <div class="row"><span>🏪 Partner Shops (Stage 3)</span></div>
       <div class="row">
-        <button class="btn" id="geoBtn">I’m at the Hill of Kapi</button>
-        <button class="btn ghost" id="geoExplain">Why location?</button>
+        <input type="text" id="s3QrA" placeholder="QR for Shop 3A">
+        <input type="text" id="s3QrB" placeholder="QR for Shop 3B">
+        <input type="text" id="s3QrC" placeholder="QR for Shop 3C">
+        <button class="btn" id="s3QrBtn">Verify all</button>
       </div>
-      <div class="status" id="geoStatus"></div>
+      <div class="status" id="s3QrStatus"></div>
     </div>
 
     <!-- Progress & Tier -->
     <div class="card" id="progressCard">
       <h3>Your Progress</h3>
-
       <!-- Overall progress bar -->
-      <div class="overall">
-        <div class="track"><div class="fill" id="overallFill"></div></div>
-        <small id="overallText">0% complete</small>
+      <div class="overall" style="margin:8px 0 10px">
+        <div class="meter"><span id="overallFill"></span></div>
+        <div class="pct" id="overallPct">0%</div>
       </div>
 
       <div id="progressPills" class="row" style="flex-wrap:wrap"></div>
       <p class="status" id="tierLine">Tier: —</p>
       <div class="row">
         <button class="btn alt" id="resetBtn">Reset demo</button>
-        <button class="btn disabled" id="claimBtn" title="Unlocks after Stage 1">🎁 Claim your Happy Box</button>
+        <button class="btn" id="claimBtn">🎁 Claim your Happy Box</button>
       </div>
-      <p class="hint">
-        You can claim anytime after completing <strong>Stage 1</strong> (Common / Uncommon).
-        Go further for <strong>Rare / Ultra Rare / Legendary</strong>.
-      </p>
-      <div class="status" id="claimStatus"></div>
+      <p class="status">Claim becomes available once you complete <strong>Stage 1</strong>. You can keep playing for rarer tiers!</p>
     </div>
   </section>
 
@@ -217,188 +251,170 @@
   <footer>© 2025 Happy Box. All rights reserved.</footer>
 
   <!-- Modal -->
-  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-card">
-      <h3 id="soonTitle">Claiming</h3>
-      <p>
-        Claim activates automatically when you complete <strong>Stage 1</strong>.  
-        The system reads your quests and assigns a rarity: Common → Legendary.  
-        Ask reception (or follow the in-page instructions) to mint your bundle NFT.
-      </p>
+      <h3 id="modalTitle">Claiming</h3>
+      <div id="modalBody">
+        <!-- filled by JS based on progress -->
+      </div>
+      <p class="mini">Your tier is calculated automatically from your completed quests.</p>
       <button class="close" id="closeModal">Close</button>
     </div>
   </div>
 
 <script>
-/* ---------------- Slider: ONLY 2..27 (1.png stays in Bundle) ---------------- */
-const slides = [
-  "public/photos/2.png","public/photos/3.png","public/photos/4.png","public/photos/5.png",
-  "public/photos/6.png","public/photos/7.png","public/photos/8.png","public/photos/9.png",
-  "public/photos/10.png","public/photos/11.png","public/photos/12.png","public/photos/13.png",
-  "public/photos/14.png","public/photos/15.png","public/photos/16.png","public/photos/17.png",
-  "public/photos/18.png","public/photos/19.png","public/photos/20.png","public/photos/21.png",
-  "public/photos/22.png","public/photos/23.png","public/photos/24.png","public/photos/25.png",
-  "public/photos/26.png","public/photos/27.png"
-];
-
-let s=0, timer;
-const heroImg=document.getElementById('heroImg');
-const heroFrame=document.getElementById('heroFrame');
-
-function show(n){
-  s=(n+slides.length)%slides.length;
-  const nextSrc = slides[s] + '?v=1';
-  heroImg.style.opacity=0;
-  setTimeout(()=>{
-    heroImg.onerror = () => { console.warn('Missing image:', slides[s]); show(s+1); };
-    heroImg.onload  = () => { heroImg.style.opacity=1; };
-    heroImg.src = nextSrc;
-  },120);
-}
-function start(){ timer=setInterval(()=>show(s+1), 4000); }
-function stop(){ clearInterval(timer); }
-document.getElementById('prevBtn').onclick=()=>{ stop(); show(s-1); start(); };
-document.getElementById('nextBtn').onclick=()=>{ stop(); show(s+1); start(); };
-heroFrame.addEventListener('mouseenter', stop);
-heroFrame.addEventListener('mouseleave', start);
-show(0); start();
-
-/* ---------------- Modal ---------------- */
-const modal=document.getElementById('modal');
-document.getElementById('mintInfoBtn').onclick=()=>modal.classList.add('show');
-document.getElementById('closeModal').onclick=()=>modal.classList.remove('show');
-modal.onclick=(e)=>{ if(e.target===modal) modal.classList.remove('show'); };
-window.addEventListener('keydown',(e)=>{ if(e.key==='Escape') modal.classList.remove('show'); });
-
-/* ---------------- Local store helpers ---------------- */
-const LS_KEY = 'hb_demo_progress_v2';
+/* ========= helpers & store ========= */
+const LS_KEY='hb_demo_progress_v2';
 function loadStore(){ try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}')}catch(e){return{}} }
-function saveStore(obj){ localStorage.setItem(LS_KEY, JSON.stringify(obj||{})) }
+function saveStore(o){ localStorage.setItem(LS_KEY, JSON.stringify(o||{})) }
 function clearStore(){ localStorage.removeItem(LS_KEY) }
+function addDone(key){ const s=loadStore(); s.completed=Array.from(new Set([...(s.completed||[]), key])); saveStore(s); }
 
-/* ---------------- Stage + Tier ---------------- */
-const st1=document.getElementById('stStep1'), st2=document.getElementById('stStep2'), st3=document.getElementById('stStep3');
-const barFill=document.getElementById('barFill'); const stageNum=document.getElementById('stageNum');
-const overallFill=document.getElementById('overallFill'); const overallText=document.getElementById('overallText');
+/* ========= slider (2..27) ========= */
+const slides=Array.from({length:26},(_,i)=>`public/photos/${i+2}.png`);
+let s=0,timer; const heroImg=document.getElementById('heroImg'), frame=document.getElementById('heroFrame');
+function show(n){ s=(n+slides.length)%slides.length; heroImg.style.opacity=0;
+  setTimeout(()=>{ heroImg.src=slides[s]; heroImg.onload=()=>heroImg.style.opacity=1; },180); }
+function start(){ timer=setInterval(()=>show(s+1),4000) } function stop(){ clearInterval(timer) }
+document.getElementById('prevBtn').onclick=()=>{stop();show(s-1);start()};
+document.getElementById('nextBtn').onclick=()=>{stop();show(s+1);start()};
+frame.onmouseenter=stop; frame.onmouseleave=start; show(0); start();
 
-function computeStage(p){
-  const d=new Set(p.completed||[]);
-  const hasPost=d.has('social:post');
-  const hasQrA=d.has('qr:A');
-  const hasQrB=d.has('qr:B');
-  const hasGeo=d.has('geo:hill-of-kapi');
-  const stage1Done = hasPost && hasQrA && (hasQrB || hasGeo);
-  return {stage: stage1Done?2:1, doneSet:d, hasPost, hasQrA, hasQrB, hasGeo};
+/* ========= stage / completion model =========
+ Stage 1 needs 3/3:
+   - s1:post
+   - s1:shop
+   - one of (s1:sightA, s1:sightB)
+ Stage 2 needs 3/3 (unlocks when Stage 1 ok):
+   - s2:shopA
+   - s2:shopB
+   - one of (s2:geo, s2:rail)
+ Stage 3 needs 3/3 (unlocks when Stage 2 ok):
+   - s3:shopA, s3:shopB, s3:shopC
+ Overall progress bar counts minimal required tasks (3 + 3 + 3 = 9)
+============================================= */
+function getState(){
+  const done=new Set((loadStore().completed)||[]);
+  const s1 = {
+    post: done.has('s1:post'),
+    shop: done.has('s1:shop'),
+    sight: (done.has('s1:sightA') || done.has('s1:sightB'))
+  };
+  const s1ok = s1.post && s1.shop && s1.sight;
+
+  const s2 = {
+    shopA: done.has('s2:shopA'),
+    shopB: done.has('s2:shopB'),
+    alt: (done.has('s2:geo') || done.has('s2:rail'))
+  };
+  const s2ok = s1ok && s2.shopA && s2.shopB && s2.alt;
+
+  const s3 = {
+    shopA: done.has('s3:shopA'),
+    shopB: done.has('s3:shopB'),
+    shopC: done.has('s3:shopC')
+  };
+  const s3ok = s2ok && s3.shopA && s3.shopB && s3.shopC;
+
+  const overallCount =
+    (s1.post?1:0) + (s1.shop?1:0) + (s1.sight?1:0) +
+    (s2.shopA?1:0) + (s2.shopB?1:0) + (s2.alt?1:0) +
+    (s3.shopA?1:0) + (s3.shopB?1:0) + (s3.shopC?1:0);
+
+  let stage=1; if(s1ok) stage=2; if(s2ok) stage=3; if(s3ok) stage=3;
+
+  // Tier suggestion: S1=Common/Uncommon, S2=Rare/Ultra Rare, S3=Legendary
+  const tier = s3ok ? 'Legendary'
+              : s2ok ? 'Rare → Ultra Rare'
+              : s1ok ? 'Common → Uncommon'
+              : '—';
+
+  return {done, s1, s2, s3, s1ok, s2ok, s3ok, stage, overallCount, tier};
 }
-function paintStage(state){
-  stageNum.textContent = state.stage;
-  st1.classList.toggle('done', state.hasPost);
-  st2.classList.toggle('done', state.hasQrA);
-  st3.classList.toggle('done', state.hasQrB || state.hasGeo);
-  const pct = (st1.classList.contains('done')?1:0) + (st2.classList.contains('done')?1:0) + (st3.classList.contains('done')?1:0);
-  barFill.style.width = (pct/3*100)+'%';
-  document.querySelector('#qrSlot option[value="B"]').disabled = (state.stage===1);
-}
-function calcTier(done){ if(done>=4) return 'Legendary'; if(done===3) return 'Ultra Rare'; if(done===2) return 'Rare'; if(done===1) return 'Uncommon'; return 'Common'; }
 
-/* Overall progress (across both stages) – 4 unique tasks */
-const ALL_TASKS = ['social:post','qr:A','qr:B','geo:hill-of-kapi'];
-function paintOverall(dSet){
-  const done = ALL_TASKS.filter(k=>dSet.has(k)).length;
-  const pct = Math.round(done/ALL_TASKS.length*100);
+/* ========= render UI ========= */
+const st1El=document.getElementById('stStep1'), st2El=document.getElementById('stStep2'), st3El=document.getElementById('stStep3');
+const barFill=document.getElementById('barFill'), stageNum=document.getElementById('stageNum'), stageHint=document.getElementById('stageHint');
+const pills=document.getElementById('progressPills'), tierLine=document.getElementById('tierLine');
+const overallFill=document.getElementById('overallFill'), overallPct=document.getElementById('overallPct');
+
+function pill(text){ const el=document.createElement('span'); el.className='pill ok'; el.textContent=text; return el; }
+
+function render(){
+  const st=getState();
+
+  // Stage tracker
+  st1El.classList.toggle('done', st.s1ok);
+  st2El.classList.toggle('done', st.s2ok);
+  st3El.classList.toggle('done', st.s3ok);
+  const trackerSteps = (st.s1ok?1:0)+(st.s2ok?1:0)+(st.s3ok?1:0);
+  barFill.style.width = (trackerSteps/3*100)+'%';
+  stageNum.textContent = st.stage;
+  stageHint.textContent = st.stage===1
+    ? 'Finish Stage 1 to unlock Stage 2 — and aim for rarer tiers.'
+    : st.stage===2
+      ? 'Great! Stage 2 unlocked — complete it to reach Stage 3.'
+      : 'Final stretch! Complete Stage 3 for the top tier.';
+
+  // Show/hide stage cards gating
+  document.getElementById('s2Card').style.display = st.s1ok ? '' : 'none';
+  document.getElementById('s3Card').style.display = st.s2ok ? '' : 'none';
+
+  // Progress pills
+  pills.innerHTML='';
+  st.done.forEach(k=>pills.appendChild(pill(k)));
+
+  // Overall progress (out of 9)
+  const pct = Math.round(st.overallCount/9*100);
   overallFill.style.width = pct+'%';
-  overallText.textContent = pct+'% complete';
+  overallPct.textContent = pct+'%';
+
+  // Tier
+  tierLine.textContent = 'Tier: ' + st.tier;
 }
+render();
 
-/* ---------------- Render ---------------- */
-const progressPills=document.getElementById('progressPills');
-const tierLine=document.getElementById('tierLine');
-const claimBtn=document.getElementById('claimBtn');
-function renderAll(){
-  const store=loadStore();
-  const state=computeStage(store);
-  paintStage(state);
-  paintOverall(state.doneSet);
-
-  // pills
-  progressPills.innerHTML='';
-  (store.completed||[]).forEach(k=>{
-    const el=document.createElement('span'); el.className='pill ok'; el.textContent=k; progressPills.appendChild(el);
-  });
-
-  // tier
-  tierLine.textContent='Tier: '+calcTier(state.doneSet.size);
-
-  // enable claim after Stage 1
-  if(state.stage>=2){
-    claimBtn.classList.remove('disabled');
-    claimBtn.title = 'Ready to claim!';
-  }else{
-    claimBtn.classList.add('disabled');
-    claimBtn.title = 'Unlocks after Stage 1';
-  }
-}
-renderAll();
-
-/* ---------------- Quests (demo) ---------------- */
-document.getElementById('resetBtn').onclick=()=>{ clearStore(); renderAll(); };
-
-document.getElementById('postBtn').onclick=()=>{
-  const url=document.getElementById('postUrl').value.trim(), st=document.getElementById('postStatus');
-  if(!/^https?:\/\//.test(url)){ st.innerHTML='<span class="pill err">Paste valid URL</span>'; return; }
-  const store=loadStore(); store.urls=store.urls||{}; store.urls.post=url;
-  store.completed = Array.from(new Set([...(store.completed||[]),'social:post']));
-  saveStore(store); st.innerHTML='<span class="pill ok">Submitted</span>'; renderAll();
+/* ========= interactions ========= */
+// Stage 1: social
+document.getElementById('s1PostBtn').onclick=()=>{
+  const url=document.getElementById('s1PostUrl').value.trim();
+  const st=document.getElementById('s1PostStatus');
+  if(!/^https?:\/\//i.test(url)){ st.innerHTML='<span class="pill err">Paste a valid public URL</span>'; return; }
+  // simple rule: must include the hashtag text
+  if(!/#?myhappybox/i.test(url)){ st.innerHTML='<span class="pill warn">Make sure your post includes #myhappybox</span>'; }
+  addDone('s1:post'); st.innerHTML='<span class="pill ok">Submitted</span>'; render();
 };
-
-const DEMO_QR={A:'HAPPY-A',B:'HAPPY-B'};
-document.getElementById('qrBtn').onclick=()=>{
-  const code=(document.getElementById('qrInput').value||'').trim().toUpperCase();
-  const slot=document.getElementById('qrSlot').value;
-  const st=document.getElementById('qrStatus');
-  const store=loadStore(); const curr=computeStage(store);
-  if(slot==='B' && curr.stage===1){ st.innerHTML='<span class="pill warn">Unlock Stage 2 first</span>'; return; }
+// Stage 1: shop (1)
+document.getElementById('s1QrBtn').onclick=()=>{
+  const code=(document.getElementById('s1Qr').value||'').trim().toUpperCase();
+  const st=document.getElementById('s1QrStatus');
   if(!code){ st.innerHTML='<span class="pill err">Enter code</span>'; return; }
-  if(code===DEMO_QR[slot]){
-    store.completed = Array.from(new Set([...(store.completed||[]),`qr:${slot}`]));
-    saveStore(store); st.innerHTML=`<span class="pill ok">QR ${slot} verified</span>`; renderAll();
-  } else { st.innerHTML='<span class="pill err">Invalid code</span>'; }
+  // placeholder accept anything non-empty for demo
+  addDone('s1:shop'); st.innerHTML='<span class="pill ok">QR verified</span>'; render();
+};
+// Stage 1: sights (choose one)
+document.getElementById('s1SightBtn').onclick=()=>{
+  const A=document.getElementById('s1SightA').checked;
+  const B=document.getElementById('s1SightB').checked;
+  const st=document.getElementById('s1SightStatus');
+  if(!A && !B){ st.innerHTML='<span class="pill warn">Pick at least one</span>'; return; }
+  if(A) addDone('s1:sightA'); if(B) addDone('s1:sightB');
+  st.innerHTML='<span class="pill ok">Marked</span>'; render();
 };
 
-const HILL={lat:38.04952,lng:22.11163};
-document.getElementById('geoExplain').onclick=()=>alert('We briefly read GPS to confirm you visited the spot. Nothing personally identifying is stored—only success/fail with your anonymous session.');
-document.getElementById('geoBtn').onclick=()=>{
-  const st=document.getElementById('geoStatus');
-  if(!navigator.geolocation){ st.innerHTML='<span class="pill err">Geolocation not supported</span>'; return; }
-  st.innerHTML='Checking…';
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const d=haversine(pos.coords.latitude,pos.coords.longitude,HILL.lat,HILL.lng);
-    if(d<=0.25){
-      const store=loadStore();
-      store.completed = Array.from(new Set([...(store.completed||[]),'geo:hill-of-kapi']));
-      saveStore(store);
-      st.innerHTML=`<span class="pill ok">Location verified</span> <span class="sublabel">${(d*1000).toFixed(0)} m</span>`;
-      renderAll();
-    } else {
-      st.innerHTML=`<span class="pill warn">You seem ${d.toFixed(2)} km away — move closer</span>`;
-    }
-  }, err=>{ st.innerHTML=`<span class="pill err">${err.message}</span>`; }, {enableHighAccuracy:true, timeout:15000});
+// Stage 2: shops (2)
+document.getElementById('s2QrBtn').onclick=()=>{
+  const a=document.getElementById('s2QrA').value.trim().toUpperCase();
+  const b=document.getElementById('s2QrB').value.trim().toUpperCase();
+  const st=document.getElementById('s2QrStatus');
+  const G=getState();
+  if(!G.s1ok){ st.innerHTML='<span class="pill warn">Complete Stage 1 first</span>'; return; }
+  if(!a || !b){ st.innerHTML='<span class="pill err">Enter both codes</span>'; return; }
+  addDone('s2:shopA'); addDone('s2:shopB');
+  st.innerHTML='<span class="pill ok">Both verified</span>'; render();
 };
-function haversine(lat1,lon1,lat2,lon2){
-  const R=6371, toRad=x=>x*Math.PI/180;
-  const dLat=toRad(lat2-lat1), dLon=toRad(lon2-lon1);
-  const a=Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); // km
-}
-
-/* Claim (front-end info only) */
-claimBtn.onclick=()=>{
-  if(claimBtn.classList.contains('disabled')){
-    alert('Complete Stage 1 to unlock your claim (Common / Uncommon).');
-  }else{
-    alert('Great! Your claim is unlocked. At checkout you’ll mint your bundle NFT. (Backend wiring next.)');
-  }
-};
-</script>
-</body>
-        </html>
+// Stage 2: geo OR rack-railway url
+document.getElementById('s2GeoBtn').onclick=()=>{
+  const stEl=document.getElementById('s2GeoStatus');
+  const G=getState(); if(!G.s1ok){ stEl.innerHTML='<span class="pill warn">Complete Stage 1 first</span>'; return; }
+  if(!navigator.geolocation){ stEl.innerHTML='<span class="pill err">Geolocation not supported</span>'; return;
