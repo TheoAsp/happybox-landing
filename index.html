@@ -87,7 +87,7 @@
 
   footer{ text-align:center; padding:18px; color:#999; font-size:13px }
 
-  /* Modal (reused for both claim info & scanner) */
+  /* Modal */
   .modal{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:50; }
   .modal.show{ display:flex }
   .modal-card{ background:#fff; border-radius:16px; padding:26px 28px; box-shadow:0 20px 60px rgba(0,0,0,.25);
@@ -124,9 +124,7 @@
   <section class="example">
     <h4>Bundle example</h4>
     <img class="example-img" src="public/photos/1.png" alt="Bundle Minted example" />
-  </section>
-
-  <!-- GAME / QUESTS -->
+  </section><!-- GAME / QUESTS -->
   <section class="quests">
     <!-- Stage tracker -->
     <div class="card" id="stageCard">
@@ -152,10 +150,10 @@
       <div class="status" id="postStatus"></div>
     </div>
 
-    <!-- QR quest A/B (now with camera scan) -->
+    <!-- QR quest A/B -->
     <div class="card" id="qrCard">
       <h3>Quest: Scan shop QR</h3>
-      <p>Ask a participating shop for their code. (Demo codes: <code>HAPPY-A</code> &amp; <code>HAPPY-B</code>)</p>
+      <p>Ask a participating shop for their code. (Demo codes: <code>HAPPY-A</code> & <code>HAPPY-B</code>)</p>
       <div class="row">
         <input type="text" id="qrInput" placeholder="Enter QR code…">
         <select id="qrSlot">
@@ -163,12 +161,11 @@
           <option value="B" disabled>Checkpoint B (unlocks in Stage 2)</option>
         </select>
         <button class="btn" id="qrBtn">Verify QR</button>
-        <button class="btn ghost" id="qrScanBtn" title="Scan with camera">📷 Scan</button>
       </div>
       <div class="status" id="qrStatus"></div>
     </div>
 
-    <!-- GEO quest (client-side) -->
+    <!-- GEO quest -->
     <div class="card" id="geoCard">
       <h3>Quest: Hill of Kapi photo (geo-check)</h3>
       <p>Go to the Hill of Kapi, enable location, then press verify.</p>
@@ -201,7 +198,7 @@
 
   <footer>© 2025 Happy Box. All rights reserved.</footer>
 
-  <!-- Claiming Modal -->
+  <!-- Modal -->
   <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
     <div class="modal-card">
       <h3 id="soonTitle">Claiming</h3>
@@ -210,24 +207,7 @@
     </div>
   </div>
 
-  <!-- QR Camera Scanner Modal -->
-  <div id="qrModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="qrTitle" style="display:none">
-    <div class="modal-card" style="max-width: min(92vw,560px)">
-      <h3 id="qrTitle">Scan QR</h3>
-      <p style="margin-top:-4px;color:#666">Point your camera at the shop’s QR.</p>
-      <div style="position:relative;overflow:hidden;border-radius:12px">
-        <video id="qrVideo" playsinline autoplay muted style="width:100%;height:auto;background:#000;border-radius:12px"></video>
-        <div style="position:absolute;inset:0;pointer-events:none;border:2px dashed rgba(255,255,255,.6);border-radius:12px"></div>
-      </div>
-      <p id="qrScanMsg" class="status" style="margin-top:10px">Initializing camera…</p>
-      <div class="row" style="justify-content:space-between">
-        <button class="close" id="qrCloseBtn">Close</button>
-        <button class="btn" id="qrFlipBtn">Flip camera</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- === Ambient music (no files needed) === -->
+  <!-- Music toggle -->
   <button id="musicToggle" aria-label="Toggle music"
     style="position:fixed;right:16px;bottom:16px;z-index:9999;
            border:none;border-radius:999px;padding:10px 14px;
@@ -235,335 +215,99 @@
            cursor:pointer;font-size:18px;">🔊</button>
 
 <script>
-/* ------------------ basic utils & demo storage ------------------ */
+/* Local storage helpers */
 const LS_KEY = 'hb_demo_progress_v1';
 function loadStore(){ try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}')}catch(e){return{}} }
 function saveStore(obj){ localStorage.setItem(LS_KEY, JSON.stringify(obj||{})) }
 function clearStore(){ localStorage.removeItem(LS_KEY) }
 
+/* Unique user cookie */
 function uid(){ return 'u_' + Math.random().toString(36).slice(2) + Date.now().toString(36) }
 function getCookie(n){ const m=document.cookie.match(new RegExp('(^| )'+n+'=([^;]+)')); return m?decodeURIComponent(m[2]):null; }
 function setCookie(n,v,days){ const d=new Date(); d.setTime(d.getTime()+days*864e5);
   document.cookie=n+'='+encodeURIComponent(v)+'; expires='+d.toUTCString()+'; path=/; SameSite=Lax'; }
 let USER=getCookie('hb_uid'); if(!USER){ USER=uid(); setCookie('hb_uid',USER,3650); }
 
-/* ------------------ slider ------------------ */
-const slides=Array.from({length:26},(_,i)=>`public/photos/${i+2}.png`); // 2..27
-let s=0,timer; const heroImg=document.getElementById('heroImg'); const heroFrame=document.getElementById('heroFrame');
+/* Slider with all 26 images (2–27) */
+const slides=Array.from({length:26},(_,i)=>`public/photos/${i+2}.png`);
+let s=0,timer; const heroImg=document.getElementById('heroImg');
 function show(n){ s=(n+slides.length)%slides.length; heroImg.style.opacity=0;
   setTimeout(()=>{ heroImg.src=slides[s]; heroImg.onload=()=>heroImg.style.opacity=1; },180); }
 function start(){ timer=setInterval(()=>show(s+1),4000) } function stop(){ clearInterval(timer) }
 document.getElementById('prevBtn').onclick=()=>{stop();show(s-1);start()};
 document.getElementById('nextBtn').onclick=()=>{stop();show(s+1);start()};
-heroFrame.onmouseenter=stop; heroFrame.onmouseleave=start; show(0); start();
+document.getElementById('heroFrame').onmouseenter=stop;
+document.getElementById('heroFrame').onmouseleave=start;
+show(0); start();
 
-/* ------------------ modal info ------------------ */
-const modal=document.getElementById('modal'); document.getElementById('mintInfoBtn').onclick=()=>modal.classList.add('show');
+/* Modal */
+const modal=document.getElementById('modal');
+document.getElementById('mintInfoBtn').onclick=()=>modal.classList.add('show');
 document.getElementById('closeModal').onclick=()=>modal.classList.remove('show');
-modal.onclick=(e)=>{if(e.target===modal)modal.classList.remove('show')}
-window.addEventListener('keydown',(e)=>{if(e.key==='Escape')modal.classList.remove('show')});
+modal.onclick=(e)=>{if(e.target===modal)modal.classList.remove('show')};
 
-/* ------------------ stage & tier helpers ------------------ */
-const stageNum=document.getElementById('stageNum');
+/* Stage logic */
 const st1=document.getElementById('stStep1'), st2=document.getElementById('stStep2'), st3=document.getElementById('stStep3');
-const barFill=document.getElementById('barFill'); const stageHint=document.getElementById('stageHint');
-
-function computeStage(progress){
-  const done=new Set(progress.completed||[]);
-  const hasPost=done.has('social:post');
-  const hasQrA=done.has('qr:A'); const hasQrB=done.has('qr:B');
-  const hasGeo=done.has('geo:hill-of-kapi');
-  const s1Done = hasPost && hasQrA && (hasQrB || hasGeo);
-  return { stage: s1Done ? 2 : 1, doneSet:done, hasPost, hasQrA, hasQrB, hasGeo };
-}
-function calcTier(done){
-  const d=done.size;
-  if(d>=4) return 'Legendary';
-  if(d===3) return 'Ultra Rare';
-  if(d===2) return 'Rare';
-  if(d===1) return 'Uncommon';
-  return 'Common';
-}
+const barFill=document.getElementById('barFill'); const stageNum=document.getElementById('stageNum');
+function computeStage(p){ const d=new Set(p.completed||[]);
+  const s1Done = d.has('social:post') && d.has('qr:A') && (d.has('qr:B')||d.has('geo:hill-of-kapi'));
+  return { stage:s1Done?2:1, doneSet:d }; }
 function paintStage(state){
   stageNum.textContent = state.stage;
   st1.classList.toggle('done', state.doneSet.has('social:post'));
   st2.classList.toggle('done', state.doneSet.has('qr:A'));
-  st3.classList.toggle('done', state.doneSet.has('qr:B') || state.doneSet.has('geo:hill-of-kapi'));
-  const pct = (st1.classList.contains('done')?1:0) + (st2.classList.contains('done')?1:0) + (st3.classList.contains('done')?1:0);
-  barFill.style.width = (Math.min(pct,3)/3*100)+'%';
-  stageHint.textContent = state.stage===1
-    ? 'Finish all three to unlock Stage 2 (QR A + QR B + Hill of Kapi)'
-    : 'Stage 2 unlocked! Aim for Rare • Ultra Rare • Legendary';
+  st3.classList.toggle('done', state.doneSet.has('qr:B')||state.doneSet.has('geo:hill-of-kapi'));
+  const pct=[st1,st2,st3].filter(x=>x.classList.contains('done')).length;
+  barFill.style.width = (pct/3*100)+'%';
   document.querySelector('#qrSlot option[value="B"]').disabled = (state.stage===1);
 }
 
-/* ------------------ quests (demo) ------------------ */
-// storage model: { completed: [keys], urls:{post:''} }
+/* Tier calc */
+function calcTier(d){ if(d>=4)return'Legendary'; if(d===3)return'Ultra Rare'; if(d===2)return'Rare'; if(d===1)return'Uncommon'; return'Common'; }
+
+/* Render */
 const progressPills=document.getElementById('progressPills');
-const tierLine=document.getElementById('tierLine');
-const claimBtn=document.getElementById('claimBtn');
-
-function tag(text,kind){ const el=document.createElement('span'); el.className='pill '+kind; el.textContent=text; return el; }
-
-function renderProgress(){
-  const store=loadStore(); const done=new Set(store.completed||[]);
-  progressPills.innerHTML='';
-  (store.completed||[]).forEach(k=>progressPills.appendChild(tag(k,'ok')));
-  const tier=calcTier(done); tierLine.textContent='Tier: '+tier;
+function renderAll(){
+  const store=loadStore(); const state=computeStage(store); paintStage(state);
+  progressPills.innerHTML=''; (store.completed||[]).forEach(k=>{let el=document.createElement('span'); el.className='pill ok'; el.textContent=k; progressPills.appendChild(el);});
+  document.getElementById('tierLine').textContent='Tier: '+calcTier(state.doneSet.size);
 }
-
-document.getElementById('resetBtn').onclick=()=>{ clearStore(); renderAll(); };
-
-// social post
-document.getElementById('postBtn').onclick=()=>{
-  const url=(document.getElementById('postUrl').value||'').trim();
-  const st=document.getElementById('postStatus');
-  if(!url){ st.innerHTML='<span class="pill err">Paste the post URL</span>'; return; }
-  const ok = /^https?:\/\//i.test(url) && /myhappybox/i.test(url);
-  if(!ok){ st.innerHTML='<span class="pill warn">Use a public link with #myhappybox</span>'; return; }
-  const store=loadStore();
-  store.urls = store.urls||{}; store.urls.post=url;
-  store.completed = Array.from(new Set([...(store.completed||[]),'social:post']));
-  saveStore(store);
-  st.innerHTML='<span class="pill ok">Submitted</span>';
-  renderAll();
-};
-
-// QR demo codes
-const DEMO_QR = { A:'HAPPY-A', B:'HAPPY-B' };
-document.getElementById('qrBtn').onclick=()=>{
-  const code=(document.getElementById('qrInput').value||'').trim().toUpperCase();
-  const slot=document.getElementById('qrSlot').value;
-  const st=document.getElementById('qrStatus');
-  if(!code){ st.innerHTML='<span class="pill err">Enter code</span>'; return; }
-  const store=loadStore(); const stage=computeStage(store).stage;
-  if(slot==='B' && stage===1){ st.innerHTML='<span class="pill warn">Unlock Stage 2 first</span>'; return; }
-  if(code===DEMO_QR[slot]){
-    store.completed = Array.from(new Set([...(store.completed||[]),`qr:${slot}`]));
-    saveStore(store);
-    st.innerHTML=`<span class="pill ok">QR ${slot} verified</span>`;
-    renderAll();
-  } else {
-    st.innerHTML='<span class="pill err">Invalid code</span>';
-  }
-};
-
-// GEO check (Hill of Kapi)
-const HILL = { lat:38.04952, lng:22.11163 }; // approx
-document.getElementById('geoExplain').onclick=()=>alert('We briefly read GPS to confirm you visited the spot. Nothing personally identifying is stored—only success/fail with your anonymous session.');
-document.getElementById('geoBtn').onclick=()=>{
-  const st=document.getElementById('geoStatus');
-  if(!navigator.geolocation){ st.innerHTML='<span class="pill err">Geolocation not supported</span>'; return; }
-  st.innerHTML='Checking…';
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const {latitude,longitude}=pos.coords;
-    const d = haversine(latitude, longitude, HILL.lat, HILL.lng);
-    if(d<=0.25){
-      const store=loadStore();
-      store.completed = Array.from(new Set([...(store.completed||[]),'geo:hill-of-kapi']));
-      saveStore(store);
-      st.innerHTML=`<span class="pill ok">Location verified</span> <span class="sublabel">${(d*1000).toFixed(0)} m</span>`;
-      renderAll();
-    }else{
-      st.innerHTML=`<span class="pill warn">You seem ${d.toFixed(2)} km away — move closer</span>`;
-    }
-  }, err=>{ st.innerHTML=`<span class="pill err">${err.message}</span>`; }, {enableHighAccuracy:true, timeout:15000});
-};
-function haversine(lat1,lon1,lat2,lon2){
-  const R=6371, toRad=x=>x*Math.PI/180;
-  const dLat=toRad(lat2-lat1), dLon=toRad(lon2-lon1);
-  const a=Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(a<1?1-a:0)); // safe
-}
-
-/* ------------------ stage refresh ------------------ */
-function renderStage(){
-  const store=loadStore();
-  const state=computeStage(store);
-  paintStage(state);
-}
-function renderAll(){ renderStage(); renderProgress(); }
 renderAll();
 
-/* ------------------ claim (info only) ------------------ */
-const claimBtn=document.getElementById('claimBtn');
-claimBtn.onclick=()=>alert('Claim is enabled at check-out with hotel assistance. Your Tier will determine your NFT rarity.');
+/* Quests */
+document.getElementById('postBtn').onclick=()=>{
+  const url=document.getElementById('postUrl').value.trim(), st=document.getElementById('postStatus');
+  if(!/^https?:\/\//.test(url)){ st.innerHTML='<span class="pill err">Paste valid URL</span>'; return; }
+  const store=loadStore(); store.urls=store.urls||{}; store.urls.post=url;
+  store.completed=[...(store.completed||[]),'social:post']; saveStore(store);
+  st.innerHTML='<span class="pill ok">Submitted</span>'; renderAll();
+};
+const DEMO_QR={A:'HAPPY-A',B:'HAPPY-B'};
+document.getElementById('qrBtn').onclick=()=>{
+  const code=document.getElementById('qrInput').value.trim().toUpperCase(), slot=document.getElementById('qrSlot').value, st=document.getElementById('qrStatus');
+  const store=loadStore(); if(slot==='B'&&computeStage(store).stage===1){ st.innerHTML='<span class="pill warn">Unlock Stage 2 first</span>'; return;}
+  if(code===DEMO_QR[slot]){ store.completed=[...(store.completed||[]),`qr:${slot}`]; saveStore(store); st.innerHTML='<span class="pill ok">QR verified</span>'; renderAll(); }
+  else st.innerHTML='<span class="pill err">Invalid code</span>';
+};
+const HILL={lat:38.04952,lng:22.11163};
+document.getElementById('geoBtn').onclick=()=>{
+  const st=document.getElementById('geoStatus');
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const d=haversine(pos.coords.latitude,pos.coords.longitude,HILL.lat,HILL.lng);
+    if(d<=0.25){ const store=loadStore(); store.completed=[...(store.completed||[]),'geo:hill-of-kapi']; saveStore(store); st.innerHTML='<span class="pill ok">Location verified</span>'; renderAll();}
+    else st.innerHTML='<span class="pill warn">Too far</span>';
+  },err=>st.innerHTML='<span class="pill err">'+err.message+'</span>',{enableHighAccuracy:true});
+};
+function haversine(a,b,c,d){const R=6371,toRad=x=>x*Math.PI/180,dl=toRad(c-a),dn=toRad(d-b);
+const x=Math.sin(dl/2)**2+Math.cos(toRad(a))*Math.cos(toRad(c))*Math.sin(dn/2)**2;
+return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}
 
-/* ------------------ Ambient music via Web Audio (no files) ------------------ */
-(() => {
-  let ctx, master, isMuted = false, started = false;
-  const btn = document.getElementById('musicToggle');
-
-  function initAudio() {
-    if (started) return;
-    started = true;
-
-    ctx = new (window.AudioContext || window.webkitAudioContext)();
-    master = ctx.createGain();
-    master.gain.value = 0.15;
-    master.connect(ctx.destination);
-
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'lowpass'; filter.frequency.value = 1200; filter.Q.value = 0.7; filter.connect(master);
-
-    const oscA = ctx.createOscillator(), oscB = ctx.createOscillator();
-    oscA.type = 'sawtooth'; oscB.type = 'sawtooth'; oscB.detune.value = +7;
-    const padGain = ctx.createGain(); padGain.gain.value = 0.15;
-    oscA.connect(padGain); oscB.connect(padGain); padGain.connect(filter);
-
-    const noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
-    const data = noiseBuf.getChannelData(0);
-    for (let i=0;i<data.length;i++) data[i] = (Math.random()*2-1)*0.02;
-    const noise = ctx.createBufferSource(); noise.buffer = noiseBuf; noise.loop = true;
-    const noiseFilter = ctx.createBiquadFilter(); noiseFilter.type = 'highpass'; noiseFilter.frequency.value = 800;
-    const noiseGain = ctx.createGain(); noiseGain.gain.value = 0.05;
-    noise.connect(noiseFilter); noiseFilter.connect(noiseGain); noiseGain.connect(master);
-
-    const lfo = ctx.createOscillator(), lfoGain = ctx.createGain();
-    lfo.frequency.value = 0.06; lfoGain.gain.value = 500; lfo.connect(lfoGain); lfoGain.connect(filter.frequency);
-
-    const chords = [
-      [261.63, 329.63], [293.66, 369.99], [246.94, 329.63], [261.63, 392.00],
-    ];
-    let step = 0;
-    function setChord([f1,f2]){ oscA.frequency.setTargetAtTime(f1, ctx.currentTime, 0.5); oscB.frequency.setTargetAtTime(f2, ctx.currentTime, 0.5); }
-    setChord(chords[0]);
-    function loopChord(){ step=(step+1)%chords.length; setChord(chords[step]); setTimeout(loopChord,8000); }
-    setTimeout(loopChord,8000);
-
-    oscA.start(); oscB.start(); lfo.start(); noise.start();
-  }
-
-  const prime = () => { initAudio(); window.removeEventListener('pointerdown', prime); };
-  window.addEventListener('pointerdown', prime, { once: true });
-
-  btn.addEventListener('click', async () => {
-    if (!started) initAudio();
-    if (ctx.state === 'suspended') await ctx.resume();
-    isMuted = !isMuted;
-    master.gain.linearRampToValueAtTime(isMuted ? 0 : 0.15, (ctx?.currentTime||0)+0.03);
-    btn.textContent = isMuted ? '🔇' : '🔊';
-  });
-})();
-
-/* ------------------ QR Camera Scanner (BarcodeDetector + jsQR fallback) ------------------ */
-(() => {
-  const qrScanBtn = document.getElementById('qrScanBtn');
-  const qrModal = document.getElementById('qrModal');
-  const qrCloseBtn = document.getElementById('qrCloseBtn');
-  const qrFlipBtn = document.getElementById('qrFlipBtn');
-  const qrVideo = document.getElementById('qrVideo');
-  const qrScanMsg = document.getElementById('qrScanMsg');
-  const qrInput = document.getElementById('qrInput');
-  const qrVerifyBtn = document.getElementById('qrBtn');
-
-  let stream = null;
-  let usingFront = false;
-  let rafId = null;
-  let detector = null;
-  let useBarcodeDetector = 'BarcodeDetector' in window;
-  let jsQRLoaded = false;
-
-  async function ensureJsQR() {
-    if (jsQRLoaded) return true;
-    return new Promise((res, rej) => {
-      const s = document.createElement('script');
-      s.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';
-      s.onload = () => { jsQRLoaded = true; res(true); };
-      s.onerror = () => rej(new Error('Failed to load jsQR'));
-      document.head.appendChild(s);
-    });
-  }
-
-  async function openScanner() {
-    qrModal.classList.add('show');
-    qrScanMsg.textContent = 'Initializing camera…';
-
-    const facingMode = usingFront ? 'user' : 'environment';
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
-    } catch (e) {
-      qrScanMsg.innerHTML = '<span class="pill err">Camera access denied</span>';
-      return;
-    }
-    qrVideo.srcObject = stream;
-
-    if (useBarcodeDetector) {
-      try { detector = new BarcodeDetector({ formats: ['qr_code'] }); }
-      catch { useBarcodeDetector = false; }
-    }
-
-    if (useBarcodeDetector) {
-      qrScanMsg.textContent = 'Scanning…';
-      loopBarcodeDetector();
-    } else {
-      try {
-        await ensureJsQR();
-        qrScanMsg.textContent = 'Scanning…';
-        loopJsQR();
-      } catch (e) {
-        qrScanMsg.innerHTML = '<span class="pill err">QR engine failed to load</span>';
-      }
-    }
-  }
-
-  function stopScanner() {
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = null;
-    if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-    qrModal.classList.remove('show');
-  }
-
-  async function loopBarcodeDetector() {
-    try {
-      const barcodes = await detector.detect(qrVideo);
-      if (barcodes && barcodes.length) {
-        const value = barcodes[0].rawValue || barcodes[0].displayValue;
-        onCode(value);
-        return;
-      }
-    } catch {}
-    rafId = requestAnimationFrame(loopBarcodeDetector);
-  }
-
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  function loopJsQR() {
-    if (!qrVideo.videoWidth) { rafId = requestAnimationFrame(loopJsQR); return; }
-    canvas.width = qrVideo.videoWidth;
-    canvas.height = qrVideo.videoHeight;
-    ctx.drawImage(qrVideo, 0, 0, canvas.width, canvas.height);
-    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const code = window.jsQR ? window.jsQR(imgData.data, canvas.width, canvas.height) : null;
-    if (code && code.data) { onCode(code.data); return; }
-    rafId = requestAnimationFrame(loopJsQR);
-  }
-
-  function onCode(value) {
-    stopScanner();
-    const v = (value || '').trim();
-    qrInput.value = v;
-    qrScanMsg.textContent = 'QR found: ' + v;
-    qrVerifyBtn.click(); // reuse existing verify flow
-  }
-
-  if (qrScanBtn) {
-    qrScanBtn.addEventListener('click', async () => {
-      if (!navigator.mediaDevices?.getUserMedia) {
-        alert('Camera API not supported in this browser.');
-        return;
-      }
-      openScanner();
-    });
-  }
-  if (qrCloseBtn) qrCloseBtn.addEventListener('click', stopScanner);
-  if (qrModal) qrModal.addEventListener('click', (e) => { if (e.target === qrModal) stopScanner(); });
-  if (qrFlipBtn) qrFlipBtn.addEventListener('click', async () => {
-    usingFront = !usingFront;
-    stopScanner();
-    openScanner();
-  });
-})();
+/* Music */
+(()=>{let ctx,master,isMuted=false,started=false;const btn=document.getElementById('musicToggle');
+function init(){if(started)return;started=true;ctx=new (window.AudioContext||window.webkitAudioContext)();master=ctx.createGain();master.gain.value=0.15;master.connect(ctx.destination);
+const osc=ctx.createOscillator();osc.type='sine';osc.frequency.value=440;osc.connect(master);osc.start();}
+window.addEventListener('pointerdown',init,{once:true});
+btn.onclick=async()=>{if(!started)init();if(ctx.state==='suspended')await ctx.resume();isMuted=!isMuted;master.gain.value=isMuted?0:0.15;btn.textContent=isMuted?'🔇':'🔊';};})();
 </script>
 </body>
 </html>
