@@ -221,10 +221,10 @@
   </div>
 
   <!-- Music toggle -->
-  <button id="musicToggle" aria-label="Toggle music">🎶</button>
+  <button id="musicToggle" aria-label="Toggle music">🔊</button>
 
 <script>
-/* ------------------ utils & storage ------------------ */
+/* ------------------ basic utils & demo storage ------------------ */
 const LS_KEY = 'hb_demo_progress_v1';
 function loadStore(){ try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}')}catch(e){return{}} }
 function saveStore(obj){ localStorage.setItem(LS_KEY, JSON.stringify(obj||{})) }
@@ -235,12 +235,12 @@ function setCookie(n,v,days){ const d=new Date(); d.setTime(d.getTime()+days*864
   document.cookie=n+'='+encodeURIComponent(v)+'; expires='+d.toUTCString()+'; path=/; SameSite=Lax'; }
 let USER=getCookie('hb_uid'); if(!USER){ USER=uid(); setCookie('hb_uid',USER,3650); }
 
-/* ------------------ slider (2..27) ------------------ */
-const slides=Array.from({length:26},(_,i)=>`public/photos/${i+2}.png`);
+/* ------------------ slider ------------------ */
+const slides=Array.from({length:26},(_,i)=>`public/photos/${i+2}.png`); // 2..27
 let s=0,timer; const heroImg=document.getElementById('heroImg'); const heroFrame=document.getElementById('heroFrame');
 function show(n){ s=(n+slides.length)%slides.length; heroImg.style.opacity=0;
-  setTimeout(()=>{ heroImg.src=slides[s]; heroImg.onload=()=>heroImg.style.opacity=1; },220); }
-function start(){ timer=setInterval(()=>show(s+1),4600) } function stop(){ clearInterval(timer) }
+  setTimeout(()=>{ heroImg.src=slides[s]; heroImg.onload=()=>heroImg.style.opacity=1; },180); }
+function start(){ timer=setInterval(()=>show(s+1),4000) } function stop(){ clearInterval(timer) }
 document.getElementById('prevBtn').onclick=()=>{stop();show(s-1);start()};
 document.getElementById('nextBtn').onclick=()=>{stop();show(s+1);start()};
 heroFrame.onmouseenter=stop; heroFrame.onmouseleave=start; show(0); start();
@@ -291,14 +291,17 @@ const tierLine=document.getElementById('tierLine');
 const claimBtn=document.getElementById('claimBtn');
 
 function tag(text,kind){ const el=document.createElement('span'); el.className='pill '+kind; el.textContent=text; return el; }
+
 function renderProgress(){
   const store=loadStore(); const done=new Set(store.completed||[]);
   progressPills.innerHTML='';
   (store.completed||[]).forEach(k=>progressPills.appendChild(tag(k,'ok')));
-  tierLine.textContent='Tier: '+calcTier(done);
+  const tier=calcTier(done); tierLine.textContent='Tier: '+tier;
 }
+
 document.getElementById('resetBtn').onclick=()=>{ clearStore(); renderAll(); };
 
+// social post
 document.getElementById('postBtn').onclick=()=>{
   const url=(document.getElementById('postUrl').value||'').trim();
   const st=document.getElementById('postStatus');
@@ -313,6 +316,7 @@ document.getElementById('postBtn').onclick=()=>{
   renderAll();
 };
 
+// QR demo codes
 const DEMO_QR = { A:'HAPPY-A', B:'HAPPY-B' };
 document.getElementById('qrBtn').onclick=()=>{
   const code=(document.getElementById('qrInput').value||'').trim().toUpperCase();
@@ -326,9 +330,12 @@ document.getElementById('qrBtn').onclick=()=>{
     saveStore(store);
     st.innerHTML=`<span class="pill ok">QR ${slot} verified</span>`;
     renderAll();
-  } else { st.innerHTML='<span class="pill err">Invalid code</span>'; }
+  } else {
+    st.innerHTML='<span class="pill err">Invalid code</span>';
+  }
 };
 
+// GEO check (Hill of Kapi)
 const HILL = { lat:38.04952, lng:22.11163 };
 document.getElementById('geoExplain').onclick=()=>alert('We briefly read GPS to confirm you visited the spot. Nothing personally identifying is stored—only success/fail with your anonymous session.');
 document.getElementById('geoBtn').onclick=()=>{
@@ -355,37 +362,40 @@ function haversine(lat1,lon1,lat2,lon2){
   const a=Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
-function renderStage(){ const store=loadStore(); const state=computeStage(store); paintStage(state); }
+
+/* ------------------ stage refresh ------------------ */
+function renderStage(){
+  const store=loadStore();
+  const state=computeStage(store);
+  paintStage(state);
+}
 function renderAll(){ renderStage(); renderProgress(); }
 renderAll();
+
+/* ------------------ claim (info only) ------------------ */
 document.getElementById('claimBtn').onclick=()=>alert('Claim is enabled at check-out with hotel assistance. Your Tier will determine your NFT rarity.');
 
-/* ===== CINEMATIC ambient (pads + sub + wide space + hits) — no files ===== */
+/* ===== Epic ambient without files (pads + bass + soft drums) ===== */
 (() => {
-  let ctx, master, busWide, started = false, isMuted = false;
+  let ctx, master, started = false, isMuted = false;
   const btn = document.getElementById('musicToggle');
 
-  function mkDelay(time, feedback){
-    const d = ctx.createDelay(3.0);
-    d.delayTime.value = time;
-    const g = ctx.createGain(); g.gain.value = feedback;
-    d.connect(g).connect(d);
-    return { d, g };
-  }
-  function mkReverbish(){
-    // Simple Schroeder-ish: 3 combs + 2 all-pass
-    const input = ctx.createGain();
-    const out = ctx.createGain(); out.gain.value = 0.35;
+  function initAudio(){
+    if (started) return;
+    started = true;
 
-    function comb(t, fb){
-      const dl = ctx.createDelay(1.5); dl.delayTime.value = t;
-      const g = ctx.createGain(); g.gain.value = fb;
-      input.connect(dl); dl.connect(g).connect(dl);
-      const tap = ctx.createGain(); dl.connect(tap);
-      return tap;
-    }
-    const c1 = comb(0.083, 0.78), c2 = comb(0.101, 0.75), c3 = comb(0.127, 0.73);
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
 
-    function allpass(t, fb){
-      const dl = ctx.createDelay(1.0); dl.delayTime.value = t;
-      
+    // Master bus
+    master = ctx.createGain();
+    master.gain.value = 0.12;
+    master.connect(ctx.destination);
+
+    // Dual delays as "space"
+    const delayL = ctx.createDelay(2.0), delayR = ctx.createDelay(2.0);
+    delayL.delayTime.value = 0.28; delayR.delayTime.value = 0.34;
+    const fbL = ctx.createGain(), fbR = ctx.createGain();
+    fbL.gain.value = 0.25; fbR.gain.value = 0.22;
+    delayL.connect(fbL).connect(delayL);
+    delayR.connect(fbR).connect(delayR);
+    const sp
