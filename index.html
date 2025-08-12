@@ -79,6 +79,19 @@
   .bar > span{ position:absolute; inset:0 0 0 auto; width:0%; background:linear-gradient(90deg,#27c498,#ffb84d); transition:width .4s ease }
   .sublabel{ font-size:12px; color:#888 }
 
+  /* ===== Overall progress bar (NEW) ===== */
+  .overall-wrap{ margin:6px 0 4px }
+  .overall{
+    height:10px; width:100%; background:#f0f0f0; border-radius:999px; overflow:hidden;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.05);
+  }
+  .overall > span{
+    display:block; height:100%; width:0%;
+    background:linear-gradient(90deg,#27c498,#ffb84d);
+    transition:width .35s ease;
+  }
+  .overall-meta{ display:flex; justify-content:space-between; font-size:12px; color:#777; margin-top:6px }
+
   /* CTA */
   .cta{ text-align:center; padding:42px 20px 70px }
   .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px); color:var(--ink2) }
@@ -124,7 +137,9 @@
   <section class="example">
     <h4>Bundle example</h4>
     <img class="example-img" src="public/photos/1.png" alt="Bundle Minted example" />
-  </section><!-- GAME / QUESTS -->
+  </section>
+
+  <!-- GAME / QUESTS -->
   <section class="quests">
     <!-- Stage tracker -->
     <div class="card" id="stageCard">
@@ -179,6 +194,19 @@
     <!-- Progress & Tier -->
     <div class="card" id="progressCard">
       <h3>Your Progress</h3>
+
+      <!-- ===== Overall progress bar (NEW) ===== -->
+      <div class="overall-wrap" aria-live="polite">
+        <div class="overall" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Overall quest progress">
+          <span id="overallFill"></span>
+        </div>
+        <div class="overall-meta">
+          <span id="overallPct">0%</span>
+          <span>Complete quests to level up your Tier</span>
+        </div>
+      </div>
+      <!-- ===== /progress bar ===== -->
+
       <div id="progressPills" class="row" style="flex-wrap:wrap"></div>
       <p class="status" id="tierLine">Tier: —</p>
       <div class="row">
@@ -265,12 +293,29 @@ function paintStage(state){
 /* Tier calc */
 function calcTier(d){ if(d>=4)return'Legendary'; if(d===3)return'Ultra Rare'; if(d===2)return'Rare'; if(d===1)return'Uncommon'; return'Common'; }
 
+/* ===== Overall progress bar updater (NEW) ===== */
+const overallFill = document.getElementById('overallFill');
+const overallPct  = document.getElementById('overallPct');
+function updateOverallProgress(doneCount){
+  const total = 4; // social:post, qr:A, qr:B, geo:hill-of-kapi
+  const pct = Math.round((doneCount/total)*100);
+  overallFill.style.width = pct+'%';
+  overallPct.textContent = pct+'%';
+  // ARIA
+  overallFill.parentElement.setAttribute('aria-valuenow', String(pct));
+}
+
 /* Render */
 const progressPills=document.getElementById('progressPills');
 function renderAll(){
   const store=loadStore(); const state=computeStage(store); paintStage(state);
-  progressPills.innerHTML=''; (store.completed||[]).forEach(k=>{let el=document.createElement('span'); el.className='pill ok'; el.textContent=k; progressPills.appendChild(el);});
-  document.getElementById('tierLine').textContent='Tier: '+calcTier(state.doneSet.size);
+  progressPills.innerHTML='';
+  (store.completed||[]).forEach(k=>{
+    const el=document.createElement('span'); el.className='pill ok'; el.textContent=k; progressPills.appendChild(el);
+  });
+  const doneCount = (store.completed||[]).length;
+  document.getElementById('tierLine').textContent='Tier: '+calcTier(doneCount);
+  updateOverallProgress(doneCount);           // <<<<<< ενημέρωση μπάρας
 }
 renderAll();
 
@@ -279,23 +324,28 @@ document.getElementById('postBtn').onclick=()=>{
   const url=document.getElementById('postUrl').value.trim(), st=document.getElementById('postStatus');
   if(!/^https?:\/\//.test(url)){ st.innerHTML='<span class="pill err">Paste valid URL</span>'; return; }
   const store=loadStore(); store.urls=store.urls||{}; store.urls.post=url;
-  store.completed=[...(store.completed||[]),'social:post']; saveStore(store);
+  store.completed=[...(new Set([...(store.completed||[]),'social:post']))]; saveStore(store);
   st.innerHTML='<span class="pill ok">Submitted</span>'; renderAll();
 };
 const DEMO_QR={A:'HAPPY-A',B:'HAPPY-B'};
 document.getElementById('qrBtn').onclick=()=>{
   const code=document.getElementById('qrInput').value.trim().toUpperCase(), slot=document.getElementById('qrSlot').value, st=document.getElementById('qrStatus');
   const store=loadStore(); if(slot==='B'&&computeStage(store).stage===1){ st.innerHTML='<span class="pill warn">Unlock Stage 2 first</span>'; return;}
-  if(code===DEMO_QR[slot]){ store.completed=[...(store.completed||[]),`qr:${slot}`]; saveStore(store); st.innerHTML='<span class="pill ok">QR verified</span>'; renderAll(); }
-  else st.innerHTML='<span class="pill err">Invalid code</span>';
+  if(code===DEMO_QR[slot]){
+    store.completed=[...(new Set([...(store.completed||[]),`qr:${slot}`]))]; saveStore(store);
+    st.innerHTML='<span class="pill ok">QR verified</span>'; renderAll();
+  } else st.innerHTML='<span class="pill err">Invalid code</span>';
 };
 const HILL={lat:38.04952,lng:22.11163};
 document.getElementById('geoBtn').onclick=()=>{
   const st=document.getElementById('geoStatus');
   navigator.geolocation.getCurrentPosition(pos=>{
     const d=haversine(pos.coords.latitude,pos.coords.longitude,HILL.lat,HILL.lng);
-    if(d<=0.25){ const store=loadStore(); store.completed=[...(store.completed||[]),'geo:hill-of-kapi']; saveStore(store); st.innerHTML='<span class="pill ok">Location verified</span>'; renderAll();}
-    else st.innerHTML='<span class="pill warn">Too far</span>';
+    if(d<=0.25){
+      const store=loadStore();
+      store.completed=[...(new Set([...(store.completed||[]),'geo:hill-of-kapi']))]; saveStore(store);
+      st.innerHTML='<span class="pill ok">Location verified</span>'; renderAll();
+    } else st.innerHTML='<span class="pill warn">Too far</span>';
   },err=>st.innerHTML='<span class="pill err">'+err.message+'</span>',{enableHighAccuracy:true});
 };
 function haversine(a,b,c,d){const R=6371,toRad=x=>x*Math.PI/180,dl=toRad(c-a),dn=toRad(d-b);
