@@ -8,13 +8,14 @@
 <style>
   :root{
     --brand:#ff7a00; --brand-soft:#ffb84d;
-    --bg1:#fef9f5; --bg2:#fff6eb; --ink:#333; --muted:#555;
-    --ok:#1f9d55; --warn:#e2a61f; --err:#d33c3c; --ink2:#222;
+    --bg1:#fef9f5; --bg2:#fff6eb; --ink:#333; --muted:#555; --ink2:#222;
+    --ok:#1f9d55; --warn:#e2a61f; --err:#d33c3c;
   }
   *{box-sizing:border-box}
   body{ margin:0; font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
     background:linear-gradient(135deg,var(--bg1),var(--bg2)); color:var(--ink); overflow-x:hidden; }
 
+  /* confetti bg */
   .confetti{ position:fixed; inset:0; pointer-events:none; opacity:.18;
     background:
       radial-gradient(circle at 10% 20%, #ff7a00 2px, transparent 3px) 0 0/120px 120px,
@@ -79,10 +80,16 @@
   .bar > span{ position:absolute; inset:0 0 0 auto; width:0%; background:linear-gradient(90deg,#27c498,#ffb84d); transition:width .4s ease }
   .sublabel{ font-size:12px; color:#888 }
 
+  /* Overall progress bar */
+  .overall{ margin:10px 0 0; }
+  .overall .track{ height:10px; border-radius:999px; background:#eee; overflow:hidden }
+  .overall .fill{ height:100%; width:0%; background:linear-gradient(90deg,#27c498,#ffb84d); transition:width .4s ease }
+  .overall small{ display:block; color:#666; margin-top:6px }
+
   /* CTA */
   .cta{ text-align:center; padding:42px 20px 70px }
   .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px); color:var(--ink2) }
-  .cta p{ margin:0 0 16px; color:#muted }
+  .cta p{ margin:0 0 16px; color:var(--muted) }
 
   footer{ text-align:center; padding:18px; color:#999; font-size:13px }
 
@@ -113,24 +120,97 @@
   <section class="hero-wrap">
     <div class="hero-frame" id="heroFrame">
       <div class="badge">Kalavryta preview</div>
-      <!-- θα ενημερωθεί αμέσως από το JS στο slides[0] -->
       <img id="heroImg" class="hero-img" src="public/photos/2.png" alt="Kalavryta preview" />
       <div class="nav prev" id="prevBtn" aria-label="Previous">‹</div>
       <div class="nav next" id="nextBtn" aria-label="Next">›</div>
     </div>
   </section>
 
-  <!-- Bundle example: ΜΟΝΟ η 1.png εδώ -->
+  <!-- Bundle example: ΜΟΝΟ η 1.png -->
   <section class="example">
     <h4>Bundle example</h4>
     <img class="example-img" src="public/photos/1.png" alt="Bundle Minted example" />
   </section>
 
-  <!-- (Μπορείς να αφήσεις τα quests σου εδώ όπως τα έχεις) -->
+  <!-- GAME / QUESTS -->
+  <section class="quests">
+    <!-- Stage tracker -->
+    <div class="card" id="stageCard">
+      <h3>Stage <span id="stageNum">1</span> — Play to unlock the next!</h3>
+      <div class="stage">
+        <div class="step" id="stStep1"><div class="dot">1</div><div>Photo post</div></div>
+        <div class="bar"><span id="barFill"></span></div>
+        <div class="step" id="stStep2"><div class="dot">2</div><div>QR A</div></div>
+        <div class="bar" style="max-width:120px"><span></span></div>
+        <div class="step" id="stStep3"><div class="dot">3</div><div>Extra</div></div>
+      </div>
+      <div class="sublabel" id="stageHint">Finish all three to unlock Stage 2 (QR A + QR B + Hill of Kapi)</div>
+    </div>
+
+    <!-- Social quest -->
+    <div class="card" id="socialCard">
+      <h3>Quest: Post with hashtag</h3>
+      <p>Share a photo with <strong>#myhappybox</strong> and paste the public URL of your post.</p>
+      <div class="row">
+        <input type="text" id="postUrl" placeholder="https://instagram.com/p/...">
+        <button class="btn" id="postBtn">Submit link</button>
+      </div>
+      <div class="status" id="postStatus"></div>
+    </div>
+
+    <!-- QR quest A/B -->
+    <div class="card" id="qrCard">
+      <h3>Quest: Scan shop QR</h3>
+      <p>Ask a participating shop for their code. (Demo codes: <code>HAPPY-A</code> & <code>HAPPY-B</code>)</p>
+      <div class="row">
+        <input type="text" id="qrInput" placeholder="Enter QR code…">
+        <select id="qrSlot">
+          <option value="A">Checkpoint A</option>
+          <option value="B" disabled>Checkpoint B (unlocks in Stage 2)</option>
+        </select>
+        <button class="btn" id="qrBtn">Verify QR</button>
+      </div>
+      <div class="status" id="qrStatus"></div>
+    </div>
+
+    <!-- GEO quest -->
+    <div class="card" id="geoCard">
+      <h3>Quest: Hill of Kapi photo (geo-check)</h3>
+      <p>Go to the Hill of Kapi, enable location, then press verify.</p>
+      <div class="row">
+        <button class="btn" id="geoBtn">I’m at the Hill of Kapi</button>
+        <button class="btn ghost" id="geoExplain">Why location?</button>
+      </div>
+      <div class="status" id="geoStatus"></div>
+    </div>
+
+    <!-- Progress & Tier -->
+    <div class="card" id="progressCard">
+      <h3>Your Progress</h3>
+
+      <!-- Overall progress bar -->
+      <div class="overall">
+        <div class="track"><div class="fill" id="overallFill"></div></div>
+        <small id="overallText">0% complete</small>
+      </div>
+
+      <div id="progressPills" class="row" style="flex-wrap:wrap"></div>
+      <p class="status" id="tierLine">Tier: —</p>
+      <div class="row">
+        <button class="btn alt" id="resetBtn">Reset demo</button>
+        <button class="btn disabled" id="claimBtn" title="Unlocks after Stage 1">🎁 Claim your Happy Box</button>
+      </div>
+      <p class="hint">
+        You can claim anytime after completing <strong>Stage 1</strong> (Common / Uncommon).
+        Go further for <strong>Rare / Ultra Rare / Legendary</strong>.
+      </p>
+      <div class="status" id="claimStatus"></div>
+    </div>
+  </section>
 
   <section class="cta">
     <h2>Explore • Play • Win</h2>
-    <p>Finish Stage 1 to unlock your first claim (Common / Uncommon). Go further for rarer rewards!</p>
+    <p>It’s a friendly treasure-hunt across Kalavryta. Finish Stage 1 to unlock Stage 2 and go for rarer rewards!</p>
     <button id="mintInfoBtn" class="btn">How claiming works</button>
   </section>
 
@@ -141,16 +221,16 @@
     <div class="modal-card">
       <h3 id="soonTitle">Claiming</h3>
       <p>
-        You can claim at any time after completing <strong>Stage 1</strong> (Common / Uncommon).  
-        Go for Stage 2–3 to aim for <strong>Rare / Ultra Rare / Legendary</strong>.  
-        Your rarity is computed automatically from your quests.
+        Claim activates automatically when you complete <strong>Stage 1</strong>.  
+        The system reads your quests and assigns a rarity: Common → Legendary.  
+        Ask reception (or follow the in-page instructions) to mint your bundle NFT.
       </p>
       <button class="close" id="closeModal">Close</button>
     </div>
   </div>
 
 <script>
-/* ---------- SLIDER: ΜΟΝΟ 2..27 ---------- */
+/* ---------------- Slider: ONLY 2..27 (1.png stays in Bundle) ---------------- */
 const slides = [
   "public/photos/2.png","public/photos/3.png","public/photos/4.png","public/photos/5.png",
   "public/photos/6.png","public/photos/7.png","public/photos/8.png","public/photos/9.png",
@@ -167,37 +247,158 @@ const heroFrame=document.getElementById('heroFrame');
 
 function show(n){
   s=(n+slides.length)%slides.length;
-  const nextSrc = slides[s];
+  const nextSrc = slides[s] + '?v=1';
   heroImg.style.opacity=0;
-  // μικρό cache-bust σε redeploys (προαιρετικά μπορείς να σβήσεις το ?v)
-  const url = nextSrc + '?v=1';
   setTimeout(()=>{
-    heroImg.onerror = () => { // αν λείπει κάποια φωτό, προχώρα στην επόμενη
-      console.warn('Image missing:', nextSrc);
-      show(s+1);
-    };
-    heroImg.onload = ()=>{ heroImg.style.opacity=1; };
-    heroImg.src = url;
-  }, 120);
+    heroImg.onerror = () => { console.warn('Missing image:', slides[s]); show(s+1); };
+    heroImg.onload  = () => { heroImg.style.opacity=1; };
+    heroImg.src = nextSrc;
+  },120);
 }
 function start(){ timer=setInterval(()=>show(s+1), 4000); }
 function stop(){ clearInterval(timer); }
-
 document.getElementById('prevBtn').onclick=()=>{ stop(); show(s-1); start(); };
 document.getElementById('nextBtn').onclick=()=>{ stop(); show(s+1); start(); };
 heroFrame.addEventListener('mouseenter', stop);
 heroFrame.addEventListener('mouseleave', start);
+show(0); start();
 
-// init
-show(0);
-start();
-
-/* ---------- Modal ---------- */
+/* ---------------- Modal ---------------- */
 const modal=document.getElementById('modal');
 document.getElementById('mintInfoBtn').onclick=()=>modal.classList.add('show');
 document.getElementById('closeModal').onclick=()=>modal.classList.remove('show');
 modal.onclick=(e)=>{ if(e.target===modal) modal.classList.remove('show'); };
 window.addEventListener('keydown',(e)=>{ if(e.key==='Escape') modal.classList.remove('show'); });
+
+/* ---------------- Local store helpers ---------------- */
+const LS_KEY = 'hb_demo_progress_v2';
+function loadStore(){ try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}')}catch(e){return{}} }
+function saveStore(obj){ localStorage.setItem(LS_KEY, JSON.stringify(obj||{})) }
+function clearStore(){ localStorage.removeItem(LS_KEY) }
+
+/* ---------------- Stage + Tier ---------------- */
+const st1=document.getElementById('stStep1'), st2=document.getElementById('stStep2'), st3=document.getElementById('stStep3');
+const barFill=document.getElementById('barFill'); const stageNum=document.getElementById('stageNum');
+const overallFill=document.getElementById('overallFill'); const overallText=document.getElementById('overallText');
+
+function computeStage(p){
+  const d=new Set(p.completed||[]);
+  const hasPost=d.has('social:post');
+  const hasQrA=d.has('qr:A');
+  const hasQrB=d.has('qr:B');
+  const hasGeo=d.has('geo:hill-of-kapi');
+  const stage1Done = hasPost && hasQrA && (hasQrB || hasGeo);
+  return {stage: stage1Done?2:1, doneSet:d, hasPost, hasQrA, hasQrB, hasGeo};
+}
+function paintStage(state){
+  stageNum.textContent = state.stage;
+  st1.classList.toggle('done', state.hasPost);
+  st2.classList.toggle('done', state.hasQrA);
+  st3.classList.toggle('done', state.hasQrB || state.hasGeo);
+  const pct = (st1.classList.contains('done')?1:0) + (st2.classList.contains('done')?1:0) + (st3.classList.contains('done')?1:0);
+  barFill.style.width = (pct/3*100)+'%';
+  document.querySelector('#qrSlot option[value="B"]').disabled = (state.stage===1);
+}
+function calcTier(done){ if(done>=4) return 'Legendary'; if(done===3) return 'Ultra Rare'; if(done===2) return 'Rare'; if(done===1) return 'Uncommon'; return 'Common'; }
+
+/* Overall progress (across both stages) – 4 unique tasks */
+const ALL_TASKS = ['social:post','qr:A','qr:B','geo:hill-of-kapi'];
+function paintOverall(dSet){
+  const done = ALL_TASKS.filter(k=>dSet.has(k)).length;
+  const pct = Math.round(done/ALL_TASKS.length*100);
+  overallFill.style.width = pct+'%';
+  overallText.textContent = pct+'% complete';
+}
+
+/* ---------------- Render ---------------- */
+const progressPills=document.getElementById('progressPills');
+const tierLine=document.getElementById('tierLine');
+const claimBtn=document.getElementById('claimBtn');
+function renderAll(){
+  const store=loadStore();
+  const state=computeStage(store);
+  paintStage(state);
+  paintOverall(state.doneSet);
+
+  // pills
+  progressPills.innerHTML='';
+  (store.completed||[]).forEach(k=>{
+    const el=document.createElement('span'); el.className='pill ok'; el.textContent=k; progressPills.appendChild(el);
+  });
+
+  // tier
+  tierLine.textContent='Tier: '+calcTier(state.doneSet.size);
+
+  // enable claim after Stage 1
+  if(state.stage>=2){
+    claimBtn.classList.remove('disabled');
+    claimBtn.title = 'Ready to claim!';
+  }else{
+    claimBtn.classList.add('disabled');
+    claimBtn.title = 'Unlocks after Stage 1';
+  }
+}
+renderAll();
+
+/* ---------------- Quests (demo) ---------------- */
+document.getElementById('resetBtn').onclick=()=>{ clearStore(); renderAll(); };
+
+document.getElementById('postBtn').onclick=()=>{
+  const url=document.getElementById('postUrl').value.trim(), st=document.getElementById('postStatus');
+  if(!/^https?:\/\//.test(url)){ st.innerHTML='<span class="pill err">Paste valid URL</span>'; return; }
+  const store=loadStore(); store.urls=store.urls||{}; store.urls.post=url;
+  store.completed = Array.from(new Set([...(store.completed||[]),'social:post']));
+  saveStore(store); st.innerHTML='<span class="pill ok">Submitted</span>'; renderAll();
+};
+
+const DEMO_QR={A:'HAPPY-A',B:'HAPPY-B'};
+document.getElementById('qrBtn').onclick=()=>{
+  const code=(document.getElementById('qrInput').value||'').trim().toUpperCase();
+  const slot=document.getElementById('qrSlot').value;
+  const st=document.getElementById('qrStatus');
+  const store=loadStore(); const curr=computeStage(store);
+  if(slot==='B' && curr.stage===1){ st.innerHTML='<span class="pill warn">Unlock Stage 2 first</span>'; return; }
+  if(!code){ st.innerHTML='<span class="pill err">Enter code</span>'; return; }
+  if(code===DEMO_QR[slot]){
+    store.completed = Array.from(new Set([...(store.completed||[]),`qr:${slot}`]));
+    saveStore(store); st.innerHTML=`<span class="pill ok">QR ${slot} verified</span>`; renderAll();
+  } else { st.innerHTML='<span class="pill err">Invalid code</span>'; }
+};
+
+const HILL={lat:38.04952,lng:22.11163};
+document.getElementById('geoExplain').onclick=()=>alert('We briefly read GPS to confirm you visited the spot. Nothing personally identifying is stored—only success/fail with your anonymous session.');
+document.getElementById('geoBtn').onclick=()=>{
+  const st=document.getElementById('geoStatus');
+  if(!navigator.geolocation){ st.innerHTML='<span class="pill err">Geolocation not supported</span>'; return; }
+  st.innerHTML='Checking…';
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const d=haversine(pos.coords.latitude,pos.coords.longitude,HILL.lat,HILL.lng);
+    if(d<=0.25){
+      const store=loadStore();
+      store.completed = Array.from(new Set([...(store.completed||[]),'geo:hill-of-kapi']));
+      saveStore(store);
+      st.innerHTML=`<span class="pill ok">Location verified</span> <span class="sublabel">${(d*1000).toFixed(0)} m</span>`;
+      renderAll();
+    } else {
+      st.innerHTML=`<span class="pill warn">You seem ${d.toFixed(2)} km away — move closer</span>`;
+    }
+  }, err=>{ st.innerHTML=`<span class="pill err">${err.message}</span>`; }, {enableHighAccuracy:true, timeout:15000});
+};
+function haversine(lat1,lon1,lat2,lon2){
+  const R=6371, toRad=x=>x*Math.PI/180;
+  const dLat=toRad(lat2-lat1), dLon=toRad(lon2-lon1);
+  const a=Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); // km
+}
+
+/* Claim (front-end info only) */
+claimBtn.onclick=()=>{
+  if(claimBtn.classList.contains('disabled')){
+    alert('Complete Stage 1 to unlock your claim (Common / Uncommon).');
+  }else{
+    alert('Great! Your claim is unlocked. At checkout you’ll mint your bundle NFT. (Backend wiring next.)');
+  }
+};
 </script>
 </body>
-</html>
+        </html>
