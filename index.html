@@ -30,11 +30,9 @@
     letter-spacing:.4px; display:flex; align-items:center; justify-content:center; gap:.35rem; }
   .title .my{ font-weight:700; font-size:.68em; color:#9a9a9a; margin-right:.15rem }
   .gift{ font-size:.9em; filter:drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
-
   .edition{ margin:.25rem 0 0; font-size:clamp(14px,2.6vw,20px); color:var(--brand-soft);
     font-style:italic; display:inline-block; transform:rotate(-2deg);
     background:#fff; padding:6px 12px; border:1px dashed var(--brand-soft); border-radius:999px; }
-
   .sub{ margin:14px auto 0; max-width:940px; font-size:clamp(14px,2.1vw,18px);
     color:var(--muted); line-height:1.55; text-align:center; padding:0 16px; }
 
@@ -93,19 +91,11 @@
   .modal{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:50; }
   .modal.show{ display:flex }
   .modal-card{ background:#fff; border-radius:16px; padding:26px 28px; box-shadow:0 20px 60px rgba(0,0,0,.25);
-    text-align:center; min-width:min(90vw,420px); }
+    text-align:center; min-width:min(90vw,540px); }
   .modal-card h3{ margin:0 0 6px } .modal-card p{ margin:0 0 16px; color:#666 }
+  .modal-card .grid{ text-align:left; display:grid; gap:10px; margin:14px 0; }
   .close{ border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer; }
-
   .disabled{ opacity:.55; cursor:not-allowed }
-
-  /* Floating music button */
-  #musicToggle{
-    position:fixed;right:16px;bottom:16px;z-index:9999;
-    border:none;border-radius:999px;padding:10px 14px;
-    background:rgba(255,255,255,.9);box-shadow:0 6px 18px rgba(0,0,0,.18);
-    cursor:pointer;font-size:18px;
-  }
 </style>
 </head>
 <body>
@@ -163,7 +153,7 @@
       <div class="status" id="postStatus"></div>
     </div>
 
-    <!-- QR quest A/B (mock codes) -->
+    <!-- QR quest A/B (demo) -->
     <div class="card" id="qrCard">
       <h3>Quest: Scan shop QR</h3>
       <p>Ask a participating shop for their code. (Demo codes: <code>HAPPY-A</code> & <code>HAPPY-B</code>)</p>
@@ -212,41 +202,55 @@
   <footer>© 2025 Happy Box. All rights reserved.</footer>
 
   <!-- Modal -->
-  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="howTitle">
     <div class="modal-card">
-      <h3 id="soonTitle">Claiming</h3>
-      <p>Minting is enabled at the hotel desk during <strong>check-out</strong>. Your Tier (Common → Legendary) is computed automatically from your quests. Ask reception to help you scan and mint!</p>
+      <h3 id="howTitle">How claiming works</h3>
+      <div class="grid">
+        <p><strong>1) Play the quests.</strong> Stage 1: post with <code>#myhappybox</code>, verify <strong>QR A</strong>, and complete one extra (QR B or Hill of Kapi).</p>
+        <p><strong>2) Unlock Stage 2.</strong> Do <strong>QR B</strong> and the <strong>Hill of Kapi</strong> geo-check to reach higher tiers.</p>
+        <p><strong>3) Your Tier = your rarity.</strong> 
+          Common → Uncommon → Rare → Ultra Rare → Legendary, based on how many tasks you complete.</p>
+        <p><strong>4) Check-out mint.</strong> At the hotel desk, you scan to mint your bundle: 
+          (a) the artistic NFT card + (b) the original photo NFT. The system reads your Tier and grants rarity automatically.</p>
+        <p class="hint">Tip: Keep your browser cookies. They store your local progress until check-out.</p>
+      </div>
       <button class="close" id="closeModal">Close</button>
     </div>
   </div>
 
   <!-- Music toggle -->
-  <button id="musicToggle" aria-label="Toggle music">🎶</button>
+  <button id="musicToggle" aria-label="Toggle music"
+    style="position:fixed;right:16px;bottom:16px;z-index:9999;
+           border:none;border-radius:999px;padding:10px 14px;
+           background:rgba(255,255,255,.9);box-shadow:0 6px 18px rgba(0,0,0,.18);
+           cursor:pointer;font-size:18px;">🎶</button>
 
 <script>
-/* ------------------ utils & storage ------------------ */
+/* ------------------ basic utils & demo storage ------------------ */
 const LS_KEY = 'hb_demo_progress_v1';
 function loadStore(){ try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}')}catch(e){return{}} }
 function saveStore(obj){ localStorage.setItem(LS_KEY, JSON.stringify(obj||{})) }
 function clearStore(){ localStorage.removeItem(LS_KEY) }
+
 function uid(){ return 'u_' + Math.random().toString(36).slice(2) + Date.now().toString(36) }
 function getCookie(n){ const m=document.cookie.match(new RegExp('(^| )'+n+'=([^;]+)')); return m?decodeURIComponent(m[2]):null; }
 function setCookie(n,v,days){ const d=new Date(); d.setTime(d.getTime()+days*864e5);
   document.cookie=n+'='+encodeURIComponent(v)+'; expires='+d.toUTCString()+'; path=/; SameSite=Lax'; }
 let USER=getCookie('hb_uid'); if(!USER){ USER=uid(); setCookie('hb_uid',USER,3650); }
 
-/* ------------------ slider (2..27) ------------------ */
-const slides=Array.from({length:26},(_,i)=>`public/photos/${i+2}.png`);
+/* ------------------ slider ------------------ */
+const slides=Array.from({length:26},(_,i)=>`public/photos/${i+2}.png`); // 2..27 (1.png μένει μόνο ως example)
 let s=0,timer; const heroImg=document.getElementById('heroImg'); const heroFrame=document.getElementById('heroFrame');
 function show(n){ s=(n+slides.length)%slides.length; heroImg.style.opacity=0;
-  setTimeout(()=>{ heroImg.src=slides[s]; heroImg.onload=()=>heroImg.style.opacity=1; },220); }
-function start(){ timer=setInterval(()=>show(s+1),4600) } function stop(){ clearInterval(timer) }
+  setTimeout(()=>{ heroImg.src=slides[s]; heroImg.onload=()=>heroImg.style.opacity=1; },180); }
+function start(){ timer=setInterval(()=>show(s+1),4000) } function stop(){ clearInterval(timer) }
 document.getElementById('prevBtn').onclick=()=>{stop();show(s-1);start()};
 document.getElementById('nextBtn').onclick=()=>{stop();show(s+1);start()};
 heroFrame.onmouseenter=stop; heroFrame.onmouseleave=start; show(0); start();
 
 /* ------------------ modal info ------------------ */
-const modal=document.getElementById('modal'); document.getElementById('mintInfoBtn').onclick=()=>modal.classList.add('show');
+const modal=document.getElementById('modal'); 
+document.getElementById('mintInfoBtn').onclick=()=>modal.classList.add('show');
 document.getElementById('closeModal').onclick=()=>modal.classList.remove('show');
 modal.onclick=(e)=>{if(e.target===modal)modal.classList.remove('show')}
 window.addEventListener('keydown',(e)=>{if(e.key==='Escape')modal.classList.remove('show')});
@@ -279,10 +283,10 @@ function paintStage(state){
   st3.classList.toggle('done', state.doneSet.has('qr:B') || state.doneSet.has('geo:hill-of-kapi'));
   const pct = (st1.classList.contains('done')?1:0) + (st2.classList.contains('done')?1:0) + (st3.classList.contains('done')?1:0);
   barFill.style.width = (Math.min(pct,3)/3*100)+'%';
+  document.querySelector('#qrSlot option[value="B"]').disabled = (state.stage===1);
   stageHint.textContent = state.stage===1
     ? 'Finish all three to unlock Stage 2 (QR A + QR B + Hill of Kapi)'
     : 'Stage 2 unlocked! Aim for Rare • Ultra Rare • Legendary';
-  document.querySelector('#qrSlot option[value="B"]').disabled = (state.stage===1);
 }
 
 /* ------------------ quests (demo) ------------------ */
@@ -291,18 +295,22 @@ const tierLine=document.getElementById('tierLine');
 const claimBtn=document.getElementById('claimBtn');
 
 function tag(text,kind){ const el=document.createElement('span'); el.className='pill '+kind; el.textContent=text; return el; }
+
 function renderProgress(){
   const store=loadStore(); const done=new Set(store.completed||[]);
   progressPills.innerHTML='';
   (store.completed||[]).forEach(k=>progressPills.appendChild(tag(k,'ok')));
-  tierLine.textContent='Tier: '+calcTier(done);
+  const tier=calcTier(done); tierLine.textContent='Tier: '+tier;
 }
+
 document.getElementById('resetBtn').onclick=()=>{ clearStore(); renderAll(); };
 
+// social post
 document.getElementById('postBtn').onclick=()=>{
   const url=(document.getElementById('postUrl').value||'').trim();
   const st=document.getElementById('postStatus');
   if(!url){ st.innerHTML='<span class="pill err">Paste the post URL</span>'; return; }
+  // demo rule: accept if looks like URL and contains 'myhappybox' anywhere
   const ok = /^https?:\/\//i.test(url) && /myhappybox/i.test(url);
   if(!ok){ st.innerHTML='<span class="pill warn">Use a public link with #myhappybox</span>'; return; }
   const store=loadStore();
@@ -313,6 +321,7 @@ document.getElementById('postBtn').onclick=()=>{
   renderAll();
 };
 
+// QR demo codes
 const DEMO_QR = { A:'HAPPY-A', B:'HAPPY-B' };
 document.getElementById('qrBtn').onclick=()=>{
   const code=(document.getElementById('qrInput').value||'').trim().toUpperCase();
@@ -326,10 +335,13 @@ document.getElementById('qrBtn').onclick=()=>{
     saveStore(store);
     st.innerHTML=`<span class="pill ok">QR ${slot} verified</span>`;
     renderAll();
-  } else { st.innerHTML='<span class="pill err">Invalid code</span>'; }
+  } else {
+    st.innerHTML='<span class="pill err">Invalid code</span>';
+  }
 };
 
-const HILL = { lat:38.04952, lng:22.11163 };
+// GEO check (Hill of Kapi)
+const HILL = { lat:38.04952, lng:22.11163 }; // approx
 document.getElementById('geoExplain').onclick=()=>alert('We briefly read GPS to confirm you visited the spot. Nothing personally identifying is stored—only success/fail with your anonymous session.');
 document.getElementById('geoBtn').onclick=()=>{
   const st=document.getElementById('geoStatus');
@@ -338,7 +350,7 @@ document.getElementById('geoBtn').onclick=()=>{
   navigator.geolocation.getCurrentPosition(pos=>{
     const {latitude,longitude}=pos.coords;
     const d = haversine(latitude, longitude, HILL.lat, HILL.lng);
-    if(d<=0.25){
+    if(d<=0.25){ // within 250m
       const store=loadStore();
       store.completed = Array.from(new Set([...(store.completed||[]),'geo:hill-of-kapi']));
       saveStore(store);
@@ -353,39 +365,19 @@ function haversine(lat1,lon1,lat2,lon2){
   const R=6371, toRad=x=>x*Math.PI/180;
   const dLat=toRad(lat2-lat1), dLon=toRad(lon2-lon1);
   const a=Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); // km
 }
-function renderStage(){ const store=loadStore(); const state=computeStage(store); paintStage(state); }
+
+/* ------------------ stage refresh ------------------ */
+function renderStage(){
+  const store=loadStore();
+  const state=computeStage(store);
+  paintStage(state);
+}
 function renderAll(){ renderStage(); renderProgress(); }
+
+/* init */
 renderAll();
-document.getElementById('claimBtn').onclick=()=>alert('Claim is enabled at check-out with hotel assistance. Your Tier will determine your NFT rarity.');
 
-/* ===== CINEMATIC ambient (pads + sub + wide space + hits) — no files ===== */
-(() => {
-  let ctx, master, busWide, started = false, isMuted = false;
-  const btn = document.getElementById('musicToggle');
-
-  function mkDelay(time, feedback){
-    const d = ctx.createDelay(3.0);
-    d.delayTime.value = time;
-    const g = ctx.createGain(); g.gain.value = feedback;
-    d.connect(g).connect(d);
-    return { d, g };
-  }
-  function mkReverbish(){
-    // Simple Schroeder-ish: 3 combs + 2 all-pass
-    const input = ctx.createGain();
-    const out = ctx.createGain(); out.gain.value = 0.35;
-
-    function comb(t, fb){
-      const dl = ctx.createDelay(1.5); dl.delayTime.value = t;
-      const g = ctx.createGain(); g.gain.value = fb;
-      input.connect(dl); dl.connect(g).connect(dl);
-      const tap = ctx.createGain(); dl.connect(tap);
-      return tap;
-    }
-    const c1 = comb(0.083, 0.78), c2 = comb(0.101, 0.75), c3 = comb(0.127, 0.73);
-
-    function allpass(t, fb){
-      const dl = ctx.createDelay(1.0); dl.delayTime.value = t;
-      
+/* ------------------ claim (info only) ------------------ */
+document.getElementById('claimBtn').onclick=()=>alert('Claim is enabled at check-out with hotel assistance. Yo
