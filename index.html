@@ -33,9 +33,15 @@
   .gift{ font-size:.9em; filter:drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
   .edition{ margin:.25rem 0 0; font-size:clamp(14px,2.6vw,20px); color:var(--brand-soft);
     font-style:italic; display:inline-block; transform:rotate(-2deg);
-    background:#fff; padding:6px 12px; border:1px dashed var(--brand-soft); border-radius:999px; }
+    background:#fff; padding:6px 12px; border:1px dashed #ffd3a1; border-radius:999px; }
   .sub{ margin:14px auto 0; max-width:940px; font-size:clamp(14px,2.1vw,18px);
     color:var(--muted); line-height:1.55; text-align:center; padding:0 16px; }
+
+  /* top controls */
+  .controls{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px }
+  .chip{ display:flex; align-items:center; gap:8px; background:#fff; border:1px solid #eee;
+    padding:8px 12px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.06); font-size:14px; }
+  .chip select{ border:1px solid #e6e6e6; border-radius:10px; padding:6px 10px }
 
   /* Slider */
   .hero-wrap{ display:flex; justify-content:center; padding:22px 16px 10px; }
@@ -127,18 +133,40 @@
 
   <header>
     <h1 class="title"><span class="my">my</span> Happy Box <span class="gift">🎁</span></h1>
-    <div class="edition">Kalavryta Edition</div>
-    <p class="sub">
+    <div class="edition" data-i18n="edition">Kalavryta Edition</div>
+    <p class="sub" data-i18n="intro">
       A joyful mini-game for travelers! Complete quests around Kalavryta to level-up your reward.  
       Unlock one of <strong>1,000 limited-edition NFT photos</strong> — the rarer your tier, the rarer your art.
       Have fun, explore, win surprises!
     </p>
+
+    <!-- Language & Season controls -->
+    <div class="controls">
+      <div class="chip">
+        <span data-i18n="lang.label">Language:</span>
+        <select id="langSelect" aria-label="Language">
+          <option value="en">English</option>
+          <option value="el">Ελληνικά</option>
+        </select>
+      </div>
+      <div class="chip">
+        <span data-i18n="season.label">Season in Kalavryta:</span>
+        <select id="seasonSelect">
+          <option value="auto" data-i18n="season.auto">Auto (recommended)</option>
+          <option value="winter" data-i18n="season.winter">Winter (Dec–Mar)</option>
+          <option value="spring" data-i18n="season.spring">Spring (Apr–May)</option>
+          <option value="summer" data-i18n="season.summer">Summer (Jun–Sep)</option>
+          <option value="autumn" data-i18n="season.autumn">Autumn (Oct–Nov)</option>
+        </select>
+        <span id="seasonNote" class="sublabel">We’ll adapt attractions to access & weather.</span>
+      </div>
+    </div>
   </header>
 
   <!-- Slider -->
   <section class="hero-wrap">
     <div class="hero-frame" id="heroFrame">
-      <div class="badge">Kalavryta preview</div>
+      <div class="badge" data-i18n="slider.badge">Kalavryta preview</div>
       <img id="heroImg" class="hero-img" src="public/photos/2.png" alt="Kalavryta preview" />
       <div class="nav prev" id="prevBtn" aria-label="Previous">‹</div>
       <div class="nav next" id="nextBtn" aria-label="Next">›</div>
@@ -147,124 +175,100 @@
 
   <!-- Bundle example -->
   <section class="example">
-    <h4>Bundle example</h4>
+    <h4 data-i18n="bundle.title">Bundle example</h4>
     <img class="example-img" src="public/photos/1.png" alt="Bundle Minted example" />
   </section>
 
   <!-- ===== GAME / QUESTS ===== -->
   <section class="quests">
+
     <!-- Stage tracker -->
     <div class="card" id="stageCard">
-      <h3>Stage <span id="stageNum">1</span> — Play to unlock the next!</h3>
+      <h3><span data-i18n="stage.title">Stage</span> <span id="stageNum">1</span> — <span data-i18n="stage.subtitle">Play to unlock the next!</span></h3>
       <div class="stage">
-        <div class="step" id="stStep1"><div class="dot">1</div><div>Stage 1</div></div>
+        <div class="step" id="stStep1"><div class="dot">1</div><div data-i18n="stage.s1">Stage 1</div></div>
         <div class="bar"><span id="barFill"></span></div>
-        <div class="step" id="stStep2"><div class="dot">2</div><div>Stage 2</div></div>
+        <div class="step" id="stStep2"><div class="dot">2</div><div data-i18n="stage.s2">Stage 2</div></div>
         <div class="bar" style="max-width:120px"><span></span></div>
-        <div class="step" id="stStep3"><div class="dot">3</div><div>Stage 3</div></div>
+        <div class="step" id="stStep3"><div class="dot">3</div><div data-i18n="stage.s3">Stage 3</div></div>
       </div>
       <div class="sublabel" id="stageHint">Finish Stage 1 to unlock Stage 2 — and aim for rarer tiers.</div>
     </div>
 
-    <!-- Stage 1 card -->
+    <!-- Stage 1 -->
     <div class="card" id="s1Card">
-      <h3>Stage 1 — Warm-up (🎯 complete 3/3)</h3>
-      <p>You need: 1 social + 1 shop + <strong>1 of the attractions</strong> (extra attractions = bonus).</p>
+      <h3 data-i18n="s1.title">Stage 1 — Warm-up (🎯 complete 3/3)</h3>
+      <p data-i18n="s1.desc">You need: 1 social + 1 shop + <strong>1 of the attractions</strong> (extra attractions = bonus).</p>
 
       <!-- Social -->
-      <div class="row"><span>📸 Post with hashtag #myhappybox</span></div>
+      <div class="row"><span data-i18n="social.label">📸 Post with hashtag #myhappybox</span></div>
       <div class="row">
         <input type="text" id="s1PostUrl" placeholder="Public post URL (e.g. Instagram)">
-        <button class="btn" id="s1PostBtn">Submit link</button>
+        <button class="btn" id="s1PostBtn" data-i18n="btn.submit">Submit link</button>
       </div>
       <div class="status" id="s1PostStatus"></div>
 
       <!-- Shop (1) -->
-      <div class="row" style="margin-top:10px"><span>🏪 Partner Shop (Stage 1)</span></div>
+      <div class="row" style="margin-top:10px"><span data-i18n="shops.s1">🏪 Partner Shop (Stage 1)</span></div>
       <div class="row">
         <input type="text" id="s1Qr" placeholder="Enter QR code (placeholder)">
-        <button class="btn" id="s1QrBtn">Verify QR</button>
+        <button class="btn" id="s1QrBtn" data-i18n="btn.verify">Verify QR</button>
       </div>
       <div class="status" id="s1QrStatus"></div>
 
-      <!-- Attractions (choose ≥1) -->
-      <div class="row" style="margin-top:10px"><span>🗺️ Attractions — pick at least one:</span></div>
-      <div class="row">
-        <label><input type="checkbox" id="s1A_museum"> Δημοτικό Μουσείο Καλαβρυτινού Ολοκαυτώματος 🏛️</label>
-        <label><input type="checkbox" id="s1A_agialavra"> Μονή Αγίας Λαύρας ⛪</label>
-        <label><input type="checkbox" id="s1A_square"> Πλατεία Πετμεζαίων 🏞️</label>
-        <button class="btn ghost" id="s1AttrBtn">Mark visited</button>
-      </div>
+      <!-- Attractions S1 -->
+      <div class="row" style="margin-top:10px"><span data-i18n="attr.pick">🗺️ Attractions — pick at least one:</span></div>
+      <div class="row" id="s1AttrList"></div>
+      <div class="row"><button class="btn ghost" id="s1AttrBtn" data-i18n="btn.markVisited">Mark visited</button></div>
       <div class="status" id="s1AttrStatus"></div>
     </div>
 
-    <!-- Stage 2 card -->
+    <!-- Stage 2 -->
     <div class="card" id="s2Card">
-      <h3>Stage 2 — Explore more (🎯 complete 3/3)</h3>
-      <p>Requires Stage 1 complete. You need: 2 shops + <strong>1 of the attractions</strong> (extras = bonus).</p>
+      <h3 data-i18n="s2.title">Stage 2 — Explore more (🎯 complete 3/3)</h3>
+      <p data-i18n="s2.desc">Requires Stage 1 complete. You need: 2 shops + <strong>1 of the attractions</strong> (extras = bonus).</p>
 
       <!-- Shops (2) -->
-      <div class="row"><span>🏪 Partner Shops (Stage 2)</span></div>
+      <div class="row"><span data-i18n="shops.s2">🏪 Partner Shops (Stage 2)</span></div>
       <div class="row">
         <input type="text" id="s2QrA" placeholder="Enter QR code for Shop 2A">
         <input type="text" id="s2QrB" placeholder="Enter QR code for Shop 2B">
-        <button class="btn" id="s2QrBtn">Verify both</button>
+        <button class="btn" id="s2QrBtn" data-i18n="btn.verifyBoth">Verify both</button>
       </div>
       <div class="status" id="s2QrStatus"></div>
 
-      <!-- Attractions (choose ≥1) -->
-      <div class="row" style="margin-top:10px"><span>🧭 Attractions — pick at least one:</span></div>
-      <div class="row" style="gap:14px; align-items:flex-start">
-        <div style="display:flex; flex-direction:column; gap:6px">
-          <label><input type="checkbox" id="s2A_hill"> Τόπος Θυσίας / Λόφος του Καπι ⛰️</label>
-          <button class="btn" id="s2GeoBtn">Verify my location</button>
-        </div>
-        <div style="display:flex; flex-direction:column; gap:6px; flex:1">
-          <label><input type="checkbox" id="s2A_odontotos"> Odontotos Rack Railway 🚆</label>
-          <div class="row">
-            <input type="text" id="s2RailUrl" placeholder="Public photo URL with #myhappybox">
-            <button class="btn ghost" id="s2RailBtn">Submit URL</button>
-          </div>
-        </div>
-        <div style="display:flex; flex-direction:column; gap:6px">
-          <label><input type="checkbox" id="s2A_heroes"> Μνημείο Ηρώων Αγωνιστών του 1821 🗿</label>
-          <button class="btn ghost" id="s2MarkBtn">Mark visited</button>
-        </div>
-      </div>
+      <!-- Attractions S2 -->
+      <div class="row" style="margin-top:10px"><span data-i18n="attr.pick">🗺️ Attractions — pick at least one:</span></div>
+      <div class="row" id="s2AttrList" style="gap:14px; align-items:flex-start"></div>
+      <div class="row"><button class="btn ghost" id="s2AttrBtn" data-i18n="btn.markVisited">Mark visited</button></div>
       <div class="status" id="s2AttrStatus"></div>
     </div>
 
-    <!-- Stage 3 card -->
+    <!-- Stage 3 -->
     <div class="card" id="s3Card">
-      <h3>Stage 3 — The finale (🎯 complete 4/4)</h3>
-      <p>Requires Stage 2 complete. You need: 3 shops + <strong>1 of the attractions</strong> (extras = bonus).</p>
+      <h3 data-i18n="s3.title">Stage 3 — The finale (🎯 complete 4/4)</h3>
+      <p data-i18n="s3.desc">Requires Stage 2 complete. You need: 3 shops + <strong>1 of the attractions</strong> (extras = bonus).</p>
 
       <!-- Shops (3) -->
-      <div class="row"><span>🏪 Partner Shops (Stage 3)</span></div>
+      <div class="row"><span data-i18n="shops.s3">🏪 Partner Shops (Stage 3)</span></div>
       <div class="row">
         <input type="text" id="s3QrA" placeholder="QR for Shop 3A">
         <input type="text" id="s3QrB" placeholder="QR for Shop 3B">
         <input type="text" id="s3QrC" placeholder="QR for Shop 3C">
-        <button class="btn" id="s3QrBtn">Verify all</button>
+        <button class="btn" id="s3QrBtn" data-i18n="btn.verifyAll">Verify all</button>
       </div>
       <div class="status" id="s3QrStatus"></div>
 
-      <!-- Attractions (choose ≥1) -->
-      <div class="row" style="margin-top:10px"><span>🗺️ Attractions — pick at least one:</span></div>
-      <div class="row" style="flex-direction:column; align-items:flex-start">
-        <label><input type="checkbox" id="s3A_cave"> Σπήλαιο των Λιμνών 🕳️</label>
-        <label><input type="checkbox" id="s3A_gorge"> Φαράγγι του Βουραϊκού 🏞️</label>
-        <label><input type="checkbox" id="s3A_ski"> Χιονοδρομικό κέντρο Καλαβρύτων 🎿</label>
-        <label><input type="checkbox" id="s3A_makellaria"> Ιερά Μονή Μακελλαριάς ⛪</label>
-        <label><input type="checkbox" id="s3A_tower"> Πύργος Πετμεζαίων 🏰</label>
-        <button class="btn ghost" id="s3AttrBtn" style="margin-top:6px">Mark visited</button>
-      </div>
+      <!-- Attractions S3 -->
+      <div class="row" style="margin-top:10px"><span data-i18n="attr.pick">🗺️ Attractions — pick at least one:</span></div>
+      <div class="row" id="s3AttrList" style="flex-direction:column; align-items:flex-start"></div>
+      <div class="row"><button class="btn ghost" id="s3AttrBtn" data-i18n="btn.markVisited" style="margin-top:6px">Mark visited</button></div>
       <div class="status" id="s3AttrStatus"></div>
     </div>
 
     <!-- Progress & Tier -->
     <div class="card" id="progressCard">
-      <h3>Your Progress</h3>
+      <h3 data-i18n="progress.title">Your Progress</h3>
 
       <!-- Overall progress bar -->
       <div class="overall" style="margin:8px 0 10px">
@@ -275,17 +279,17 @@
       <div id="progressPills" class="row" style="flex-wrap:wrap"></div>
       <p class="status" id="tierLine">Tier: —</p>
       <div class="row">
-        <button class="btn alt" id="resetBtn">Reset demo</button>
-        <button class="btn" id="claimBtn">🎁 Claim your Happy Box</button>
+        <button class="btn alt" id="resetBtn" data-i18n="btn.reset">Reset demo</button>
+        <button class="btn" id="claimBtn">🎁 <span data-i18n="btn.claim">Claim your Happy Box</span></button>
       </div>
-      <p class="status">Claim becomes available once you complete <strong>Stage 1</strong>. You can keep playing for rarer tiers!</p>
+      <p class="status" data-i18n="claim.note">Claim becomes available once you complete <strong>Stage 1</strong>. You can keep playing for rarer tiers!</p>
     </div>
   </section>
 
   <section class="cta">
-    <h2>Explore • Play • Win</h2>
-    <p>It’s a friendly treasure-hunt across Kalavryta. Finish Stage 1 to unlock Stage 2 and go for rarer rewards!</p>
-    <button id="mintInfoBtn" class="btn">How claiming works</button>
+    <h2 data-i18n="cta.title">Explore • Play • Win</h2>
+    <p data-i18n="cta.desc">It’s a friendly treasure-hunt across Kalavryta. Finish Stage 1 to unlock Stage 2 and go for rarer rewards!</p>
+    <button id="mintInfoBtn" class="btn" data-i18n="btn.howClaim">How claiming works</button>
   </section>
 
   <footer>© 2025 Happy Box. All rights reserved.</footer>
@@ -295,8 +299,8 @@
     <div class="modal-card">
       <h3 id="modalTitle">Claiming</h3>
       <div id="modalBody"></div>
-      <p class="mini">Your tier is calculated automatically from your completed quests.</p>
-      <button class="close" id="closeModal">Close</button>
+      <p class="mini" data-i18n="claim.mini">Your tier is calculated automatically from your completed quests.</p>
+      <button class="close" id="closeModal" data-i18n="btn.close">Close</button>
     </div>
   </div>
 
@@ -305,100 +309,65 @@
     <div class="victory-card">
       <div class="confetti-fx" id="confettiFx"></div>
       <div class="trophy">🏆</div>
-      <h2>All quests complete!</h2>
-      <p>You’ve reached 100% progress. Time to claim your top reward! 🎉</p>
-      <button class="btn" id="victoryClose">Awesome!</button>
+      <h2 data-i18n="victory.title">All quests complete!</h2>
+      <p data-i18n="victory.desc">You’ve reached 100% progress. Time to claim your top reward! 🎉</p>
+      <button class="btn" id="victoryClose" data-i18n="btn.awesome">Awesome!</button>
     </div>
   </div>
 
 <script>
-/* ========= helpers & store ========= */
-const LS_KEY='hb_demo_progress_v3';
+/* ========= constants ========= */
+const LS_KEY='hb_demo_progress_v5';
 const LS_VICTORY='hb_demo_victory_once';
-function loadStore(){ try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}')}catch(e){return{}} }
-function saveStore(o){ localStorage.setItem(LS_KEY, JSON.stringify(o||{})) }
-function clearStore(){ localStorage.removeItem(LS_KEY); localStorage.removeItem(LS_VICTORY); }
-function addDone(key){ const s=loadStore(); s.completed=Array.from(new Set([...(s.completed||[]), key])); saveStore(s); }
+const LS_SEASON='hb_demo_season';
+const LS_LANG='hb_demo_lang';
 
-/* ========= slider (2..27) ========= */
-const slides=Array.from({length:26},(_,i)=>`public/photos/${i+2}.png`);
-let s=0,timer; const heroImg=document.getElementById('heroImg'), frame=document.getElementById('heroFrame');
-function show(n){ s=(n+slides.length)%slides.length; heroImg.style.opacity=0;
-  setTimeout(()=>{ heroImg.src=slides[s]; heroImg.onload=()=>heroImg.style.opacity=1; },180); }
-function start(){ timer=setInterval(()=>show(s+1),4000) } function stop(){ clearInterval(timer) }
-document.getElementById('prevBtn').onclick=()=>{stop();show(s-1);start()};
-document.getElementById('nextBtn').onclick=()=>{stop();show(s+1);start()};
-frame.onmouseenter=stop; frame.onmouseleave=start; show(0); start();
-
-/* ========= state model =========
- Stage 1 (need 3): s1:post, s1:shop, any(s1 attractions*)
- Stage 2 (need 3): s2:shopA, s2:shopB, any(s2 attractions*)
- Stage 3 (need 4): s3:shopA, s3:shopB, s3:shopC, any(s3 attractions*)
- Overall minimal = 10
-================================= */
-function getState(){
-  const done=new Set((loadStore().completed)||[]);
-  // S1 attractions
-  const s1Attr = {
-    museum: done.has('s1:attr:museum'),
-    agialavra: done.has('s1:attr:agialavra'),
-    square: done.has('s1:attr:square'),
-  };
-  const s1 = {
-    post: done.has('s1:post'),
-    shop: done.has('s1:shop'),
-    attrOk: (s1Attr.museum || s1Attr.agialavra || s1Attr.square)
-  };
-  const s1ok = s1.post && s1.shop && s1.attrOk;
-
-  // S2 attractions
-  const s2Attr = {
-    hill: done.has('s2:attr:hill'),
-    odontotos: done.has('s2:attr:odontotos'),
-    heroes: done.has('s2:attr:heroes'),
-  };
-  const s2 = {
-    shopA: done.has('s2:shopA'),
-    shopB: done.has('s2:shopB'),
-    attrOk: (s2Attr.hill || s2Attr.odontotos || s2Attr.heroes)
-  };
-  const s2ok = s1ok && s2.shopA && s2.shopB && s2.attrOk;
-
-  // S3 attractions
-  const s3Attr = {
-    cave: done.has('s3:attr:cave'),
-    gorge: done.has('s3:attr:gorge'),
-    ski: done.has('s3:attr:ski'),
-    makellaria: done.has('s3:attr:makellaria'),
-    tower: done.has('s3:attr:tower'),
-  };
-  const s3 = {
-    shopA: done.has('s3:shopA'),
-    shopB: done.has('s3:shopB'),
-    shopC: done.has('s3:shopC'),
-    attrOk: (s3Attr.cave || s3Attr.gorge || s3Attr.ski || s3Attr.makellaria || s3Attr.tower)
-  };
-  const s3ok = s2ok && s3.shopA && s3.shopB && s3.shopC && s3.attrOk;
-
-  // minimal required for 100%
-  const overallCount =
-    (s1.post?1:0)+(s1.shop?1:0)+(s1.attrOk?1:0)+
-    (s2.shopA?1:0)+(s2.shopB?1:0)+(s2.attrOk?1:0)+
-    (s3.shopA?1:0)+(s3.shopB?1:0)+(s3.shopC?1:0)+(s3.attrOk?1:0);
-
-  let stage=1; if(s1ok) stage=2; if(s2ok) stage=3; if(s3ok) stage=3;
-
-  // Tier hint (extras help IRL)
-  const tier = s3ok ? 'Legendary'
-            : s2ok ? 'Rare → Ultra Rare'
-            : s1ok ? 'Common → Uncommon'
-            : '—';
-
-  return {done, s1, s2, s3, s1ok, s2ok, s3ok, stage, overallCount, tier,
-          s1Attr, s2Attr, s3Attr};
-}
-
-/* ========= render UI ========= */
-const st1El=document.getElementById('stStep1'), st2El=document.getElementById('stStep2'), st3El=document.getElementById('stStep3');
-const barFill=document.getElementById('barFill'), stageNum=document.getElementById('stageNum'), stageHint=document.getElementById('stageHint');
-const
+/* i18n strings */
+const T = {
+  en:{
+    edition:"Kalavryta Edition",
+    intro:"A joyful mini-game for travelers! Complete quests around Kalavryta to level-up your reward. Unlock one of <strong>1,000 limited-edition NFT photos</strong> — the rarer your tier, the rarer your art. Have fun, explore, win surprises!",
+    "lang.label":"Language:",
+    "season.label":"Season in Kalavryta:",
+    "season.auto":"Auto (recommended)",
+    "season.winter":"Winter (Dec–Mar)",
+    "season.spring":"Spring (Apr–May)",
+    "season.summer":"Summer (Jun–Sep)",
+    "season.autumn":"Autumn (Oct–Nov)",
+    "slider.badge":"Kalavryta preview",
+    "bundle.title":"Bundle example",
+    "stage.title":"Stage",
+    "stage.subtitle":"Play to unlock the next!",
+    "stage.s1":"Stage 1",
+    "stage.s2":"Stage 2",
+    "stage.s3":"Stage 3",
+    "s1.title":"Stage 1 — Warm-up (🎯 complete 3/3)",
+    "s1.desc":"You need: 1 social + 1 shop + <strong>1 of the attractions</strong> (extra attractions = bonus).",
+    "s2.title":"Stage 2 — Explore more (🎯 complete 3/3)",
+    "s2.desc":"Requires Stage 1 complete. You need: 2 shops + <strong>1 of the attractions</strong> (extras = bonus).",
+    "s3.title":"Stage 3 — The finale (🎯 complete 4/4)",
+    "s3.desc":"Requires Stage 2 complete. You need: 3 shops + <strong>1 of the attractions</strong> (extras = bonus).",
+    "social.label":"📸 Post with hashtag #myhappybox",
+    "shops.s1":"🏪 Partner Shop (Stage 1)",
+    "shops.s2":"🏪 Partner Shops (Stage 2)",
+    "shops.s3":"🏪 Partner Shops (Stage 3)",
+    "attr.pick":"🗺️ Attractions — pick at least one:",
+    "btn.submit":"Submit link",
+    "btn.verify":"Verify QR",
+    "btn.verifyBoth":"Verify both",
+    "btn.verifyAll":"Verify all",
+    "btn.markVisited":"Mark visited",
+    "btn.reset":"Reset demo",
+    "btn.claim":"Claim your Happy Box",
+    "btn.howClaim":"How claiming works",
+    "btn.close":"Close",
+    "btn.awesome":"Awesome!",
+    "claim.note":"Claim becomes available once you complete <strong>Stage 1</strong>. You can keep playing for rarer tiers!",
+    "claim.needS1":"To claim your gift, please complete <strong>Stage 1</strong> first:",
+    "claim.points":"Then you can claim a <strong>Common / Uncommon</strong> NFT — or keep playing for rarer tiers.",
+    "claim.unlocked1":"Nice! You’ve unlocked claiming.",
+    "claim.unlocked2":"You can mint a <strong>{tier}</strong> NFT based on your progress.",
+    "claim.unlocked3":"Extra attractions and higher stages increase your rarity odds (up to Legendary).",
+    "claim.mini":"Your tier is calculated automatically from your completed quests.",
+    "victory.title":"All quests complete!",
+    "victory.desc":"You’ve reached 1
