@@ -221,10 +221,10 @@
   </div>
 
   <!-- Music toggle -->
-  <button id="musicToggle" aria-label="Toggle music">🔊</button>
+  <button id="musicToggle" aria-label="Toggle music">🎶</button>
 
 <script>
-/* ------------------ basic utils & demo storage ------------------ */
+/* ------------------ utils & storage ------------------ */
 const LS_KEY = 'hb_demo_progress_v1';
 function loadStore(){ try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}')}catch(e){return{}} }
 function saveStore(obj){ localStorage.setItem(LS_KEY, JSON.stringify(obj||{})) }
@@ -235,12 +235,12 @@ function setCookie(n,v,days){ const d=new Date(); d.setTime(d.getTime()+days*864
   document.cookie=n+'='+encodeURIComponent(v)+'; expires='+d.toUTCString()+'; path=/; SameSite=Lax'; }
 let USER=getCookie('hb_uid'); if(!USER){ USER=uid(); setCookie('hb_uid',USER,3650); }
 
-/* ------------------ slider ------------------ */
-const slides=Array.from({length:26},(_,i)=>`public/photos/${i+2}.png`); // 2..27
+/* ------------------ slider (2..27) ------------------ */
+const slides=Array.from({length:26},(_,i)=>`public/photos/${i+2}.png`);
 let s=0,timer; const heroImg=document.getElementById('heroImg'); const heroFrame=document.getElementById('heroFrame');
 function show(n){ s=(n+slides.length)%slides.length; heroImg.style.opacity=0;
-  setTimeout(()=>{ heroImg.src=slides[s]; heroImg.onload=()=>heroImg.style.opacity=1; },180); }
-function start(){ timer=setInterval(()=>show(s+1),4000) } function stop(){ clearInterval(timer) }
+  setTimeout(()=>{ heroImg.src=slides[s]; heroImg.onload=()=>heroImg.style.opacity=1; },220); }
+function start(){ timer=setInterval(()=>show(s+1),4600) } function stop(){ clearInterval(timer) }
 document.getElementById('prevBtn').onclick=()=>{stop();show(s-1);start()};
 document.getElementById('nextBtn').onclick=()=>{stop();show(s+1);start()};
 heroFrame.onmouseenter=stop; heroFrame.onmouseleave=start; show(0); start();
@@ -291,17 +291,14 @@ const tierLine=document.getElementById('tierLine');
 const claimBtn=document.getElementById('claimBtn');
 
 function tag(text,kind){ const el=document.createElement('span'); el.className='pill '+kind; el.textContent=text; return el; }
-
 function renderProgress(){
   const store=loadStore(); const done=new Set(store.completed||[]);
   progressPills.innerHTML='';
   (store.completed||[]).forEach(k=>progressPills.appendChild(tag(k,'ok')));
-  const tier=calcTier(done); tierLine.textContent='Tier: '+tier;
+  tierLine.textContent='Tier: '+calcTier(done);
 }
-
 document.getElementById('resetBtn').onclick=()=>{ clearStore(); renderAll(); };
 
-// social post
 document.getElementById('postBtn').onclick=()=>{
   const url=(document.getElementById('postUrl').value||'').trim();
   const st=document.getElementById('postStatus');
@@ -316,7 +313,6 @@ document.getElementById('postBtn').onclick=()=>{
   renderAll();
 };
 
-// QR demo codes
 const DEMO_QR = { A:'HAPPY-A', B:'HAPPY-B' };
 document.getElementById('qrBtn').onclick=()=>{
   const code=(document.getElementById('qrInput').value||'').trim().toUpperCase();
@@ -330,12 +326,9 @@ document.getElementById('qrBtn').onclick=()=>{
     saveStore(store);
     st.innerHTML=`<span class="pill ok">QR ${slot} verified</span>`;
     renderAll();
-  } else {
-    st.innerHTML='<span class="pill err">Invalid code</span>';
-  }
+  } else { st.innerHTML='<span class="pill err">Invalid code</span>'; }
 };
 
-// GEO check (Hill of Kapi)
 const HILL = { lat:38.04952, lng:22.11163 };
 document.getElementById('geoExplain').onclick=()=>alert('We briefly read GPS to confirm you visited the spot. Nothing personally identifying is stored—only success/fail with your anonymous session.');
 document.getElementById('geoBtn').onclick=()=>{
@@ -362,143 +355,37 @@ function haversine(lat1,lon1,lat2,lon2){
   const a=Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
-
-/* ------------------ stage refresh ------------------ */
-function renderStage(){
-  const store=loadStore();
-  const state=computeStage(store);
-  paintStage(state);
-}
+function renderStage(){ const store=loadStore(); const state=computeStage(store); paintStage(state); }
 function renderAll(){ renderStage(); renderProgress(); }
 renderAll();
-
-/* ------------------ claim (info only) ------------------ */
 document.getElementById('claimBtn').onclick=()=>alert('Claim is enabled at check-out with hotel assistance. Your Tier will determine your NFT rarity.');
 
-/* ===== Epic ambient without files (pads + bass + soft drums) ===== */
+/* ===== CINEMATIC ambient (pads + sub + wide space + hits) — no files ===== */
 (() => {
-  let ctx, master, started = false, isMuted = false;
+  let ctx, master, busWide, started = false, isMuted = false;
   const btn = document.getElementById('musicToggle');
 
-  function initAudio(){
-    if (started) return;
-    started = true;
-
-    ctx = new (window.AudioContext || window.webkitAudioContext)();
-
-    // Master bus
-    master = ctx.createGain();
-    master.gain.value = 0.12;
-    master.connect(ctx.destination);
-
-    // Dual delays as "space"
-    const delayL = ctx.createDelay(2.0), delayR = ctx.createDelay(2.0);
-    delayL.delayTime.value = 0.28; delayR.delayTime.value = 0.34;
-    const fbL = ctx.createGain(), fbR = ctx.createGain();
-    fbL.gain.value = 0.25; fbR.gain.value = 0.22;
-    delayL.connect(fbL).connect(delayL);
-    delayR.connect(fbR).connect(delayR);
-    const spaceMix = ctx.createGain(); spaceMix.gain.value = 0.32;
-    delayL.connect(spaceMix); delayR.connect(spaceMix); spaceMix.connect(master);
-
-    function env(node, from, to, tAtk=0.8, tRel=0.8){
-      const now = ctx.currentTime;
-      node.gain.cancelScheduledValues(now);
-      node.gain.setValueAtTime(from, now);
-      node.gain.linearRampToValueAtTime(to, now + tAtk);
-      node.gain.linearRampToValueAtTime(from, now + tAtk + tRel);
-    }
-
-    function makePad(freqs){
-      const lp = ctx.createBiquadFilter();
-      lp.type = 'lowpass'; lp.frequency.value = 1200; lp.Q.value = 0.7;
-
-      const lfo = ctx.createOscillator(), lfoGain = ctx.createGain();
-      lfo.frequency.value = 0.06; lfoGain.gain.value = 700;
-      lfo.connect(lfoGain); lfoGain.connect(lp.frequency); lfo.start();
-
-      const padBus = ctx.createGain(); padBus.gain.value = 0.0;
-      padBus.connect(lp); lp.connect(master); lp.connect(delayL); lp.connect(delayR);
-
-      freqs.forEach((f,i)=>{
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.type = 'sawtooth';
-        o.frequency.value = f;
-        o.detune.value = (i-1)*7;
-        o.connect(g); g.connect(padBus);
-        o.start();
-      });
-
-      env(padBus, 0.0, 0.18, 1.2, 1.2);
-      return padBus;
-    }
-
-    function makeBass(root){
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      const filt = ctx.createBiquadFilter();
-      filt.type='lowpass'; filt.frequency.value = 220; filt.Q.value = 0.8;
-      o.type='triangle'; o.frequency.value = root/2;
-      o.connect(g); g.connect(filt).connect(master);
-      g.gain.value = 0.0; env(g,0,0.12,0.4,0.6); o.start();
-
-      const lfo = ctx.createOscillator(), lfoG=ctx.createGain();
-      lfo.frequency.value=0.03; lfoG.gain.value=20;
-      lfo.connect(lfoG).connect(filt.frequency); lfo.start();
-      return g;
-    }
-
-    function boom(){
-      const g = ctx.createGain(); g.gain.value=0; g.connect(master);
-      const kick = ctx.createOscillator(); kick.type='sine';
-      kick.frequency.setValueAtTime(120, ctx.currentTime);
-      kick.connect(g);
-      const now=ctx.currentTime;
-      g.gain.setValueAtTime(0.001, now);
-      g.gain.exponentialRampToValueAtTime(0.25, now+0.01);
-      g.gain.exponentialRampToValueAtTime(0.001, now+0.6);
-      kick.frequency.exponentialRampToValueAtTime(55, now+0.25);
-      kick.start(); kick.stop(now+0.7);
-
-      const nBuf = ctx.createBuffer(1, ctx.sampleRate*0.5, ctx.sampleRate);
-      const d = nBuf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*0.3;
-      const n = ctx.createBufferSource(); n.buffer = nBuf; n.loop=false;
-      const nf = ctx.createBiquadFilter(); nf.type='bandpass'; nf.frequency.value=1500; nf.Q.value=0.8;
-      const ng = ctx.createGain(); ng.gain.value=0.18;
-      n.connect(nf).connect(ng).connect(delayL); n.connect(nf).connect(ng).connect(delayR);
-      n.start(now);
-    }
-
-    // chord progression (epic/minor): Am, F, Dm, E
-    const roots = [220.00, 174.61, 146.83, 164.81];
-    let step=0;
-    function chordFrom(root){ const fifth=root*1.5, octave=root*2; return [root,fifth,octave]; }
-    function nextChord(){
-      step=(step+1)%roots.length;
-      const r=roots[step];
-      makePad(chordFrom(r));
-      makeBass(r);
-      boom();
-    }
-    nextChord();
-    setInterval(nextChord, 8000);
-    setInterval(boom, 16000);
+  function mkDelay(time, feedback){
+    const d = ctx.createDelay(3.0);
+    d.delayTime.value = time;
+    const g = ctx.createGain(); g.gain.value = feedback;
+    d.connect(g).connect(d);
+    return { d, g };
   }
+  function mkReverbish(){
+    // Simple Schroeder-ish: 3 combs + 2 all-pass
+    const input = ctx.createGain();
+    const out = ctx.createGain(); out.gain.value = 0.35;
 
-  const btn = document.getElementById('musicToggle');
-  const prime = () => { initAudio(); window.removeEventListener('pointerdown', prime); };
-  window.addEventListener('pointerdown', prime, { once:true });
+    function comb(t, fb){
+      const dl = ctx.createDelay(1.5); dl.delayTime.value = t;
+      const g = ctx.createGain(); g.gain.value = fb;
+      input.connect(dl); dl.connect(g).connect(dl);
+      const tap = ctx.createGain(); dl.connect(tap);
+      return tap;
+    }
+    const c1 = comb(0.083, 0.78), c2 = comb(0.101, 0.75), c3 = comb(0.127, 0.73);
 
-  btn.addEventListener('click', async () => {
-    if (!started) initAudio();
-    if (ctx.state === 'suspended') await ctx.resume();
-    isMuted = !isMuted;
-    master.gain.cancelScheduledValues(ctx.currentTime);
-    master.gain.linearRampToValueAtTime(isMuted ? 0 : 0.12, ctx.currentTime + 0.05);
-    btn.textContent = isMuted ? '🔇' : '🔊';
-  });
-})();
-</script>
-</body>
-</html>
+    function allpass(t, fb){
+      const dl = ctx.createDelay(1.0); dl.delayTime.value = t;
+      
