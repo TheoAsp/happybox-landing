@@ -1,29 +1,35 @@
-export default async function handler(req, res) {
-  const base = process.env.KV_REST_API_URL;
-  const token = process.env.KV_REST_API_TOKEN;
-  if (!base || !token) {
-    return res.status(500).json({ ok: false, error: 'KV envs missing' });
+// api/kv-test.js
+// Γρήγορο τεστ Upstash KV (SET χωρίς TTL + GET)
+
+const KV_BASE  = process.env.KV_REST_API_URL || "";
+const KV_TOKEN = process.env.KV_REST_API_TOKEN || "";
+
+function j(res, code, data){ res.status(code).json(data); }
+
+module.exports = async (req, res) => {
+  try {
+    const email = String(req.query.email || "debug@test.com").toLowerCase();
+    const key = `minted:${email}`;
+
+    // SET key=1 (χωρίς TTL)
+    const wroteRes = await fetch(`${KV_BASE}/set/${encodeURIComponent(key)}/1`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${KV_TOKEN}` }
+    });
+    const wroteTxt = await wroteRes.text();
+
+    // GET key
+    const readRes = await fetch(`${KV_BASE}/get/${encodeURIComponent(key)}`, {
+      headers: { Authorization: `Bearer ${KV_TOKEN}` }
+    });
+    const readTxt = await readRes.text();
+
+    return j(res, 200, {
+      ok: true,
+      wrote: { status: wroteRes.status, body: wroteTxt },
+      read:  { status: readRes.status,  body: readTxt }
+    });
+  } catch (e) {
+    return j(res, 500, { ok:false, error: String(e.message || e) });
   }
-
-  const email = String(req.query.email || 'test@example.com').toLowerCase();
-  const key = `minted:${email}`;
-
-  // 1) write (set) με TTL 1 ώρα (3600s)
-  const setResp = await fetch(`${base}/set/${encodeURIComponent(key)}/1?ttlSeconds=3600`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${token}` }
-  });
-  const setTxt = await setResp.text();
-
-  // 2) read (get)
-  const getResp = await fetch(`${base}/get/${encodeURIComponent(key)}`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-  const getTxt = await getResp.text();
-
-  return res.status(200).json({
-    ok: true,
-    wrote: { status: setResp.status, body: setTxt },
-    read:  { status: getResp.status, body: getTxt }
-  });
-}
+};
