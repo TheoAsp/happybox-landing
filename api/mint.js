@@ -1,5 +1,5 @@
 // api/mint.js
-// Email-to-mint με Crossmint + περιορισμό 1 mint ανά email μέσω Upstash KV
+// Email-to-mint με Crossmint + 1 mint ανά email (μόνιμο) μέσω Upstash KV
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
 
@@ -9,8 +9,8 @@ const CROSSMINT_ENV = (process.env.CROSSMINT_ENV || "production").toLowerCase();
 const CHAIN = CROSSMINT_ENV === "staging" ? "polygon-mumbai" : "polygon";
 
 // Upstash KV (REST)
-const KV_BASE  = process.env.KV_REST_API_URL || "";   // π.χ. https://xxxx.upstash.io
-const KV_TOKEN = process.env.KV_REST_API_TOKEN || ""; // Bearer token
+const KV_BASE  = process.env.KV_REST_API_URL || "";
+const KV_TOKEN = process.env.KV_REST_API_TOKEN || "";
 
 // -------- helpers --------
 function getTierTemplates(prefix) {
@@ -70,11 +70,11 @@ async function kvGet(key) {
   });
   const txt = await r.text();
   if (!r.ok) throw new Error(`KV GET ${r.status}: ${txt}`);
-  return txt; // αν δεν υπάρχει, θα είναι κενό
+  return txt; // {"result":"..."} ή {"result":null}
 }
 
-async function kvSetEx(key, value, ttlSeconds) {
-  const r = await fetch(`${KV_BASE}/set/${encodeURIComponent(key)}/${encodeURIComponent(value)}?ttlSeconds=${ttlSeconds}`, {
+async function kvSet(key, value) {
+  const r = await fetch(`${KV_BASE}/set/${encodeURIComponent(key)}/${encodeURIComponent(value)}`, {
     method: "POST",
     headers: { Authorization: `Bearer ${KV_TOKEN}` }
   });
@@ -112,14 +112,15 @@ module.exports = async function handler(req, res) {
       .trim()
       .toUpperCase();
 
-    // 1) Έλεγχος rate-limit: 1 mint / email (24h)
+    // 1) Έλεγχος: έχει ξανακάνει mint;
     const kvKey = `minted:${email}`;
     try {
-      const existing = await kvGet(kvKey);      // αν υπάρχει τιμή, έχει ξανακάνει mint
+      const existingTxt = await kvGet(kvKey);
+      const existing = (() => { try { return JSON.parse(existingTxt).result; } catch { return null; } })();
       if (existing) {
         return res.status(429).json({
           error: "Already minted",
-          details: "Each email can mint only once for now."
+          details: "Each email can mint only once."
         });
       }
     } catch (e) {
@@ -163,12 +164,12 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // 4) Αν πέτυχε, κλείδωσε το email στο KV (TTL 24h)
+    // 4) Κλείδωσε το email
     try {
-      await kvSetEx(kvKey, "1", 24 * 60 * 60);
+      await kvSet(kvKey, "1"); // χωρίς TTL => μόνιμο
     } catch (e) {
-      // Δεν αποτυγχάνει το mint αν σκάσει το KV, απλά log
       console.error("KV SET error (post-mint):", e);
+      // δεν αποτυγχάνει το mint, απλώς γράφουμε log
     }
 
     let data; try { data = JSON.parse(txt); } catch { data = { raw: txt }; }
