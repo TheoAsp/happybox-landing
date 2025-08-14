@@ -1,62 +1,79 @@
-// /pages/api/mint.js
+// /api/mint.js
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    const { email, tier, stage } = req.body;
-
-    if (!email) {
-      return res.status(400).json({ error: 'Missing email' });
+    const { email, tier, completed, stage } = req.body || {};
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ error: "Invalid email" });
     }
 
-    // Environment variables (βεβαιώσου ότι είναι σωστά στο Vercel)
-    const CROSSMINT_API_KEY = process.env.CROSSMINT_API_KEY;
-    const CROSSMINT_COLLECTION_ID = process.env.CROSSMINT_COLLECTION_ID;
+    // mapping tier -> template id (fallback σε TPL_COMMON)
+    const tplCommon   = process.env.TPL_COMMON;
+    const tplRare     = process.env.TPL_RARE;
+    const tplUltra    = process.env.TPL_ULTRA;
+    const tplLegend   = process.env.TPL_LEGENDARY;
 
-    if (!CROSSMINT_API_KEY || !CROSSMINT_COLLECTION_ID) {
-      return res.status(500).json({ error: 'Missing Crossmint config' });
+    const pickTemplateId = () => {
+      const t = (tier || "").toLowerCase();
+      if (t.includes("legend")) return tplLegend || tplUltra || tplRare || tplCommon;
+      if (t.includes("ultra"))  return tplUltra  || tplRare || tplCommon;
+      if (t.includes("rare"))   return tplRare   || tplCommon;
+      return tplCommon;
+    };
+
+    const templateId   = pickTemplateId();
+    const collectionId = process.env.CROSSMINT_COLLECTION_ID;
+    const API_KEY      = process.env.CROSSMINT_API_KEY;
+
+    if (!API_KEY || !collectionId || !templateId) {
+      return res.status(500).json({ error: "Server misconfigured: missing env vars" });
     }
 
-    // Κλήση στο Crossmint API
-    const response = await fetch(
-      `https://www.crossmint.com/api/2022-06-09/collections/${CROSSMINT_COLLECTION_ID}/nfts`,
-      {
-        method: 'POST',
-        headers: {
-          'x-client-secret': CROSSMINT_API_KEY,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          recipient: `email:${email}`,
-          metadata: {
-            name: 'Happy Box — Kalavryta Edition',
-            image: 'https://myhappybox.gr/public/photos/cover.jpg',
-            description: `Tier: ${tier || 'N/A'} • Stage: ${stage || 'N/A'}`,
-            attributes: [
-              { trait_type: 'Tier', value: tier || 'N/A' },
-              { trait_type: 'Stage', value: String(stage) || 'N/A' },
-            ],
-          },
-        }),
-      }
-    );
+    // recipient ως email (το chain το γνωρίζει από το collection)
+    const recipient = `email:${email}`;
 
-    const text = await response.text();
+    // OPTIONAL: extra metadata που θες να “γραφτούν” επάνω στο minted NFT
+    const metadata = {
+      name: `Happy Box — ${tier || "Guest"}`,
+      description: "Minted via Happy Box game (Kalavryta Edition).",
+      attributes: [
+        { trait_type: "Tier", value: tier || "—" },
+        { trait_type: "Stage Reached", value: String(stage || 1) },
+        { trait_type: "Completed keys", value: (completed || []).length }
+      ]
+    };
 
-    if (!response.ok) {
-      console.error('Crossmint error:', response.status, text);
-      return res.status(response.status).json({
-        error: 'Crossmint mint failed',
-        details: text,
-      });
+    const url = `https://www.crossmint.com/api/2022-06-09/collections/${collectionId}/nfts`;
+
+    const resp = await fetch(url, {
+      method: "POST",
+      headers: {
+        "X-Client-Secret": API_KEY,      // server key
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        recipient,            // "email:xxx"
+        templateId,           // <<<< το κρίσιμο για mint-from-template
+        // Αν θες να περάσεις επιπλέον metadata (προαιρετικό):
+        metadata
+      })
+    });
+
+    const out = await resp.json().catch(() => ({}));
+
+    if (!resp.ok) {
+      console.error("Crossmint error", resp.status, out);
+      return res.status(resp.status).json({ error: out?.error || "Crossmint mint failed" });
     }
 
-    // Αν όλα πάνε καλά
-    return res.status(200).json({ success: true, details: JSON.parse(text) });
+    // Επιστρέφουμε κάτι χρήσιμο στο UI (π.χ. requestId)
+    return res.status(200).json({ ok: true, requestId: out?.id || null });
+
   } catch (err) {
-    console.error('Mint API error:', err);
-    return res.status(500).json({ error: 'Server error', details: err.message });
+    console.error(err);
+    return res.status(500).json({ error: "Unexpected server error" });
   }
 }
