@@ -1,170 +1,166 @@
-// /api/mint.js
-// Next.js (Vercel) serverless API route – Crossmint "mint by email"
-// Ταιριάζει τα tiers ανά στάδιο, επιλέγει τυχαίο template μέσα στο tier pool,
-// και κάνει mint στο email του παίκτη.
+// api/mint.js
+// Vercel Serverless Function – Crossmint "email to mint" με templates ανά tier.
 
-export default async function handler(req, res) {
-  // ---- Guard: method ----
-  if (req.method !== "POST") {
-    return res.status(405).json({ ok: false, error: "Method Not Allowed" });
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
+
+// ----- διαβάζουμε βασικά env -----
+const API_KEY = process.env.CROSSMINT_API_KEY || "";
+const COLLECTION_ID = process.env.CROSSMINT_COLLECTION_ID || "";
+const CROSSMINT_ENV = (process.env.CROSSMINT_ENV || "production").toLowerCase();
+
+// chain: production -> polygon  (αν είσαι σε staging άλλαξε το σε "polygon-mumbai")
+const CHAIN = CROSSMINT_ENV === "staging" ? "polygon-mumbai" : "polygon";
+
+// ----- helper: μάζεψε όλα τα templateIds για ένα tier prefix -----
+function getTierTemplates(prefix) {
+  const arr = Object.keys(process.env)
+    .filter((k) => k.startsWith(prefix))
+    .sort() // σταθερή σειρά
+    .map((k) => (process.env[k] || "").trim())
+    .filter(Boolean);
+  return arr;
+}
+
+// Μάζεψε λίστες από ENV (βάλε μόνο όσα χρησιμοποιείς)
+const TPL = {
+  COMMON:     getTierTemplates("TPL_COMMON_"),
+  UNCOMMON:   getTierTemplates("TPL_UNCOMMON_"),
+  RARE:       getTierTemplates("TPL_RARE_"),
+  ULTRARARE:  getTierTemplates("TPL_ULTRARARE_"),
+  UNIQUE:     getTierTemplates("TPL_UNIQUE_"),
+  EPIC:       getTierTemplates("TPL_EPIC_"),
+  LEGENDARY:  getTierTemplates("TPL_LEGENDARY_"),
+  MYTHIC:     getTierTemplates("TPL_MYTHIC_"),
+};
+
+// helper
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+// Επιλογή templateId με βάση tier (και fallbacks αν λείπουν env)
+function chooseTemplateId(tier, stage) {
+  const T = (tier || "").toString().trim().toUpperCase();
+
+  // κανόνες ανά tier
+  const map = {
+    "COMMON":     ["COMMON", "UNCOMMON", "RARE"],        // fallback σε UNCOMMON/RARE αν λείπει
+    "UNCOMMON":   ["UNCOMMON", "COMMON", "RARE"],
+    "RARE":       ["RARE", "ULTRARARE"],
+    "ULTRA RARE": ["ULTRARARE", "RARE", "UNIQUE"],
+    "ULTRARARE":  ["ULTRARARE", "RARE", "UNIQUE"],
+    "UNIQUE":     ["UNIQUE"],
+    "EPIC":       ["EPIC", "LEGENDARY"],
+    "LEGENDARY":  ["LEGENDARY", "EPIC", "MYTHIC"],
+    "MYTHIC":     ["MYTHIC", "LEGENDARY"]
+  };
+
+  // αν δεν έρθει "tier" από client, φτιάξε το από το stage
+  let wanted = map[T];
+  if (!wanted) {
+    if (stage === 1)      wanted = map["COMMON"];
+    else if (stage === 2) wanted = ["RARE", "ULTRARARE", "UNIQUE"];
+    else if (stage === 3) wanted = ["EPIC", "LEGENDARY", "MYTHIC"];
+    else wanted = map["COMMON"];
   }
 
-  // ---- ENV ----
-  const API_KEY = process.env.CROSSMINT_API_KEY;
-  const COLLECTION_ID = process.env.CROSSMINT_COLLECTION_ID;
-  const ENV = (process.env.CROSSMINT_ENV || "staging").toLowerCase(); // "staging" | "production"
-  const MAX_PER_EMAIL = parseInt(process.env.MAX_MINTS_PER_EMAIL || "1", 10);
+  // ψάξε με προτεραιότητα και διάλεξε τυχαία από διαθέσιμα
+  for (const bucket of wanted) {
+    const arr = TPL[bucket.replace(" ", "")] || TPL[bucket] || [];
+    if (arr.length) return pickRandom(arr);
+  }
+  return null; // τίποτα διαθέσιμο
+}
+
+// μικρό helper για να μην “πετάμε” τεράστια responses στα logs
+function cut(s, n = 1200) { try { return String(s).slice(0, n); } catch { return ""; } }
+
+module.exports = async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 
   if (!API_KEY || !COLLECTION_ID) {
-    return res.status(500).json({
-      ok: false,
-      error:
-        "Server misconfigured: missing CROSSMINT_API_KEY or CROSSMINT_COLLECTION_ID",
-    });
+    return res.status(500).json({ error: "Server not configured (API key / COLLECTION missing)" });
   }
-
-  const HOST =
-    ENV === "production"
-      ? "https://www.crossmint.com"
-      : "https://staging.crossmint.com";
-
-  // ---- Input ----
-  const { email, stage, completed, tier: clientTier } = req.body || {};
-
-  if (!isValidEmail(email)) {
-    return res.status(400).json({ ok: false, error: "Invalid email" });
-  }
-
-  const st = Number(stage);
-  if (![1, 2, 3].includes(st)) {
-    return res.status(400).json({ ok: false, error: "Invalid stage" });
-  }
-
-  // ---- (Optional) very light throttle per email (stateless best-effort)
-  // Σε production θα το έκανες με DB/ratelimit. Εδώ απλά προστατεύουμε λίγο.
-  // Άφησα hook να τιμήσεις MAX_MINTS_PER_EMAIL αν αργότερα βάλεις DB.
-  // Προς το παρόν δεν απορρίπτουμε — Crossmint θα αποτρέψει duplicates αν θες.
-  // Αν ΘΕΣ να κόβεις αυστηρά 1/email, βάλε δικό σου storage/DB εδώ.
-
-  // ---- Pools: βάλε εδώ τα TEMPLATE IDs που δημιούργησες στο Crossmint ----
-  // Αν λείπουν COMMON/UNCOMMON προσωρινά, ο handler θα επιστρέψει καθαρό σφάλμα.
-  const POOLS = {
-    COMMON: [], // π.χ. ["TPL_COMMON_1", "TPL_COMMON_2"]
-    UNCOMMON: [], // π.χ. ["TPL_UNCOMMON_1"]
-    RARE: ["TPL_RARE_1", "TPL_RARE_2", "TPL_RARE_3"],
-    ULTRARARE: ["TPL_ULTRARARE_1"],
-    UNIQUE: ["TPL_UNIQUE_1", "TPL_UNIQUE_2"], // <-- προστέθηκε το TPL_UNIQUE_2
-    EPIC: ["TPL_EPIC_1", "TPL_EPIC_2", "TPL_EPIC_3"],
-    LEGENDARY: ["TPL_LEGENDARY_1", "TPL_LEGENDARY_2", "TPL_LEGENDARY_3", "TPL_LEGENDARY_4"],
-    MYTHIC: ["TPL_MYTHIC_1", "TPL_MYTHIC_2", "TPL_MYTHIC_3"],
-  };
-
-  // ---- Tiers by stage (όπως ζήτησες) ----
-  const ALLOWED_BY_STAGE = {
-    1: ["COMMON", "UNCOMMON"],
-    2: ["RARE", "ULTRARARE", "UNIQUE"],
-    3: ["EPIC", "LEGENDARY", "MYTHIC"],
-  };
-
-  // Αν από το frontend έρχεται περιγραφικό Tier (π.χ. "Common → Uncommon"), δεν το εμπιστευόμαστε,
-  // αποφασίζουμε στον server με βάση το stage. (ασφάλεια & δίκαιη λογική)
-  const allowedTiers = ALLOWED_BY_STAGE[st];
-
-  // Αν θες weights, μπορείς να αλλάξεις εδώ (ίσα βάρη προς το παρόν)
-  const chosenTier = randomPick(allowedTiers);
-
-  // Βρίσκουμε διαθέσιμα templates για το chosenTier
-  const tierPool = POOLS[chosenTier] || [];
-  if (tierPool.length === 0) {
-    return res.status(400).json({
-      ok: false,
-      error:
-        `No templates configured for tier ${chosenTier}. ` +
-        `Create at least one template in Crossmint (e.g. TPL_${chosenTier}_1) and update POOLS.`,
-    });
-  }
-
-  // Επιλογή τυχαίου template από το tier
-  const templateId = randomPick(tierPool);
-
-  // Μπορούμε να περάσουμε metadata — helpful για εμφάνιση στο wallet/marketplaces
-  const metadata = {
-    name: `my Happy Box — ${chosenTier}`,
-    description: `Kalavryta Edition • Tier ${chosenTier}`,
-    attributes: [
-      { trait_type: "tier", value: chosenTier },
-      { trait_type: "stage", value: st },
-      ...(Array.isArray(completed)
-        ? [{ trait_type: "tasks_completed", value: completed.length }]
-        : []),
-    ],
-  };
 
   try {
-    // Crossmint “mint by email”:
-    // Endpoint (stable): /api/2022-06-09/collections/{collectionId}/nfts
-    // Headers: X-API-KEY
-    // Body: { recipient: "email:someone@example.com", templateId, metadata?, allowDuplicate? }
-    const url = `${HOST}/api/2022-06-09/collections/${encodeURIComponent(
-      COLLECTION_ID
-    )}/nfts`;
+    const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
+    const email = (body.email || "").trim().toLowerCase();
+    const stage = Number(body.stage || 0);
+    const clientTier = body.tier || ""; // π.χ. "Common → Uncommon", "Legendary" κλπ.
 
-    const resp = await fetch(url, {
-      method: "POST",
-      headers: {
-        "X-API-KEY": API_KEY,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        recipient: `email:${email}`,
-        templateId,
-        metadata,
-        allowDuplicate: false, // συνήθως false, ώστε να μη ξανακοπεί ίδιο NFT άθελά σου
-      }),
-    });
+    if (!EMAIL_RE.test(email)) {
+      return res.status(400).json({ error: "Invalid email" });
+    }
 
-    const data = await safeJson(resp);
+    // καθάρισε το tier από “→” κλπ
+    const normalizedTier = String(clientTier)
+      .replace(/→/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toUpperCase();
 
-    if (!resp.ok) {
-      // Eπιστρέφουμε το πραγματικό σφάλμα από Crossmint για debugging
-      return res.status(resp.status).json({
-        ok: false,
-        error: data?.error || data?.message || `Crossmint error (${resp.status})`,
-        details: data,
+    const templateId = chooseTemplateId(normalizedTier, stage);
+
+    if (!templateId) {
+      // Δεν υπάρχουν templates για το tier/stage – πες μας ποια λείπουν
+      return res.status(400).json({
+        error: "No templates available for this tier/stage",
+        details: {
+          tier: normalizedTier || null,
+          stage: stage || null,
+          available: Object.fromEntries(
+            Object.entries(TPL).map(([k, v]) => [k, v.length])
+          )
+        }
       });
     }
 
-    // ΟΚ – Crossmint θα στείλει email στον χρήστη για το custodial wallet κ.λπ.
+    // φτιάξε σώμα για Crossmint
+    const payload = {
+      recipient: `email:${email}:${CHAIN}`,
+      chain: CHAIN,
+      templateId
+      // εναλλακτικά αντί για templateId θα μπορούσες να στείλεις metadata
+    };
+
+    const endpoint = `https://www.crossmint.com/api/2022-06-09/collections/${COLLECTION_ID}/nfts`;
+
+    const cm = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-client-secret": API_KEY
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const txt = await cm.text();
+
+    if (!cm.ok) {
+      console.error("CROSSMINT ERROR", cm.status, cut(txt));
+      return res.status(cm.status).json({
+        error: "Crossmint rejected request",
+        status: cm.status,
+        details: cut(txt)
+      });
+    }
+
+    // ok
+    let data;
+    try { data = JSON.parse(txt); } catch { data = { raw: txt }; }
+
     return res.status(200).json({
       ok: true,
-      email,
-      stage: st,
-      chosenTier,
-      templateId,
-      crossmint: data,
+      sent: {
+        email,
+        tier: normalizedTier || null,
+        templateId,
+        chain: CHAIN
+      },
+      crossmint: data
     });
   } catch (err) {
-    return res.status(500).json({
-      ok: false,
-      error: "Mint request failed",
-      details: err?.message || String(err),
-    });
+    console.error("MINT HANDLER CRASH", err);
+    return res.status(500).json({ error: "Internal server error" });
   }
-}
-
-// -------- Helpers --------
-function isValidEmail(e) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(e || "").trim());
-}
-
-function randomPick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-async function safeJson(resp) {
-  try {
-    return await resp.json();
-  } catch {
-    return null;
-  }
-               }
+};
