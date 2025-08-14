@@ -1,17 +1,18 @@
+// api/mint.js
+// Email-to-mint με Crossmint + περιορισμό 1 mint ανά email μέσω Upstash KV
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
 
-// --- ENV ---
 const API_KEY       = process.env.CROSSMINT_API_KEY || "";
 const COLLECTION_ID = process.env.CROSSMINT_COLLECTION_ID || "";
 const CROSSMINT_ENV = (process.env.CROSSMINT_ENV || "production").toLowerCase();
-
 const CHAIN = CROSSMINT_ENV === "staging" ? "polygon-mumbai" : "polygon";
 
-// Upstash REST
-const KV_URL   = process.env.KV_REST_API_URL || "";
-const KV_TOKEN = process.env.KV_REST_API_TOKEN || "";
+// Upstash KV (REST)
+const KV_BASE  = process.env.KV_REST_API_URL || "";   // π.χ. https://xxxx.upstash.io
+const KV_TOKEN = process.env.KV_REST_API_TOKEN || ""; // Bearer token
 
-// --- templates από ENV ---
+// -------- helpers --------
 function getTierTemplates(prefix) {
   return Object.keys(process.env)
     .filter((k) => k.startsWith(prefix))
@@ -30,8 +31,8 @@ const TPL = {
   MYTHIC:     getTierTemplates("TPL_MYTHIC_"),
 };
 const pickRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+function cut(s, n = 1500) { try { return String(s).slice(0, n); } catch { return ""; } }
 
-// Επιλογή template ανά tier/stage (όπως είχαμε)
 function chooseTemplateId(tier, stage) {
   const T = (tier || "").toString().trim().toUpperCase();
   const map = {
@@ -51,56 +52,82 @@ function chooseTemplateId(tier, stage) {
     if (stage === 1)      wanted = map["COMMON"];
     else if (stage === 2) wanted = ["RARE", "ULTRARARE", "UNIQUE"];
     else if (stage === 3) wanted = ["EPIC", "LEGENDARY", "MYTHIC"];
-    else                  wanted = map["COMMON"];
+    else wanted = map["COMMON"];
   }
 
   for (const bucket of wanted) {
-    const arr = TPL[bucket.replace(" ", "")] || TPL[bucket] || [];
+    const key = bucket.replace(" ", "");
+    const arr = TPL[key] || [];
     if (arr.length) return pickRandom(arr);
   }
   return null;
 }
 
-// --- Upstash helpers ---
-async function kvSetOnce(key, secondsTTL = 60 * 60 * 24 * 30) {
-  // SETNX: βάλε value=1 μόνο αν δεν υπάρχει, με TTL
-  const resp = await fetch(
-    `${KV_URL}/set/${encodeURIComponent(key)}/1?nx=true&ttlSeconds=${secondsTTL}`,
-    { method: "POST", headers: { Authorization: `Bearer ${KV_TOKEN}` } }
-  );
-  if (!resp.ok) {
-    const t = await resp.text().catch(() => "");
-    throw new Error(`KV set failed ${resp.status}: ${t}`);
-  }
-  const text = await resp.text();
-  // Upstash επιστρέφει "OK" αν έβαλε, "null" αν υπήρχε ήδη
-  return text.replace(/"/g, "") === "OK";
+// -------- KV ops (1 mint / email) --------
+async function kvGet(key) {
+  const r = await fetch(`${KV_BASE}/get/${encodeURIComponent(key)}`, {
+    headers: { Authorization: `Bearer ${KV_TOKEN}` }
+  });
+  const txt = await r.text();
+  if (!r.ok) throw new Error(`KV GET ${r.status}: ${txt}`);
+  return txt; // αν δεν υπάρχει, θα είναι κενό
 }
 
-function cut(s, n = 1200) { try { return String(s).slice(0, n); } catch { return ""; } }
+async function kvSetEx(key, value, ttlSeconds) {
+  const r = await fetch(`${KV_BASE}/set/${encodeURIComponent(key)}/${encodeURIComponent(value)}?ttlSeconds=${ttlSeconds}`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${KV_TOKEN}` }
+  });
+  const txt = await r.text();
+  if (!r.ok) throw new Error(`KV SET ${r.status}: ${txt}`);
+  return txt;
+}
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
-  if (!API_KEY || !COLLECTION_ID) return res.status(500).json({ error: "Server not configured" });
-  if (!KV_URL || !KV_TOKEN) return res.status(500).json({ error: "KV not configured" });
+// -----------------------------------------
+module.exports = async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  if (!API_KEY || !COLLECTION_ID) {
+    return res.status(500).json({ error: "Server not configured (Crossmint envs missing)" });
+  }
+  if (!KV_BASE || !KV_TOKEN) {
+    return res.status(500).json({ error: "Server not configured (KV envs missing)" });
+  }
 
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
-    const email = (body.email || "").trim().toLowerCase();
+    const email = String(body.email || "").trim().toLowerCase();
     const stage = Number(body.stage || 0);
-    const clientTier = body.tier || "";
+    const clientTier = String(body.tier || "");
 
-    if (!EMAIL_RE.test(email)) return res.status(400).json({ error: "Invalid email" });
-
-    // Κλείδωμα: 1 NFT / email
-    const lockKey = `minted:${email}`;
-    const acquired = await kvSetOnce(lockKey, 60 * 60 * 24 * 30); // 30 ημέρες
-    if (!acquired) {
-      return res.status(429).json({ error: "This email has already minted a reward recently." });
+    if (!EMAIL_RE.test(email)) {
+      return res.status(400).json({ error: "Invalid email" });
     }
 
-    // normalise tier
-    const normalizedTier = String(clientTier).replace(/→/g, " ").replace(/\s+/g, " ").trim().toUpperCase();
+    const normalizedTier = clientTier
+      .replace(/→/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toUpperCase();
+
+    // 1) Έλεγχος rate-limit: 1 mint / email (24h)
+    const kvKey = `minted:${email}`;
+    try {
+      const existing = await kvGet(kvKey);      // αν υπάρχει τιμή, έχει ξανακάνει mint
+      if (existing) {
+        return res.status(429).json({
+          error: "Already minted",
+          details: "Each email can mint only once for now."
+        });
+      }
+    } catch (e) {
+      console.error("KV GET error:", e);
+      return res.status(502).json({ error: "KV unavailable", details: String(e.message || e) });
+    }
+
+    // 2) Διάλεξε template
     const templateId = chooseTemplateId(normalizedTier, stage);
     if (!templateId) {
       return res.status(400).json({
@@ -109,29 +136,50 @@ export default async function handler(req, res) {
       });
     }
 
-    // Crossmint call
-    const payload = { recipient: `email:${email}:${CHAIN}`, chain: CHAIN, templateId };
+    // 3) Κάλεσε Crossmint
     const endpoint = `https://www.crossmint.com/api/2022-06-09/collections/${COLLECTION_ID}/nfts`;
+    const payload = {
+      recipient: `email:${email}:${CHAIN}`,
+      chain: CHAIN,
+      templateId
+    };
 
     const cm = await fetch(endpoint, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-client-secret": API_KEY },
+      headers: {
+        "Content-Type": "application/json",
+        "x-client-secret": API_KEY
+      },
       body: JSON.stringify(payload)
     });
-
     const txt = await cm.text();
+
     if (!cm.ok) {
-      // Αν αποτύχει το mint, ελευθέρωσε το lock για να ξαναδοκιμάσει ο χρήστης
-      await fetch(`${KV_URL}/del/${encodeURIComponent(lockKey)}`, {
-        method: "POST", headers: { Authorization: `Bearer ${KV_TOKEN}` }
-      }).catch(()=>{});
-      return res.status(cm.status).json({ error: "Crossmint rejected request", details: cut(txt) });
+      console.error("Crossmint error:", cm.status, cut(txt));
+      return res.status(cm.status).json({
+        error: "Crossmint rejected request",
+        status: cm.status,
+        details: cut(txt)
+      });
+    }
+
+    // 4) Αν πέτυχε, κλείδωσε το email στο KV (TTL 24h)
+    try {
+      await kvSetEx(kvKey, "1", 24 * 60 * 60);
+    } catch (e) {
+      // Δεν αποτυγχάνει το mint αν σκάσει το KV, απλά log
+      console.error("KV SET error (post-mint):", e);
     }
 
     let data; try { data = JSON.parse(txt); } catch { data = { raw: txt }; }
-    return res.status(200).json({ ok: true, sent: { email, tier: normalizedTier || null, templateId, chain: CHAIN }, crossmint: data });
+    return res.status(200).json({
+      ok: true,
+      sent: { email, tier: normalizedTier || null, templateId, chain: CHAIN },
+      crossmint: data
+    });
 
   } catch (err) {
-    return res.status(500).json({ error: "Internal server error", details: String(err && err.message || err) });
+    console.error("MINT HANDLER CRASH:", err);
+    return res.status(500).json({ error: "Internal server error", details: String(err.message || err) });
   }
-  }
+};
