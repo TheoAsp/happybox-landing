@@ -431,7 +431,59 @@ const T = {
     "btn.mintNow":"Mint τώρα"
   }
 };
+<script>
+// ===== API-only verify (strict) =====
+async function verifyQR(questId, code, statusEl){
+  const uid = ensureUid();
+  const email = getEmail();
 
+  function setStatus(html){ if(statusEl) statusEl.innerHTML = html; }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email||"")) {
+    setStatus('<span class="pill err">Βάλε έγκυρο email</span>');
+    return false;
+  }
+  if (!code) {
+    setStatus('<span class="pill err">Βάλε τον κωδικό QR</span>');
+    return false;
+  }
+
+  try{
+    setStatus('Επαλήθευση…');
+
+    const resp = await fetch('/api/verify-qr', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ uid, email, code, questId })
+    });
+
+    const data = await resp.json().catch(()=> ({}));
+
+    if (!resp.ok) {
+      if (data?.error === 'already used') {
+        setStatus('<span class="pill warn">Ήδη χρησιμοποιήθηκε για αυτό το email</span>');
+      } else if (data?.error === 'invalid code') {
+        setStatus('<span class="pill err">Λάθος QR code</span>');
+      } else if (data?.error) {
+        setStatus(`<span class="pill err">${data.error}</span>`);
+      } else {
+        setStatus(`<span class="pill err">Σφάλμα ${resp.status}</span>`);
+      }
+      return false;
+    }
+
+    // OK μόνο αν το API γύρισε 200
+    setStatus('<span class="pill ok">QR verified ✅</span>');
+    if (typeof addDone === 'function') addDone(questId);
+    if (typeof render === 'function') render();
+    return true;
+
+  } catch (e) {
+    setStatus('<span class="pill err">Δίκτυο/Server error</span>');
+    return false;
+  }
+}
+</script>
 /* attractions dictionary */
 const ATTR = {
   museum:{en:"Municipal Museum of the Kalavryta Holocaust 🏛️", el:"Δημοτικό Μουσείο Καλαβρυτινού Ολοκαυτώματος 🏛️"},
