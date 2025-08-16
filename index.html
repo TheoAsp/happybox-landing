@@ -130,6 +130,11 @@
     </p>
 
     <div class="controls">
+<!-- ADD: Email chip (βάλε το μέσα στο .controls) -->
+<div class="chip">
+  <label for="userEmail" style="font-size:14px;margin-right:6px">Email:</label>
+  <input type="email" id="userEmail" placeholder="you@example.com" style="border:1px solid #e6e6e6;border-radius:10px;padding:6px 10px;min-width:220px">
+</div>
       <div class="chip">
         <span data-i18n="lang.label">Language:</span>
         <select id="langSelect" aria-label="Language">
@@ -289,6 +294,7 @@
 
 <script>
 /* ========= constants ========= */
+
 const LS_KEY='hb_demo_progress_v5';
 const LS_VICTORY='hb_demo_victory_once';
 const LS_SEASON='hb_demo_season';
@@ -503,6 +509,24 @@ function applyLangToDom(){
 }
 
 /* ========= dynamic attractions UI ========= */
+// ===== shop verify handlers =====
+document.getElementById('s1QrBtn')?.addEventListener('click', ()=>{
+  const code = document.getElementById('s1QrC').value.trim();
+  const status = document.getElementById('s1QrStatus');
+  verifyQR('s1', code, status);
+});
+
+document.getElementById('s2QrBtn')?.addEventListener('click', ()=>{
+  const code = document.getElementById('s2QrC').value.trim();
+  const status = document.getElementById('s2QrStatus');
+  verifyQR('s2', code, status);
+});
+
+document.getElementById('s3QrBtn')?.addEventListener('click', ()=>{
+  const code = document.getElementById('s3QrC').value.trim();
+  const status = document.getElementById('s3QrStatus');
+  verifyQR('s3', code, status);
+});
 const s1AttrList=document.getElementById('s1AttrList');
 const s2AttrList=document.getElementById('s2AttrList');
 const s3AttrList=document.getElementById('s3AttrList');
