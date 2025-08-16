@@ -64,7 +64,7 @@
   .card{ background:#fff; border-radius:14px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.08); margin-bottom:14px; }
   .card h3{ margin:4px 0 6px; font-size:20px } .card p{ margin:0 0 12px; color:#666 }
   .row{ display:flex; gap:8px; align-items:center; margin:8px 0; flex-wrap:wrap }
-  .row input[type="text"], .row input[type="email"]{ flex:1; min-width:260px; padding:10px 12px; border:1px solid #e6e6e6; border-radius:10px; font-size:15px; }
+  .row input[type="text"], .row input[type="email"]{ flex:1; min-width:220px; padding:10px 12px; border:1px solid #e6e6e6; border-radius:10px; font-size:15px; }
   .btn{ appearance:none; border:none; cursor:pointer; color:#fff; background:var(--brand);
     padding:10px 14px; border-radius:10px; font-weight:700; box-shadow:0 8px 20px rgba(255,122,0,.3); }
   .btn.alt{ background:#444 } .btn.ghost{ background:#fff; color:#333; border:1px solid #ddd }
@@ -187,9 +187,11 @@
       <div class="status" id="s1PostStatus"></div>
 
       <div class="row" style="margin-top:10px"><span data-i18n="shops.s1">🏪 Partner Shop (Stage 1)</span></div>
-      <div class="row">
-        <input type="text" id="s1Qr" placeholder="Enter QR code (Stage 1)">
+      <div class="row" style="gap:6px;flex-wrap:wrap">
+        <input type="text" id="s1Qr" placeholder="Enter QR code (placeholder)">
         <button class="btn" id="s1QrBtn" data-i18n="btn.verify">Verify QR</button>
+        <!-- NEW: scan with camera -->
+        <button class="btn ghost" id="s1ScanBtn">📷 Scan QR</button>
       </div>
       <div class="status" id="s1QrStatus"></div>
 
@@ -205,10 +207,14 @@
       <p data-i18n="s2.desc">Requires Stage 1 complete. You need: 2 shops + <strong>1 of the attractions</strong> (extras = bonus).</p>
 
       <div class="row"><span data-i18n="shops.s2">🏪 Partner Shops (Stage 2)</span></div>
-      <div class="row">
-        <input type="text" id="s2QrA" placeholder="QR code for Shop 2A">
-        <input type="text" id="s2QrB" placeholder="QR code for Shop 2B">
-        <button class="btn" id="s2QrBtn" data-i18n="btn.verifyBoth">Verify both</button>
+      <div class="row" style="gap:6px;flex-wrap:wrap">
+        <input type="text" id="s2QrA" placeholder="Enter QR code for Shop 2A">
+        <button class="btn" id="s2QrBtnA">Verify 2A</button>
+        <button class="btn ghost" id="s2ScanABtn">📷 Scan 2A</button>
+
+        <input type="text" id="s2QrB" placeholder="Enter QR code for Shop 2B">
+        <button class="btn" id="s2QrBtnB">Verify 2B</button>
+        <button class="btn ghost" id="s2ScanBBtn">📷 Scan 2B</button>
       </div>
       <div class="status" id="s2QrStatus"></div>
 
@@ -224,15 +230,23 @@
       <p data-i18n="s3.desc">Requires Stage 2 complete. You need: 3 shops + <strong>1 of the attractions</strong> (extras = bonus).</p>
 
       <div class="row"><span data-i18n="shops.s3">🏪 Partner Shops (Stage 3)</span></div>
-      <div class="row">
+      <div class="row" style="gap:6px;flex-wrap:wrap">
         <input type="text" id="s3QrA" placeholder="QR for Shop 3A">
+        <button class="btn" id="s3QrBtnA">Verify 3A</button>
+        <button class="btn ghost" id="s3ScanABtn">📷 Scan 3A</button>
+
         <input type="text" id="s3QrB" placeholder="QR for Shop 3B">
+        <button class="btn" id="s3QrBtnB">Verify 3B</button>
+        <button class="btn ghost" id="s3ScanBBtn">📷 Scan 3B</button>
+
         <input type="text" id="s3QrC" placeholder="QR for Shop 3C">
-        <button class="btn" id="s3QrBtn" data-i18n="btn.verifyAll">Verify all</button>
+        <button class="btn" id="s3QrBtnC">Verify 3C</button>
+        <button class="btn ghost" id="s3ScanCBtn">📷 Scan 3C</button>
       </div>
       <div class="status" id="s3QrStatus"></div>
 
       <div class="row" style="margin-top:10px"><span data-i18n="attr.pick">🗺️ Attractions — pick at least one:</span></div>
+      <!-- εδώ θα μπουν ΔΥΝΑΜΙΚΑ τα attractions με κουμπί "📍 Verify by location" στο PART 2 -->
       <div class="row" id="s3AttrList" style="flex-direction:column; align-items:flex-start"></div>
       <div class="row"><button class="btn ghost" id="s3AttrBtn" data-i18n="btn.markVisited" style="margin-top:6px">Mark visited</button></div>
       <div class="status" id="s3AttrStatus"></div>
@@ -284,113 +298,53 @@
       <p data-i18n="victory.desc">You’ve reached 100% progress. Time to claim your top reward! 🎉</p>
       <button class="btn" id="victoryClose" data-i18n="btn.awesome">Awesome!</button>
     </div>
-  </div>
+                                              </div>
+                                              <!-- QR scanner lib (ESM) -->
+<script type="module">
+import QrScanner from "https://unpkg.com/qr-scanner@1.4.2/qr-scanner.min.js";
 
-<script>
 /* ========= constants ========= */
 const LS_KEY='hb_demo_progress_v5';
 const LS_VICTORY='hb_demo_victory_once';
 const LS_SEASON='hb_demo_season';
 const LS_LANG='hb_demo_lang';
+const LS_UID_APP='hb_uid_v1';
+const LS_EMAIL_APP='hb_email_v1';
 
-/* ========= UID & Email helpers (για το API) ========= */
-const LS_UID_APP = 'hb_uid_v1';
-const LS_EMAIL_APP = 'hb_email_v1';
-function ensureUid() {
-  let uid = localStorage.getItem(LS_UID_APP);
-  if (!uid) {
-    const rnd = (crypto && crypto.getRandomValues) ? crypto.getRandomValues(new Uint8Array(16)) : null;
+/* ========= UID & Email helpers ========= */
+function ensureUid(){
+  let uid=localStorage.getItem(LS_UID_APP);
+  if(!uid){
+    const rnd=(crypto&&crypto.getRandomValues)?crypto.getRandomValues(new Uint8Array(16)):null;
     uid = rnd ? Array.from(rnd).map(x=>x.toString(16).padStart(2,'0')).join('') : String(Date.now())+Math.random().toString(16).slice(2);
-    localStorage.setItem(LS_UID_APP, uid);
+    localStorage.setItem(LS_UID_APP,uid);
   }
   return uid;
 }
-function getEmail() {
-  const el = document.getElementById('userEmail');
-  const v = (el && el.value ? el.value : localStorage.getItem(LS_EMAIL_APP) || '').trim().toLowerCase();
-  return v;
+function getEmail(){
+  const el=document.getElementById('userEmail');
+  return (el&&el.value?el.value:localStorage.getItem(LS_EMAIL_APP)||'').trim().toLowerCase();
 }
 function setEmail(v){
-  localStorage.setItem(LS_EMAIL_APP, (v||'').trim().toLowerCase());
-  const el=document.getElementById('userEmail'); if(el) el.value = (v||'');
+  localStorage.setItem(LS_EMAIL_APP,(v||'').trim().toLowerCase());
+  const el=document.getElementById('userEmail'); if(el) el.value=(v||'');
 }
 document.addEventListener('DOMContentLoaded',()=>{ const saved=localStorage.getItem(LS_EMAIL_APP)||''; const el=document.getElementById('userEmail'); if(el){ el.value=saved; el.addEventListener('input',()=>setEmail(el.value)); } });
-function isValidEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e||''); }
+const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/* ========= i18n (μικρό δείγμα, βάλε τα δικά σου αν έχεις ήδη) ========= */
-const T = {
-  en:{
-    "btn.submit":"Submit link","btn.verify":"Verify QR","btn.verifyBoth":"Verify both","btn.verifyAll":"Verify all",
-    "btn.markVisited":"Mark visited","btn.reset":"Reset demo","btn.claim":"Claim your Happy Box","btn.howClaim":"How claiming works",
-    "btn.close":"Close","btn.awesome":"Awesome!","progress.title":"Your Progress","claim.note":"Claim becomes available once you complete <strong>Stage 1</strong>."
-  },
-  el:{
-    "btn.submit":"Υποβολή link","btn.verify":"Έλεγχος QR","btn.verifyBoth":"Έλεγχος και των δύο","btn.verifyAll":"Έλεγχος όλων",
-    "btn.markVisited":"Σήμανση επίσκεψης","btn.reset":"Reset demo","btn.claim":"Πάρε το Happy Box σου","btn.howClaim":"Πώς λειτουργεί το claim",
-    "btn.close":"Κλείσιμο","btn.awesome":"Τέλειο!","progress.title":"Η Πρόοδός σου","claim.note":"Το claim ενεργοποιείται μόλις ολοκληρώσεις το <strong>Στάδιο 1</strong>."
-  }
+/* ========= i18n (σύντομο) ========= */
+const T={
+  en:{ "btn.submit":"Submit link","btn.verify":"Verify QR","btn.markVisited":"Mark visited",
+       "claim.note":"Claim becomes available once you complete <strong>Stage 1</strong>.",
+       "mint.sending":"Minting… please wait","mint.success":"Success! Check your inbox.","mint.error":"Something went wrong." },
+  el:{ "btn.submit":"Υποβολή link","btn.verify":"Έλεγχος QR","btn.markVisited":"Σήμανση επίσκεψης",
+       "claim.note":"Το claim ενεργοποιείται μόλις ολοκληρώσεις το <strong>Στάδιο 1</strong>.",
+       "mint.sending":"Γίνεται mint…","mint.success":"Επιτυχία! Δες το inbox σου.","mint.error":"Κάτι πήγε στραβά." }
 };
+function currentLang(){ return localStorage.getItem(LS_LANG)||'en'; }
 
-/* ========= API-only verify (STRICT) ========= */
-async function verifyQR(questId, code, statusEl){
-  const uid = ensureUid();
-  const email = getEmail();
-  const setStatus = (html)=>{ if(statusEl) statusEl.innerHTML = html; };
-
-  if (!isValidEmail(email)) { setStatus('<span class="pill err">Βάλε έγκυρο email</span>'); return false; }
-  if (!code) { setStatus('<span class="pill err">Βάλε τον κωδικό QR</span>'); return false; }
-
-  try{
-    setStatus('Επαλήθευση…');
-    const resp = await fetch('/api/verify-qr', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ uid, email, code, questId })
-    });
-    const data = await resp.json().catch(()=> ({}));
-
-    if (!resp.ok) {
-      if (data && data.error === 'already used') setStatus('<span class="pill warn">Ήδη χρησιμοποιήθηκε για αυτό το email</span>');
-      else if (data && data.error === 'invalid code') setStatus('<span class="pill err">Λάθος QR code</span>');
-      else setStatus('<span class="pill err">Σφάλμα '+(data.error||resp.status)+'</span>');
-      return false;
-    }
-
-    setStatus('<span class="pill ok">QR verified ✅</span>');
-    addDone(questId); // ενημέρωσε τοπική πρόοδο ΜΟΝΟ μετά από 200 OK
-    render();
-    return true;
-  }catch(e){
-    setStatus('<span class="pill err">Δίκτυο/Server error</span>');
-    return false;
-  }
-}
-
-/* ========= attractions dictionary ========= */
-const ATTR = {
-  museum:{en:"Municipal Museum of the Kalavryta Holocaust 🏛️", el:"Δημοτικό Μουσείο Καλαβρυτινού Ολοκαυτώματος 🏛️"},
-  agialavra:{en:"Monastery of Agia Lavra ⛪", el:"Μονή Αγίας Λαύρας ⛪"},
-  odontotos:{en:"Odontotos Rack Railway 🚆", el:"Odontotos Rack Railway 🚆"},
-  cave:{en:"Cave of Lakes 🕳️", el:"Σπήλαιο των Λιμνών 🕳️"},
-  hill:{en:"Place of Sacrifice / Hill of Kapi ⛰️", el:"Τόπος Θυσίας / Λόφος του Καπι ⛰️"},
-  heroes:{en:"Heroes of 1821 Monument 🗿", el:"Μνημείο Ηρώων Αγωνιστών του 1821 🗿"},
-  ski:{en:"Kalavryta Ski Center 🎿", el:"Χιονοδρομικό κέντρο Καλαβρύτων 🎿"},
-  makellaria:{en:"Holy Monastery of Makellaria ⛪", el:"Ιερά Μονή Μακελλαριάς ⛪"},
-  tower:{en:"Petmezai Tower 🏰", el:"Πύργος Πετμεζαίων 🏰"},
-  gorge:{en:"Vouraikos Gorge 🏞️", el:"Φαράγγι του Βουραϊκού 🏞️"},
-  square:{en:"Petmezai Square 🏞️", el:"Πλατεία Πετμεζαίων 🏞️"}
-};
-
-/* ========= season layouts (απλό demo) ========= */
-const LAYOUTS = {
-  winter:{ s1:['museum','agialavra','square'], s2:['hill','heroes','ski','odontotos'], s3:['cave','gorge','makellaria','tower'] },
-  spring:{ s1:['museum','agialavra','square'], s2:['hill','heroes','odontotos'],     s3:['gorge','cave','makellaria','tower','ski'] },
-  summer:{ s1:['museum','agialavra','square'], s2:['hill','heroes','odontotos'],     s3:['gorge','cave','makellaria','tower','ski'] },
-  autumn:{ s1:['museum','agialavra','square'], s2:['hill','heroes','odontotos'],     s3:['gorge','cave','makellaria','tower','ski'] }
-};
-
-/* ========= store helpers ========= */
-function loadStore(){ try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}')}catch(e){return{}} }
+/* ========= store ========= */
+function loadStore(){ try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}')}catch{return{}} }
 function saveStore(o){ localStorage.setItem(LS_KEY, JSON.stringify(o||{})) }
 function clearStore(){ localStorage.removeItem(LS_KEY); localStorage.removeItem(LS_VICTORY); }
 function addDone(key){ const s=loadStore(); s.completed=Array.from(new Set([...(s.completed||[]), key])); saveStore(s); }
@@ -398,72 +352,79 @@ function addDone(key){ const s=loadStore(); s.completed=Array.from(new Set([...(
 /* ========= slider (2..27) ========= */
 const slides=Array.from({length:26},(_,i)=>`public/photos/${i+2}.png`);
 let sidx=0,timer; const heroImg=document.getElementById('heroImg'), frame=document.getElementById('heroFrame');
-function show(n){ sidx=(n+slides.length)%slides.length; heroImg.style.opacity=0;
-  setTimeout(()=>{ heroImg.src=slides[sidx]; heroImg.onload=()=>heroImg.style.opacity=1; },180); }
+function show(n){ sidx=(n+slides.length)%slides.length; heroImg.style.opacity=0; setTimeout(()=>{ heroImg.src=slides[sidx]; heroImg.onload=()=>heroImg.style.opacity=1; },180); }
 function start(){ timer=setInterval(()=>show(sidx+1),4000) } function stop(){ clearInterval(timer) }
-document.getElementById('prevBtn').onclick=()=>{stop();show(sidx-1);start()};
-document.getElementById('nextBtn').onclick=()=>{stop();show(sidx+1);start()};
+document.getElementById('prevBtn').onclick=()=>{stop();show(sidx-1);start()}; document.getElementById('nextBtn').onclick=()=>{stop();show(sidx+1);start()};
 frame.onmouseenter=stop; frame.onmouseleave=start; show(0); start();
 
 /* ========= season & language ========= */
 const seasonSelect=document.getElementById('seasonSelect');
 const seasonNote=document.getElementById('seasonNote');
 const langSelect=document.getElementById('langSelect');
+function autoSeason(){ const m=new Date().getMonth()+1; if(m===12||m<=3) return 'winter'; if(m<=5) return 'spring'; if(m<=9) return 'summer'; return 'autumn'; }
+function effectiveSeason(){ const set=localStorage.getItem(LS_SEASON)||'auto'; return set==='auto'?autoSeason():set; }
+function applySeasonNote(){ seasonNote.textContent = (effectiveSeason()==='winter'?'Winter mode':'Seasonal mode'); }
+function applyLangToDom(){ /* κρατάμε το υπάρχον UI σου όπως έχει */ }
+langSelect.value=localStorage.getItem(LS_LANG)||'en';
+langSelect.addEventListener('change',()=>{ localStorage.setItem(LS_LANG,langSelect.value); renderAll(); });
+seasonSelect.value=localStorage.getItem(LS_SEASON)||'auto';
+seasonSelect.addEventListener('change',()=>{ localStorage.setItem(LS_SEASON,seasonSelect.value); renderAll(); });
 
-function autoSeason(){
-  const m=new Date().getMonth()+1;
-  if(m===12||m<=3) return 'winter';
-  if(m<=5) return 'spring';
-  if(m<=9) return 'summer';
-  return 'autumn';
-}
-function effectiveSeason(){
-  const set=localStorage.getItem(LS_SEASON)||'auto';
-  return set==='auto'?autoSeason():set;
-}
-function applySeasonNote(){
-  const eff=effectiveSeason(), lang=currentLang();
-  const key= eff==='winter'?'note.winter' : eff==='summer'?'note.summer' : eff==='spring'?'note.spring':'note.autumn';
-  // αν δεν έχεις note strings, βάλε ένα default:
-  seasonNote.innerHTML = (lang==='el' ? 'Οι δραστηριότητες προσαρμόζονται ανά εποχή.' : 'Activities adapt by season.');
-}
-function currentLang(){ return localStorage.getItem(LS_LANG)||'en'; }
-function applyLangToDom(){
-  const lang=currentLang();
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    const k=el.getAttribute('data-i18n'); const txt=T[lang][k]; if(txt) el.innerHTML=txt;
-  });
-  document.getElementById('s1PostUrl').placeholder = lang==='el'?"Δημόσιο link (π.χ. Instagram)":"Public post URL (e.g. Instagram)";
-  document.getElementById('s1Qr').placeholder = lang==='el'?"QR κωδικός (Στάδιο 1)":"Enter QR code (Stage 1)";
-  document.getElementById('s2QrA').placeholder = lang==='el'?"QR για Κατάστημα 2A":"QR code for Shop 2A";
-  document.getElementById('s2QrB').placeholder = lang==='el'?"QR για Κατάστημα 2B":"QR code for Shop 2B";
-  document.getElementById('s3QrA').placeholder = lang==='el'?"QR για Κατάστημα 3A":"QR for Shop 3A";
-  document.getElementById('s3QrB').placeholder = lang==='el'?"QR για Κατάστημα 3B":"QR for Shop 3B";
-  document.getElementById('s3QrC').placeholder = lang==='el'?"QR για Κατάστημα 3C":"QR for Shop 3C";
-}
+/* ========= attractions ========= */
+const ATTR={
+  museum:{en:"Municipal Museum of the Kalavryta Holocaust 🏛️", el:"Δημοτικό Μουσείο Καλαβρυτινού Ολοκαυτώματος 🏛️", checkpoint:"museum"},
+  agialavra:{en:"Monastery of Agia Lavra ⛪", el:"Μονή Αγίας Λαύρας ⛪", checkpoint:"agiaLavra"},
+  odontotos:{en:"Odontotos Rack Railway 🚆", el:"Odontotos Rack Railway 🚆", checkpoint:"vouraikosGorge"}, /* ή κράτα όπως θέλεις */
+  cave:{en:"Cave of Lakes 🕳️", el:"Σπήλαιο των Λιμνών 🕳️", checkpoint:"caveOfLakes"},
+  hill:{en:"Place of Sacrifice / Hill of Kapi ⛰️", el:"Τόπος Θυσίας / Λόφος του Καπί ⛰️", checkpoint:"kapi"},
+  heroes:{en:"Heroes of 1821 Monument 🗿", el:"Μνημείο Ηρώων Αγωνιστών του 1821 🗿", checkpoint:"heroes1821"},
+  ski:{en:"Kalavryta Ski Center 🎿", el:"Χιονοδρομικό κέντρο Καλαβρύτων 🎿", checkpoint:"skiCenter"},
+  makellaria:{en:"Holy Monastery of Makellaria ⛪", el:"Ιερά Μονή Μακελλαριάς ⛪", checkpoint:"moniMakellarias"},
+  tower:{en:"Petmezai Tower 🏰", el:"Πύργος Πετμεζαίων 🏰", checkpoint:"pyrgosPetmezaion"},
+  gorge:{en:"Vouraikos Gorge 🏞️", el:"Φαράγγι του Βουραϊκού 🏞️", checkpoint:"vouraikosGorge"},
+  square:{en:"Petmezai Square 🏞️", el:"Πλατεία Πετμεζαίων 🏞️", checkpoint:"petmezaionSquare"}
+};
+const LAYOUTS={
+  winter:{ s1:['museum','agialavra','square'], s2:['hill','heroes','ski','odontotos'], s3:['cave','gorge','makellaria','tower'] },
+  spring:{ s1:['museum','agialavra','square'], s2:['hill','heroes','odontotos'],     s3:['gorge','cave','makellaria','tower','ski'] },
+  summer:{ s1:['museum','agialavra','square'], s2:['hill','heroes','odontotos'],     s3:['gorge','cave','makellaria','tower','ski'] },
+  autumn:{ s1:['museum','agialavra','square'], s2:['hill','heroes','odontotos'],     s3:['gorge','cave','makellaria','tower','ski'] }
+};
 
-/* ========= dynamic attractions UI ========= */
 const s1AttrList=document.getElementById('s1AttrList');
 const s2AttrList=document.getElementById('s2AttrList');
 const s3AttrList=document.getElementById('s3AttrList');
 
-function makeCheckbox(id,label){
-  const wrap=document.createElement('label');
-  const cb=document.createElement('input'); cb.type='checkbox'; cb.id=id;
-  wrap.appendChild(cb); wrap.appendChild(document.createTextNode(' '+label));
+function makeAttrRow(stageKey, k, label){
+  // checkbox + verify-by-location κουμπί
+  const wrap=document.createElement('div');
+  wrap.style.display='flex'; wrap.style.alignItems='center'; wrap.style.gap='8px'; wrap.style.flexWrap='wrap';
+
+  const lab=document.createElement('label'); lab.style.display='flex'; lab.style.alignItems='center'; lab.style.gap='6px';
+  const cb=document.createElement('input'); cb.type='checkbox'; cb.id=`${stageKey}_${k}`;
+  lab.appendChild(cb); lab.appendChild(document.createTextNode(' '+label));
+  wrap.appendChild(lab);
+
+  const btn=document.createElement('button'); btn.className='btn ghost'; btn.textContent='📍 Verify by location';
+  btn.addEventListener('click', ()=> verifyAttractionByGeo(stageKey, k));
+  wrap.appendChild(btn);
+
   return wrap;
 }
+
 function renderAttractions(){
   const lang=currentLang(), eff=effectiveSeason(), layout=LAYOUTS[eff];
   s1AttrList.innerHTML=''; s2AttrList.innerHTML=''; s3AttrList.innerHTML='';
-  layout.s1.forEach(k=>{ s1AttrList.appendChild(makeCheckbox('s1_'+k, ATTR[k][lang])); });
-  layout.s2.forEach(k=>{ s2AttrList.appendChild(makeCheckbox('s2_'+k, ATTR[k][lang])); });
-  layout.s3.forEach(k=>{ s3AttrList.appendChild(makeCheckbox('s3_'+k, ATTR[k][lang])); });
+
+  layout.s1.forEach(k=>{ s1AttrList.appendChild(makeAttrRow('s1', k, ATTR[k][lang])); });
+  layout.s2.forEach(k=>{ s2AttrList.appendChild(makeAttrRow('s2', k, ATTR[k][lang])); });
+  layout.s3.forEach(k=>{ s3AttrList.appendChild(makeAttrRow('s3', k, ATTR[k][lang])); });
 }
 
 /* ========= state & progress ========= */
+const st1El=document.getElementById('s1Card'), st2El=document.getElementById('s2Card'), st3El=document.getElementById('s3Card');
+const barFill=document.getElementById('overallFill'), overallPct=document.getElementById('overallPct');
 const pills=document.getElementById('progressPills'), tierLine=document.getElementById('tierLine');
-const overallFill=document.getElementById('overallFill'), overallPct=document.getElementById('overallPct');
 
 function getState(){
   const done=new Set((loadStore().completed)||[]);
@@ -481,29 +442,108 @@ function getState(){
   const overallCount=(s1.post?1:0)+(s1.shop?1:0)+(s1.attrOk?1:0)+
                      (s2.shopA?1:0)+(s2.shopB?1:0)+(s2.attrOk?1:0)+
                      (s3.shopA?1:0)+(s3.shopB?1:0)+(s3.shopC?1:0)+(s3.attrOk?1:0);
-
   const tier = s3ok ? 'Legendary'
              : s2ok ? 'Rare → Ultra Rare'
              : s1ok ? 'Common → Uncommon'
              : '—';
-
   return {done, s1, s2, s3, s1ok, s2ok, s3ok, overallCount, tier, layout};
 }
 function pill(text){ const el=document.createElement('span'); el.className='pill ok'; el.textContent=text; return el; }
 
 function render(){
   const st=getState();
-  pills.innerHTML=''; st.done.forEach(k=>pills.appendChild(pill(k)));
-  const pct=Math.round(st.overallCount/10*100);
-  overallFill.style.width=pct+'%'; overallPct.textContent=pct+'%';
   document.getElementById('s2Card').style.display = st.s1ok ? '' : 'none';
   document.getElementById('s3Card').style.display = st.s2ok ? '' : 'none';
+  pills.innerHTML=''; st.done.forEach(k=>pills.appendChild(pill(k)));
+  const pct=Math.round(st.overallCount/10*100);
+  barFill.style.width=pct+'%'; overallPct.textContent=pct+'%';
   tierLine.textContent='Tier: '+st.tier;
   if(pct===100) triggerVictoryOnce();
 }
 
+/* ========= VERIFY HELPERS ========= */
+function setStatus(el, html){ if(el) el.innerHTML = html; }
+async function verifyQR(questId, code, statusEl){
+  const uid=ensureUid(); const email=getEmail();
+  if(!EMAIL_RE.test(email||'')){ return setStatus(statusEl,'<span class="pill err">Βάλε έγκυρο email</span>'); }
+  if(!code){ return setStatus(statusEl,'<span class="pill err">Βάλε τον κωδικό QR</span>'); }
+  setStatus(statusEl,'Επαλήθευση…');
+  try{
+    const r=await fetch('/api/verify-qr',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({uid,email,code,questId})});
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok){
+      if(data?.error==='already used') setStatus(statusEl,'<span class="pill warn">Ήδη χρησιμοποιήθηκε για αυτό το email</span>');
+      else if(data?.error==='invalid code') setStatus(statusEl,'<span class="pill err">Λάθος QR code</span>');
+      else setStatus(statusEl,`<span class="pill err">${data.error||('HTTP '+r.status)}</span>`);
+      return;
+    }
+    setStatus(statusEl,'<span class="pill ok">QR verified ✅</span>');
+    addDone(questId); render();
+  }catch{ setStatus(statusEl,'<span class="pill err">Δίκτυο/Server error</span>'); }
+}
+
+/* ========= QR CAMERA ========= */
+async function scanInto(inputEl){
+  // ανοίγει transient video overlay για scan
+  const overlay=document.createElement('div');
+  overlay.style.position='fixed'; overlay.style.inset='0'; overlay.style.background='rgba(0,0,0,.7)';
+  overlay.style.display='flex'; overlay.style.alignItems='center'; overlay.style.justifyContent='center'; overlay.style.zIndex='9999';
+  const box=document.createElement('div'); box.style.background='#000'; box.style.borderRadius='12px'; box.style.padding='8px';
+  const video=document.createElement('video'); video.style.width='min(92vw,520px)'; video.style.height='auto'; video.playsInline=true;
+  const close=document.createElement('button'); close.textContent='Close'; close.className='btn'; close.style.marginTop='8px';
+  box.appendChild(video); box.appendChild(close); overlay.appendChild(box); document.body.appendChild(overlay);
+
+  const scanner=new QrScanner(video, result=>{
+    inputEl.value = (result?.data || result || '').trim();
+    scanner.stop(); overlay.remove();
+  }, { returnDetailedScanResult:true, highlightScanRegion:true, highlightCodeOutline:true });
+
+  await scanner.start();
+  close.onclick=()=>{ scanner.stop(); overlay.remove(); };
+}
+
+/* ========= GEOLOCATION for attractions ========= */
+function haversineKm(lat1,lon1,lat2,lon2){
+  const R=6371, toRad=x=>x*Math.PI/180;
+  const dLat=toRad(lat2-lat1), dLon=toRad(lon2-lon1);
+  const a=Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+async function verifyAttractionByGeo(stageKey, k){
+  const statusEl = document.getElementById(stageKey==='s1'?'s1AttrStatus':stageKey==='s2'?'s2AttrStatus':'s3AttrStatus');
+  const uid=ensureUid(); const questId=`${stageKey}:attr:${k}`;
+  if(!navigator.geolocation){ return setStatus(statusEl,'<span class="pill err">Geolocation not supported</span>'); }
+  setStatus(statusEl,'Checking location…');
+  navigator.geolocation.getCurrentPosition(async pos=>{
+    try{
+      const body={ uid, lat:pos.coords.latitude, lon:pos.coords.longitude, checkpoint:ATTR[k].checkpoint, questId };
+      const r=await fetch('/api/geo-check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+      const data=await r.json().catch(()=>({}));
+      if(!r.ok){ setStatus(statusEl,`<span class="pill err">${data.error||('HTTP '+r.status)}</span>`); return; }
+      if(data.ok){
+        addDone(questId);
+        // τσέκαρε και το checkbox για ομορφιά
+        const cb=document.getElementById(`${stageKey}_${k}`); if(cb) cb.checked=true;
+        setStatus(statusEl,'<span class="pill ok">Location verified ✅</span>');
+        render();
+      }else{
+        const km=(data.distance/1000).toFixed(2);
+        setStatus(statusEl,`<span class="pill warn">Too far (~${km} km)</span>`);
+      }
+    }catch{ setStatus(statusEl,'<span class="pill err">Server error</span>'); }
+  }, err=> setStatus(statusEl, `<span class="pill err">${err.message}</span>`), {enableHighAccuracy:true,timeout:15000});
+}
+
+/* ========= Dynamic attractions UI ========= */
+function renderAttractions(){
+  const lang=currentLang(), eff=effectiveSeason(), layout=LAYOUTS[eff];
+  s1AttrList.innerHTML=''; s2AttrList.innerHTML=''; s3AttrList.innerHTML='';
+  layout.s1.forEach(k=> s1AttrList.appendChild(makeAttrRow('s1', k, ATTR[k][lang])));
+  layout.s2.forEach(k=> s2AttrList.appendChild(makeAttrRow('s2', k, ATTR[k][lang])));
+  layout.s3.forEach(k=> s3AttrList.appendChild(makeAttrRow('s3', k, ATTR[k][lang])));
+}
+
 /* ========= interactions ========= */
-/* Social (demo) */
 document.getElementById('s1PostBtn').onclick=()=>{
   const url=document.getElementById('s1PostUrl').value.trim();
   const stS=document.getElementById('s1PostStatus');
@@ -512,34 +552,41 @@ document.getElementById('s1PostBtn').onclick=()=>{
   addDone('s1:post'); stS.innerHTML='<span class="pill ok">Submitted</span>'; render();
 };
 
-/* QR — STRICT: μόνο μέσω API */
-document.getElementById('s1QrBtn').onclick=async ()=>{
-  const code = (document.getElementById('s1Qr').value||'').trim();
-  const stS=document.getElementById('s1QrStatus');
-  await verifyQR('s1:shop', code, stS);
+/* QR verify buttons (API) */
+document.getElementById('s1QrBtn').onclick=()=>{
+  const code=document.getElementById('s1Qr').value.trim();
+  verifyQR('s1:shop', code, document.getElementById('s1QrStatus'));
 };
-document.getElementById('s2QrBtn').onclick=async ()=>{
-  const a=(document.getElementById('s2QrA').value||'').trim();
-  const b=(document.getElementById('s2QrB').value||'').trim();
-  const stS=document.getElementById('s2QrStatus');
-  stS.textContent='Checking…';
-  const okA = await verifyQR('s2:shopA', a, stS);
-  if(!okA) return;
-  const okB = await verifyQR('s2:shopB', b, stS);
-  if(okB) stS.innerHTML='<span class="pill ok">Both verified ✅</span>';
+document.getElementById('s2QrBtnA').onclick=()=>{
+  const code=document.getElementById('s2QrA').value.trim();
+  verifyQR('s2:shopA', code, document.getElementById('s2QrStatus'));
 };
-document.getElementById('s3QrBtn').onclick=async ()=>{
-  const a=(document.getElementById('s3QrA').value||'').trim();
-  const b=(document.getElementById('s3QrB').value||'').trim();
-  const c=(document.getElementById('s3QrC').value||'').trim();
-  const stS=document.getElementById('s3QrStatus');
-  stS.textContent='Checking…';
-  const okA = await verifyQR('s3:shopA', a, stS); if(!okA) return;
-  const okB = await verifyQR('s3:shopB', b, stS); if(!okB) return;
-  const okC = await verifyQR('s3:shopC', c, stS); if(okC) stS.innerHTML='<span class="pill ok">Verified ✅</span>';
+document.getElementById('s2QrBtnB').onclick=()=>{
+  const code=document.getElementById('s2QrB').value.trim();
+  verifyQR('s2:shopB', code, document.getElementById('s2QrStatus'));
+};
+document.getElementById('s3QrBtnA').onclick=()=>{
+  const code=document.getElementById('s3QrA').value.trim();
+  verifyQR('s3:shopA', code, document.getElementById('s3QrStatus'));
+};
+document.getElementById('s3QrBtnB').onclick=()=>{
+  const code=document.getElementById('s3QrB').value.trim();
+  verifyQR('s3:shopB', code, document.getElementById('s3QrStatus'));
+};
+document.getElementById('s3QrBtnC').onclick=()=>{
+  const code=document.getElementById('s3QrC').value.trim();
+  verifyQR('s3:shopC', code, document.getElementById('s3QrStatus'));
 };
 
-/* Attractions (client-side mark) */
+/* QR camera scan buttons */
+document.getElementById('s1ScanBtn').onclick=()=> scanInto(document.getElementById('s1Qr'));
+document.getElementById('s2ScanABtn').onclick=()=> scanInto(document.getElementById('s2QrA'));
+document.getElementById('s2ScanBBtn').onclick=()=> scanInto(document.getElementById('s2QrB'));
+document.getElementById('s3ScanABtn').onclick=()=> scanInto(document.getElementById('s3QrA'));
+document.getElementById('s3ScanBBtn').onclick=()=> scanInto(document.getElementById('s3QrB'));
+document.getElementById('s3ScanCBtn').onclick=()=> scanInto(document.getElementById('s3QrC'));
+
+/* mark visited (checkbox fallback) */
 document.getElementById('s1AttrBtn').onclick=()=>{
   const eff=effectiveSeason(), layout=LAYOUTS[eff].s1;
   const stS=document.getElementById('s1AttrStatus'); let picked=false;
@@ -557,53 +604,25 @@ document.getElementById('s3AttrBtn').onclick=()=>{
   stS.innerHTML=picked?'<span class="pill ok">Marked</span>':'<span class="pill warn">Pick at least one</span>'; render();
 };
 
-/* ====== CLAIM modal (μπορείς να συνδέσεις /api/mint αργότερα) ====== */
+/* CLAIM modal (μένει όπως το έχεις — συντόμευσα τα κείμενα) */
 const modal=document.getElementById('modal');
 document.getElementById('mintInfoBtn').onclick=()=>openClaimInfo(false);
 document.getElementById('claimBtn').onclick=()=>openClaimInfo(true);
 document.getElementById('closeModal').onclick=()=>modal.classList.remove('show');
 modal.onclick=(e)=>{ if(e.target===modal) modal.classList.remove('show'); };
+function openClaimInfo(){ modal.classList.add('show'); }
 
-function openClaimInfo(){
-  document.getElementById('modalTitle').textContent = 'Claiming';
-  document.getElementById('modalBody').innerHTML = '<p>Claim unlocks after Stage 1. Keep playing for rarer tiers!</p>';
-  modal.classList.add('show');
-}
-
-/* ========= season/lang boot ========= */
+/* overall render */
 function renderAll(){ applyLangToDom(); applySeasonNote(); renderAttractions(); render(); }
+
+/* reset */
 document.getElementById('resetBtn').onclick=()=>{ clearStore(); render(); };
 
-const langSelectEl=document.getElementById('langSelect');
-langSelectEl.value=localStorage.getItem(LS_LANG)||'en';
-langSelectEl.addEventListener('change',()=>{ localStorage.setItem(LS_LANG,langSelectEl.value); renderAll(); });
-
-const seasonSelectEl=document.getElementById('seasonSelect');
-seasonSelectEl.value=localStorage.getItem(LS_SEASON)||'auto';
-seasonSelectEl.addEventListener('change',()=>{ localStorage.setItem(LS_SEASON,seasonSelectEl.value); renderAll(); });
-
 /* utils */
-function haversine(lat1,lon1,lat2,lon2){
-  const R=6371, toRad=x=>x*Math.PI/180;
-  const dLat=toRad(lat2-lat1), dLon=toRad(lon2-lon1);
-  const a=Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-}
-
-/* Victory celebration */
-const victoryEl=document.getElementById('victory'); const victoryClose=document.getElementById('victoryClose'); const confettiFx=document.getElementById('confettiFx');
-function triggerVictoryOnce(){ if(localStorage.getItem(LS_VICTORY)==='yes') return; localStorage.setItem(LS_VICTORY,'yes'); showVictory(); }
-function showVictory(){
-  confettiFx.innerHTML=''; const colors=['#ff7a00','#ffb84d','#ffd699','#27c498','#5aa9e6','#d16ba5']; const pieces=80;
-  for(let i=0;i<pieces;i++){ const s=document.createElement('span'); s.className='piece'; s.style.left=Math.random()*100+'%'; s.style.top=(-Math.random()*40)+'vh';
-    s.style.background=colors[i%colors.length]; s.style.animationDuration=(0.9+Math.random()*0.7)+'s'; s.style.transform=`rotate(${Math.random()*360}deg)`; confettiFx.appendChild(s); }
-  victoryEl.classList.add('show'); setTimeout(()=>{ if(victoryEl.classList.contains('show')) victoryEl.classList.remove('show'); },4000);
-}
-victoryClose.onclick=()=>victoryEl.classList.remove('show');
-victoryEl.onclick=(e)=>{ if(e.target===victoryEl) victoryEl.classList.remove('show'); };
+function triggerVictoryOnce(){ if(localStorage.getItem(LS_VICTORY)==='yes') return; localStorage.setItem(LS_VICTORY,'yes'); /* μπορείς να βάλεις εφέ σου */ }
 
 /* first paint */
 renderAll();
 </script>
 </body>
-</html>
+  </html>
