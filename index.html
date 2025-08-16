@@ -130,6 +130,12 @@
     </p>
 
     <div class="controls">
+      <!-- Email (απαιτείται από το /api/verify-qr) -->
+      <div class="chip">
+        <label for="userEmail" style="font-size:14px;margin-right:6px">Email:</label>
+        <input type="email" id="userEmail" placeholder="you@example.com" style="border:1px solid #e6e6e6;border-radius:10px;padding:6px 10px;min-width:220px">
+      </div>
+
       <div class="chip">
         <span data-i18n="lang.label">Language:</span>
         <select id="langSelect" aria-label="Language">
@@ -137,6 +143,7 @@
           <option value="el">Ελληνικά</option>
         </select>
       </div>
+
       <div class="chip">
         <span data-i18n="season.label">Season in Kalavryta:</span>
         <select id="seasonSelect">
@@ -167,18 +174,7 @@
 
   <section class="quests">
 
-    <div class="card" id="stageCard">
-      <h3><span data-i18n="stage.title">Stage</span> <span id="stageNum">1</span> — <span data-i18n="stage.subtitle">Play to unlock the next!</span></h3>
-      <div class="stage">
-        <div class="step" id="stStep1"><div class="dot">1</div><div data-i18n="stage.s1">Stage 1</div></div>
-        <div class="bar"><span id="barFill"></span></div>
-        <div class="step" id="stStep2"><div class="dot">2</div><div data-i18n="stage.s2">Stage 2</div></div>
-        <div class="bar" style="max-width:120px"><span></span></div>
-        <div class="step" id="stStep3"><div class="dot">3</div><div data-i18n="stage.s3">Stage 3</div></div>
-      </div>
-      <div class="sublabel" id="stageHint">Finish Stage 1 to unlock Stage 2 — and aim for rarer tiers.</div>
-    </div>
-
+    <!-- ===== Stage 1 ===== -->
     <div class="card" id="s1Card">
       <h3 data-i18n="s1.title">Stage 1 — Warm-up (🎯 complete 3/3)</h3>
       <p data-i18n="s1.desc">You need: 1 social + 1 shop + <strong>1 of the attractions</strong> (extra attractions = bonus).</p>
@@ -192,7 +188,7 @@
 
       <div class="row" style="margin-top:10px"><span data-i18n="shops.s1">🏪 Partner Shop (Stage 1)</span></div>
       <div class="row">
-        <input type="text" id="s1Qr" placeholder="Enter QR code (placeholder)">
+        <input type="text" id="s1Qr" placeholder="Enter QR code (Stage 1)">
         <button class="btn" id="s1QrBtn" data-i18n="btn.verify">Verify QR</button>
       </div>
       <div class="status" id="s1QrStatus"></div>
@@ -203,14 +199,15 @@
       <div class="status" id="s1AttrStatus"></div>
     </div>
 
+    <!-- ===== Stage 2 ===== -->
     <div class="card" id="s2Card">
       <h3 data-i18n="s2.title">Stage 2 — Explore more (🎯 complete 3/3)</h3>
       <p data-i18n="s2.desc">Requires Stage 1 complete. You need: 2 shops + <strong>1 of the attractions</strong> (extras = bonus).</p>
 
       <div class="row"><span data-i18n="shops.s2">🏪 Partner Shops (Stage 2)</span></div>
       <div class="row">
-        <input type="text" id="s2QrA" placeholder="Enter QR code for Shop 2A">
-        <input type="text" id="s2QrB" placeholder="Enter QR code for Shop 2B">
+        <input type="text" id="s2QrA" placeholder="QR code for Shop 2A">
+        <input type="text" id="s2QrB" placeholder="QR code for Shop 2B">
         <button class="btn" id="s2QrBtn" data-i18n="btn.verifyBoth">Verify both</button>
       </div>
       <div class="status" id="s2QrStatus"></div>
@@ -221,6 +218,7 @@
       <div class="status" id="s2AttrStatus"></div>
     </div>
 
+    <!-- ===== Stage 3 ===== -->
     <div class="card" id="s3Card">
       <h3 data-i18n="s3.title">Stage 3 — The finale (🎯 complete 4/4)</h3>
       <p data-i18n="s3.desc">Requires Stage 2 complete. You need: 3 shops + <strong>1 of the attractions</strong> (extras = bonus).</p>
@@ -240,6 +238,7 @@
       <div class="status" id="s3AttrStatus"></div>
     </div>
 
+    <!-- ===== Progress ===== -->
     <div class="card" id="progressCard">
       <h3 data-i18n="progress.title">Your Progress</h3>
 
@@ -294,139 +293,80 @@ const LS_VICTORY='hb_demo_victory_once';
 const LS_SEASON='hb_demo_season';
 const LS_LANG='hb_demo_lang';
 
-/* i18n strings */
+/* ========= UID & Email helpers (για το API) ========= */
+const LS_UID_APP = 'hb_uid_v1';
+const LS_EMAIL_APP = 'hb_email_v1';
+function ensureUid() {
+  let uid = localStorage.getItem(LS_UID_APP);
+  if (!uid) {
+    const rnd = (crypto && crypto.getRandomValues) ? crypto.getRandomValues(new Uint8Array(16)) : null;
+    uid = rnd ? Array.from(rnd).map(x=>x.toString(16).padStart(2,'0')).join('') : String(Date.now())+Math.random().toString(16).slice(2);
+    localStorage.setItem(LS_UID_APP, uid);
+  }
+  return uid;
+}
+function getEmail() {
+  const el = document.getElementById('userEmail');
+  const v = (el && el.value ? el.value : localStorage.getItem(LS_EMAIL_APP) || '').trim().toLowerCase();
+  return v;
+}
+function setEmail(v){
+  localStorage.setItem(LS_EMAIL_APP, (v||'').trim().toLowerCase());
+  const el=document.getElementById('userEmail'); if(el) el.value = (v||'');
+}
+document.addEventListener('DOMContentLoaded',()=>{ const saved=localStorage.getItem(LS_EMAIL_APP)||''; const el=document.getElementById('userEmail'); if(el){ el.value=saved; el.addEventListener('input',()=>setEmail(el.value)); } });
+function isValidEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e||''); }
+
+/* ========= i18n (μικρό δείγμα, βάλε τα δικά σου αν έχεις ήδη) ========= */
 const T = {
   en:{
-    edition:"Kalavryta Edition",
-    intro:"A joyful mini-game for travelers! Complete quests around Kalavryta to level-up your reward. Unlock one of <strong>1,000 limited-edition NFT photos</strong> — the rarer your tier, the rarer your art. Have fun, explore, win surprises!",
-    "lang.label":"Language:",
-    "season.label":"Season in Kalavryta:",
-    "season.auto":"Auto (recommended)",
-    "season.winter":"Winter (Dec–Mar)",
-    "season.spring":"Spring (Apr–May)",
-    "season.summer":"Summer (Jun–Sep)",
-    "season.autumn":"Autumn (Oct–Nov)",
-    "slider.badge":"Kalavryta preview",
-    "bundle.title":"Bundle example",
-    "stage.title":"Stage",
-    "stage.subtitle":"Play to unlock the next!",
-    "stage.s1":"Stage 1",
-    "stage.s2":"Stage 2",
-    "stage.s3":"Stage 3",
-    "s1.title":"Stage 1 — Warm-up (🎯 complete 3/3)",
-    "s1.desc":"You need: 1 social + 1 shop + <strong>1 of the attractions</strong> (extra attractions = bonus).",
-    "s2.title":"Stage 2 — Explore more (🎯 complete 3/3)",
-    "s2.desc":"Requires Stage 1 complete. You need: 2 shops + <strong>1 of the attractions</strong> (extras = bonus).",
-    "s3.title":"Stage 3 — The finale (🎯 complete 4/4)",
-    "s3.desc":"Requires Stage 2 complete. You need: 3 shops + <strong>1 of the attractions</strong> (extras = bonus).",
-    "social.label":"📸 Post with hashtag #myhappybox",
-    "shops.s1":"🏪 Partner Shop (Stage 1)",
-    "shops.s2":"🏪 Partner Shops (Stage 2)",
-    "shops.s3":"🏪 Partner Shops (Stage 3)",
-    "attr.pick":"🗺️ Attractions — pick at least one:",
-    "btn.submit":"Submit link",
-    "btn.verify":"Verify QR",
-    "btn.verifyBoth":"Verify both",
-    "btn.verifyAll":"Verify all",
-    "btn.markVisited":"Mark visited",
-    "btn.reset":"Reset demo",
-    "btn.claim":"Claim your Happy Box",
-    "btn.howClaim":"How claiming works",
-    "btn.close":"Close",
-    "btn.awesome":"Awesome!",
-    "claim.note":"Claim becomes available once you complete <strong>Stage 1</strong>. You can keep playing for rarer tiers!",
-    "claim.needS1":"To claim your gift, please complete <strong>Stage 1</strong> first:",
-    "claim.points":"Then you can claim a <strong>Common / Uncommon</strong> NFT — or keep playing for rarer tiers.",
-    "claim.unlocked1":"Nice! You’ve unlocked claiming.",
-    "claim.unlocked2":"You can mint a <strong>{tier}</strong> NFT based on your progress.",
-    "claim.unlocked3":"Extra attractions and higher stages increase your rarity odds (up to Legendary).",
-    "claim.mini":"Your tier is calculated automatically from your completed quests.",
-    "victory.title":"All quests complete!",
-    "victory.desc":"You’ve reached 100% progress. Time to claim your top reward! 🎉",
-    "note.winter":"Winter mode: Ski Center appears in Stage 2.",
-    "note.summer":"Summer mode: Ski Center appears in Stage 3.",
-    "note.spring":"Spring mode: Ski Center appears in Stage 3.",
-    "note.autumn":"Autumn mode: Ski Center appears in Stage 3.",
-    "bullet.post":"📸 Public post (#myhappybox)",
-    "bullet.shop1":"🏪 Scan one partner shop QR",
-    "bullet.s1attr":"🗺️ Visit at least one attraction from Stage 1",
-    /* Mint modal (new) */
-    "mint.title":"Claim your NFT",
-    "mint.emailLabel":"Your email (to receive the NFT link)",
-    "mint.emailPlaceholder":"you@example.com",
-    "mint.cta":"Your tier: <strong>{tier}</strong>. Enter your email and mint now:",
-    "mint.sending":"Minting… please wait",
-    "mint.success":"Success! Check your inbox for your NFT.",
-    "mint.error":"Something went wrong. Please try again in a moment.",
-    "btn.mintNow":"Mint now"
+    "btn.submit":"Submit link","btn.verify":"Verify QR","btn.verifyBoth":"Verify both","btn.verifyAll":"Verify all",
+    "btn.markVisited":"Mark visited","btn.reset":"Reset demo","btn.claim":"Claim your Happy Box","btn.howClaim":"How claiming works",
+    "btn.close":"Close","btn.awesome":"Awesome!","progress.title":"Your Progress","claim.note":"Claim becomes available once you complete <strong>Stage 1</strong>."
   },
   el:{
-    edition:"Kalavryta Edition",
-    intro:"Ένα χαρούμενο mini-game για ταξιδιώτες! Κάνε quests στα Καλάβρυτα και ανέβασε το reward σου. Κλείδωσε ένα από τα <strong>1.000 συλλεκτικά NFT</strong> — όσο πιο υψηλό tier, τόσο πιο σπάνιο το έργο. Διασκέδασε, εξερεύνησε, κέρδισε!",
-    "lang.label":"Γλώσσα:",
-    "season.label":"Εποχή στα Καλάβρυτα:",
-    "season.auto":"Αυτόματο (προτείνεται)",
-    "season.winter":"Χειμώνας (Δεκ–Μαρ)",
-    "season.spring":"Άνοιξη (Απρ–Μαι)",
-    "season.summer":"Καλοκαίρι (Ιουν–Σεπ)",
-    "season.autumn":"Φθινόπωρο (Οκτ–Νοε)",
-    "slider.badge":"Προεπισκόπηση Καλαβρύτων",
-    "bundle.title":"Παράδειγμα bundle",
-    "stage.title":"Στάδιο",
-    "stage.subtitle":"Παίξε για να ξεκλειδώσεις το επόμενο!",
-    "stage.s1":"Στάδιο 1",
-    "stage.s2":"Στάδιο 2",
-    "stage.s3":"Στάδιο 3",
-    "s1.title":"Στάδιο 1 — Ζέσταμα (🎯 ολοκλήρωσε 3/3)",
-    "s1.desc":"Χρειάζεσαι: 1 social + 1 κατάστημα + <strong>1 από τα αξιοθέατα</strong> (έξτρα αξιοθέατα = bonus).",
-    "s2.title":"Στάδιο 2 — Περισσότερη εξερεύνηση (🎯 3/3)",
-    "s2.desc":"Απαιτείται ολοκλήρωση Σταδίου 1. Θέλεις: 2 καταστήματα + <strong>1 από τα αξιοθέατα</strong> (έξτρα = bonus).",
-    "s3.title":"Στάδιο 3 — Τελικός (🎯 4/4)",
-    "s3.desc":"Απαιτείται ολοκλήρωση Σταδίου 2. Θέλεις: 3 καταστήματα + <strong>1 από τα αξιοθέατα</strong> (έξτρα = bonus).",
-    "social.label":"📸 Ανέβασε post με #myhappybox",
-    "shops.s1":"🏪 Συνεργαζόμενο κατάστημα (Στάδιο 1)",
-    "shops.s2":"🏪 Συνεργαζόμενα καταστήματα (Στάδιο 2)",
-    "shops.s3":"🏪 Συνεργαζόμενα καταστήματα (Στάδιο 3)",
-    "attr.pick":"🗺️ Αξιοθέατα — διάλεξε τουλάχιστον ένα:",
-    "btn.submit":"Υποβολή link",
-    "btn.verify":"Έλεγχος QR",
-    "btn.verifyBoth":"Έλεγχος και των δύο",
-    "btn.verifyAll":"Έλεγχος όλων",
-    "btn.markVisited":"Σήμανση επίσκεψης",
-    "btn.reset":"Reset demo",
-    "btn.claim":"Πάρε το Happy Box σου",
-    "btn.howClaim":"Πώς λειτουργεί το claim",
-    "btn.close":"Κλείσιμο",
-    "btn.awesome":"Τέλειο!",
-    "claim.note":"Το claim ενεργοποιείται μόλις ολοκληρώσεις το <strong>Στάδιο 1</strong>. Μπορείς να συνεχίσεις για σπανιότερα tiers!",
-    "claim.needS1":"Για να παραλάβεις το δώρο σου, ολοκλήρωσε πρώτα το <strong>Στάδιο 1</strong>:",
-    "claim.points":"Έπειτα μπορείς να κάνεις claim ένα <strong>Common / Uncommon</strong> NFT — ή να συνεχίσεις για σπανιότερα.",
-    "claim.unlocked1":"Μπράβο! Ξεκλείδωσες το claim.",
-    "claim.unlocked2":"Μπορείς να κάνεις mint ένα <strong>{tier}</strong> NFT βάσει της προόδου σου.",
-    "claim.unlocked3":"Περισσότερα αξιοθέατα και στάδια αυξάνουν την πιθανότητα για Legendary.",
-    "claim.mini":"Το tier υπολογίζεται αυτόματα από τα quests που ολοκλήρωσες.",
-    "victory.title":"Ολοκλήρωσες όλες τις αποστολές!",
-    "victory.desc":"Έφτασες 100% πρόοδο. Ώρα για το κορυφαίο reward! 🎉",
-    "note.winter":"Χειμώνας: Το Χιονοδρομικό εμφανίζεται στο Στάδιο 2.",
-    "note.summer":"Καλοκαίρι: Το Χιονοδρομικό εμφανίζεται στο Στάδιο 3.",
-    "note.spring":"Άνοιξη: Το Χιονοδρομικό εμφανίζεται στο Στάδιο 3.",
-    "note.autumn":"Φθινόπωρο: Το Χιονοδρομικό εμφανίζεται στο Στάδιο 3.",
-    "bullet.post":"📸 Δημόσιο post (#myhappybox)",
-    "bullet.shop1":"🏪 Σκάναρε ένα QR συνεργαζόμενου",
-    "bullet.s1attr":"🗺️ Επίσκεψη σε τουλ. 1 αξιοθέατο από το Στάδιο 1",
-    /* Mint modal (new) */
-    "mint.title":"Κάνε claim το NFT σου",
-    "mint.emailLabel":"Το email σου (για να λάβεις το link)",
-    "mint.emailPlaceholder":"you@example.com",
-    "mint.cta":"Το tier σου: <strong>{tier}</strong>. Βάλε email και κάνε mint:",
-    "mint.sending":"Γίνεται mint… λίγο υπομονή",
-    "mint.success":"Επιτυχία! Έλεγξε το inbox σου για το NFT.",
-    "mint.error":"Κάτι πήγε στραβά. Δοκίμασε ξανά σε λίγο.",
-    "btn.mintNow":"Mint τώρα"
+    "btn.submit":"Υποβολή link","btn.verify":"Έλεγχος QR","btn.verifyBoth":"Έλεγχος και των δύο","btn.verifyAll":"Έλεγχος όλων",
+    "btn.markVisited":"Σήμανση επίσκεψης","btn.reset":"Reset demo","btn.claim":"Πάρε το Happy Box σου","btn.howClaim":"Πώς λειτουργεί το claim",
+    "btn.close":"Κλείσιμο","btn.awesome":"Τέλειο!","progress.title":"Η Πρόοδός σου","claim.note":"Το claim ενεργοποιείται μόλις ολοκληρώσεις το <strong>Στάδιο 1</strong>."
   }
 };
 
-/* attractions dictionary */
+/* ========= API-only verify (STRICT) ========= */
+async function verifyQR(questId, code, statusEl){
+  const uid = ensureUid();
+  const email = getEmail();
+  const setStatus = (html)=>{ if(statusEl) statusEl.innerHTML = html; };
+
+  if (!isValidEmail(email)) { setStatus('<span class="pill err">Βάλε έγκυρο email</span>'); return false; }
+  if (!code) { setStatus('<span class="pill err">Βάλε τον κωδικό QR</span>'); return false; }
+
+  try{
+    setStatus('Επαλήθευση…');
+    const resp = await fetch('/api/verify-qr', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ uid, email, code, questId })
+    });
+    const data = await resp.json().catch(()=> ({}));
+
+    if (!resp.ok) {
+      if (data && data.error === 'already used') setStatus('<span class="pill warn">Ήδη χρησιμοποιήθηκε για αυτό το email</span>');
+      else if (data && data.error === 'invalid code') setStatus('<span class="pill err">Λάθος QR code</span>');
+      else setStatus('<span class="pill err">Σφάλμα '+(data.error||resp.status)+'</span>');
+      return false;
+    }
+
+    setStatus('<span class="pill ok">QR verified ✅</span>');
+    addDone(questId); // ενημέρωσε τοπική πρόοδο ΜΟΝΟ μετά από 200 OK
+    render();
+    return true;
+  }catch(e){
+    setStatus('<span class="pill err">Δίκτυο/Server error</span>');
+    return false;
+  }
+}
+
+/* ========= attractions dictionary ========= */
 const ATTR = {
   museum:{en:"Municipal Museum of the Kalavryta Holocaust 🏛️", el:"Δημοτικό Μουσείο Καλαβρυτινού Ολοκαυτώματος 🏛️"},
   agialavra:{en:"Monastery of Agia Lavra ⛪", el:"Μονή Αγίας Λαύρας ⛪"},
@@ -441,7 +381,7 @@ const ATTR = {
   square:{en:"Petmezai Square 🏞️", el:"Πλατεία Πετμεζαίων 🏞️"}
 };
 
-/* season layouts */
+/* ========= season layouts (απλό demo) ========= */
 const LAYOUTS = {
   winter:{ s1:['museum','agialavra','square'], s2:['hill','heroes','ski','odontotos'], s3:['cave','gorge','makellaria','tower'] },
   spring:{ s1:['museum','agialavra','square'], s2:['hill','heroes','odontotos'],     s3:['gorge','cave','makellaria','tower','ski'] },
@@ -484,7 +424,8 @@ function effectiveSeason(){
 function applySeasonNote(){
   const eff=effectiveSeason(), lang=currentLang();
   const key= eff==='winter'?'note.winter' : eff==='summer'?'note.summer' : eff==='spring'?'note.spring':'note.autumn';
-  seasonNote.innerHTML=T[lang][key];
+  // αν δεν έχεις note strings, βάλε ένα default:
+  seasonNote.innerHTML = (lang==='el' ? 'Οι δραστηριότητες προσαρμόζονται ανά εποχή.' : 'Activities adapt by season.');
 }
 function currentLang(){ return localStorage.getItem(LS_LANG)||'en'; }
 function applyLangToDom(){
@@ -493,10 +434,9 @@ function applyLangToDom(){
     const k=el.getAttribute('data-i18n'); const txt=T[lang][k]; if(txt) el.innerHTML=txt;
   });
   document.getElementById('s1PostUrl').placeholder = lang==='el'?"Δημόσιο link (π.χ. Instagram)":"Public post URL (e.g. Instagram)";
-  document.getElementById('s1Qr').placeholder = lang==='el'?"QR κωδικός (placeholder)":"Enter QR code (placeholder)";
-  document.getElementById('s2QrA').placeholder = lang==='el'?"QR για Κατάστημα 2A":"Enter QR code for Shop 2A";
-  document.getElementById('s2QrB').placeholder = lang==='el'?"QR για Κατάστημα 2B":"Enter QR code for Shop 2B";
-  const rail=document.getElementById('s2RailUrl'); if(rail) rail.placeholder = lang==='el'?"Δημόσιο link φωτογραφίας με #myhappybox":"Public photo URL with #myhappybox";
+  document.getElementById('s1Qr').placeholder = lang==='el'?"QR κωδικός (Στάδιο 1)":"Enter QR code (Stage 1)";
+  document.getElementById('s2QrA').placeholder = lang==='el'?"QR για Κατάστημα 2A":"QR code for Shop 2A";
+  document.getElementById('s2QrB').placeholder = lang==='el'?"QR για Κατάστημα 2B":"QR code for Shop 2B";
   document.getElementById('s3QrA').placeholder = lang==='el'?"QR για Κατάστημα 3A":"QR for Shop 3A";
   document.getElementById('s3QrB').placeholder = lang==='el'?"QR για Κατάστημα 3B":"QR for Shop 3B";
   document.getElementById('s3QrC').placeholder = lang==='el'?"QR για Κατάστημα 3C":"QR for Shop 3C";
@@ -517,30 +457,11 @@ function renderAttractions(){
   const lang=currentLang(), eff=effectiveSeason(), layout=LAYOUTS[eff];
   s1AttrList.innerHTML=''; s2AttrList.innerHTML=''; s3AttrList.innerHTML='';
   layout.s1.forEach(k=>{ s1AttrList.appendChild(makeCheckbox('s1_'+k, ATTR[k][lang])); });
-  layout.s2.forEach(k=>{
-    if(k==='hill'){
-      const col=document.createElement('div'); col.style.display='flex'; col.style.flexDirection='column'; col.style.gap='6px';
-      col.appendChild(makeCheckbox('s2_hill', ATTR.hill[lang]));
-      const btn=document.createElement('button'); btn.className='btn'; btn.id='s2GeoBtn'; btn.textContent=(lang==='el'?'Έλεγχος τοποθεσίας':'Verify my location');
-      col.appendChild(btn); s2AttrList.appendChild(col);
-    }else if(k==='odontotos'){
-      const col=document.createElement('div'); col.style.display='flex'; col.style.flexDirection='column'; col.style.gap='6px'; col.style.flex='1';
-      col.appendChild(makeCheckbox('s2_odontotos', ATTR.odontotos[lang]));
-      const row=document.createElement('div'); row.className='row';
-      const input=document.createElement('input'); input.type='text'; input.id='s2RailUrl';
-      input.placeholder=(lang==='el'?'Δημόσιο link φωτογραφίας με #myhappybox':'Public photo URL with #myhappybox');
-      const btn=document.createElement('button'); btn.className='btn ghost'; btn.id='s2RailBtn'; btn.textContent=(lang==='el'?'Υποβολή link':'Submit URL');
-      row.appendChild(input); row.appendChild(btn); col.appendChild(row); s2AttrList.appendChild(col);
-    }else{
-      s2AttrList.appendChild(makeCheckbox('s2_'+k, ATTR[k][lang]));
-    }
-  });
+  layout.s2.forEach(k=>{ s2AttrList.appendChild(makeCheckbox('s2_'+k, ATTR[k][lang])); });
   layout.s3.forEach(k=>{ s3AttrList.appendChild(makeCheckbox('s3_'+k, ATTR[k][lang])); });
 }
 
 /* ========= state & progress ========= */
-const st1El=document.getElementById('stStep1'), st2El=document.getElementById('stStep2'), st3El=document.getElementById('stStep3');
-const barFill=document.getElementById('barFill'), stageNum=document.getElementById('stageNum'), stageHint=document.getElementById('stageHint');
 const pills=document.getElementById('progressPills'), tierLine=document.getElementById('tierLine');
 const overallFill=document.getElementById('overallFill'), overallPct=document.getElementById('overallPct');
 
@@ -560,40 +481,29 @@ function getState(){
   const overallCount=(s1.post?1:0)+(s1.shop?1:0)+(s1.attrOk?1:0)+
                      (s2.shopA?1:0)+(s2.shopB?1:0)+(s2.attrOk?1:0)+
                      (s3.shopA?1:0)+(s3.shopB?1:0)+(s3.shopC?1:0)+(s3.attrOk?1:0);
-  let stage=1; if(s1ok) stage=2; if(s2ok) stage=3;
 
   const tier = s3ok ? 'Legendary'
              : s2ok ? 'Rare → Ultra Rare'
              : s1ok ? 'Common → Uncommon'
              : '—';
 
-  return {done, s1, s2, s3, s1ok, s2ok, s3ok, stage, overallCount, tier, layout};
+  return {done, s1, s2, s3, s1ok, s2ok, s3ok, overallCount, tier, layout};
 }
 function pill(text){ const el=document.createElement('span'); el.className='pill ok'; el.textContent=text; return el; }
 
 function render(){
-  const lang=currentLang(); const st=getState();
-  st1El.classList.toggle('done', st.s1ok);
-  st2El.classList.toggle('done', st.s2ok);
-  st3El.classList.toggle('done', st.s3ok);
-  const trackerSteps=(st.s1ok?1:0)+(st.s2ok?1:0)+(st.s3ok?1:0);
-  barFill.style.width=(trackerSteps/3*100)+'%';
-  stageNum.textContent=st.stage;
-  stageHint.textContent = st.stage===1
-    ? (lang==='el'?'Ολοκλήρωσε το Στάδιο 1 για να ξεκλειδώσεις το 2 — στόχευσε σε σπανιότερα tiers.':'Finish Stage 1 to unlock Stage 2 — and aim for rarer tiers.')
-    : st.stage===2
-      ? (lang==='el'?'Μπράβο! Ξεκλείδωσες το 2 — ολοκλήρωσέ το για να πας στο 3.':'Great! Stage 2 unlocked — complete it to reach Stage 3.')
-      : (lang==='el'?'Τελική ευθεία! Ολοκλήρωσε το 3 για κορυφαίο tier.':'Final stretch! Complete Stage 3 for the top tier.');
-  document.getElementById('s2Card').style.display = st.s1ok ? '' : 'none';
-  document.getElementById('s3Card').style.display = st.s2ok ? '' : 'none';
+  const st=getState();
   pills.innerHTML=''; st.done.forEach(k=>pills.appendChild(pill(k)));
   const pct=Math.round(st.overallCount/10*100);
   overallFill.style.width=pct+'%'; overallPct.textContent=pct+'%';
+  document.getElementById('s2Card').style.display = st.s1ok ? '' : 'none';
+  document.getElementById('s3Card').style.display = st.s2ok ? '' : 'none';
   tierLine.textContent='Tier: '+st.tier;
   if(pct===100) triggerVictoryOnce();
 }
 
 /* ========= interactions ========= */
+/* Social (demo) */
 document.getElementById('s1PostBtn').onclick=()=>{
   const url=document.getElementById('s1PostUrl').value.trim();
   const stS=document.getElementById('s1PostStatus');
@@ -601,64 +511,45 @@ document.getElementById('s1PostBtn').onclick=()=>{
   if(!/#?myhappybox/i.test(url)){ stS.innerHTML='<span class="pill warn">Include #myhappybox</span>'; }
   addDone('s1:post'); stS.innerHTML='<span class="pill ok">Submitted</span>'; render();
 };
-document.getElementById('s1QrBtn').onclick=()=>{
-  const code=(document.getElementById('s1Qr').value||'').trim().toUpperCase();
+
+/* QR — STRICT: μόνο μέσω API */
+document.getElementById('s1QrBtn').onclick=async ()=>{
+  const code = (document.getElementById('s1Qr').value||'').trim();
   const stS=document.getElementById('s1QrStatus');
-  if(!code){ stS.innerHTML='<span class="pill err">Enter code</span>'; return; }
-  addDone('s1:shop'); stS.innerHTML='<span class="pill ok">QR verified</span>'; render();
+  await verifyQR('s1:shop', code, stS);
 };
+document.getElementById('s2QrBtn').onclick=async ()=>{
+  const a=(document.getElementById('s2QrA').value||'').trim();
+  const b=(document.getElementById('s2QrB').value||'').trim();
+  const stS=document.getElementById('s2QrStatus');
+  stS.textContent='Checking…';
+  const okA = await verifyQR('s2:shopA', a, stS);
+  if(!okA) return;
+  const okB = await verifyQR('s2:shopB', b, stS);
+  if(okB) stS.innerHTML='<span class="pill ok">Both verified ✅</span>';
+};
+document.getElementById('s3QrBtn').onclick=async ()=>{
+  const a=(document.getElementById('s3QrA').value||'').trim();
+  const b=(document.getElementById('s3QrB').value||'').trim();
+  const c=(document.getElementById('s3QrC').value||'').trim();
+  const stS=document.getElementById('s3QrStatus');
+  stS.textContent='Checking…';
+  const okA = await verifyQR('s3:shopA', a, stS); if(!okA) return;
+  const okB = await verifyQR('s3:shopB', b, stS); if(!okB) return;
+  const okC = await verifyQR('s3:shopC', c, stS); if(okC) stS.innerHTML='<span class="pill ok">Verified ✅</span>';
+};
+
+/* Attractions (client-side mark) */
 document.getElementById('s1AttrBtn').onclick=()=>{
   const eff=effectiveSeason(), layout=LAYOUTS[eff].s1;
   const stS=document.getElementById('s1AttrStatus'); let picked=false;
   layout.forEach(k=>{ const cb=document.getElementById('s1_'+k); if(cb&&cb.checked){ addDone('s1:attr:'+k); picked=true; }});
   stS.innerHTML=picked?'<span class="pill ok">Marked</span>':'<span class="pill warn">Pick at least one</span>'; render();
 };
-
-document.getElementById('s2QrBtn').onclick=()=>{
-  const a=document.getElementById('s2QrA').value.trim().toUpperCase();
-  const b=document.getElementById('s2QrB').value.trim().toUpperCase();
-  const stS=document.getElementById('s2QrStatus');
-  const G=getState(); if(!G.s1ok){ stS.innerHTML='<span class="pill warn">Complete Stage 1 first</span>'; return; }
-  if(!a||!b){ stS.innerHTML='<span class="pill err">Enter both codes</span>'; return; }
-  addDone('s2:shopA'); addDone('s2:shopB'); stS.innerHTML='<span class="pill ok">Both verified</span>'; render();
-};
-
-document.addEventListener('click',(e)=>{
-  if(e.target && e.target.id==='s2GeoBtn'){
-    const stS=document.getElementById('s2AttrStatus'); const G=getState();
-    if(!G.s1ok){ stS.innerHTML='<span class="pill warn">Complete Stage 1 first</span>'; return; }
-    if(!navigator.geolocation){ stS.innerHTML='<span class="pill err">Geolocation not supported</span>'; return; }
-    stS.textContent='Checking…';
-    const HILL={lat:38.04952, lng:22.11163};
-    navigator.geolocation.getCurrentPosition(pos=>{
-      const d=haversine(pos.coords.latitude,pos.coords.longitude,HILL.lat,HILL.lng);
-      if(d<=0.25){ addDone('s2:attr:hill'); stS.innerHTML='<span class="pill ok">Hill verified</span>'; render(); }
-      else{ stS.innerHTML='<span class="pill warn">You seem too far (~'+d.toFixed(2)+' km)</span>'; }
-    },err=>{ stS.innerHTML='<span class="pill err">'+err.message+'</span>'; },{enableHighAccuracy:true,timeout:15000});
-  }
-  if(e.target && e.target.id==='s2RailBtn'){
-    const url=(document.getElementById('s2RailUrl')||{value:''}).value.trim();
-    const stS=document.getElementById('s2AttrStatus'); const G=getState();
-    if(!G.s1ok){ stS.innerHTML='<span class="pill warn">Complete Stage 1 first</span>'; return; }
-    if(!/^https?:\/\//i.test(url)){ stS.innerHTML='<span class="pill err">Paste a valid public URL</span>'; return; }
-    if(!/#?myhappybox/i.test(url)){ stS.innerHTML='<span class="pill warn">Include #myhappybox</span>'; }
-    addDone('s2:attr:odontotos'); stS.innerHTML='<span class="pill ok">Odontotos submitted</span>'; render();
-  }
-});
 document.getElementById('s2AttrBtn').onclick=()=>{
   const eff=effectiveSeason(), layout=LAYOUTS[eff].s2; const stS=document.getElementById('s2AttrStatus'); let picked=false;
   layout.forEach(k=>{ const cb=document.getElementById('s2_'+k); if(cb&&cb.checked){ addDone('s2:attr:'+k); picked=true; }});
   stS.innerHTML=picked?'<span class="pill ok">Marked</span>':'<span class="pill warn">Select at least one</span>'; render();
-};
-
-document.getElementById('s3QrBtn').onclick=()=>{
-  const a=document.getElementById('s3QrA').value.trim().toUpperCase();
-  const b=document.getElementById('s3QrB').value.trim().toUpperCase();
-  const c=document.getElementById('s3QrC').value.trim().toUpperCase();
-  const stS=document.getElementById('s3QrStatus'); const G=getState();
-  if(!G.s2ok){ stS.innerHTML='<span class="pill warn">Complete Stage 2 first</span>'; return; }
-  if(!a||!b||!c){ stS.innerHTML='<span class="pill err">Enter all three codes</span>'; return; }
-  addDone('s3:shopA'); addDone('s3:shopB'); addDone('s3:shopC'); stS.innerHTML='<span class="pill ok">Verified</span>'; render();
 };
 document.getElementById('s3AttrBtn').onclick=()=>{
   const eff=effectiveSeason(), layout=LAYOUTS[eff].s3; const stS=document.getElementById('s3AttrStatus'); let picked=false;
@@ -666,80 +557,30 @@ document.getElementById('s3AttrBtn').onclick=()=>{
   stS.innerHTML=picked?'<span class="pill ok">Marked</span>':'<span class="pill warn">Pick at least one</span>'; render();
 };
 
-/* ====== CLAIM MODAL & EMAIL MINT ====== */
+/* ====== CLAIM modal (μπορείς να συνδέσεις /api/mint αργότερα) ====== */
 const modal=document.getElementById('modal');
 document.getElementById('mintInfoBtn').onclick=()=>openClaimInfo(false);
 document.getElementById('claimBtn').onclick=()=>openClaimInfo(true);
 document.getElementById('closeModal').onclick=()=>modal.classList.remove('show');
 modal.onclick=(e)=>{ if(e.target===modal) modal.classList.remove('show'); };
 
-function openClaimInfo(showMint){
-  const lang=currentLang(); const G=getState(); const body=document.getElementById('modalBody');
-  document.getElementById('modalTitle').textContent = T[lang]["mint.title"];
-  if(!G.s1ok){
-    body.innerHTML=`
-      <p>${T[lang]["claim.needS1"]}</p>
-      <ul style="text-align:left;line-height:1.5">
-        <li>${T[lang]["bullet.post"]}</li>
-        <li>${T[lang]["bullet.shop1"]}</li>
-        <li>${T[lang]["bullet.s1attr"]}</li>
-      </ul>
-      <p>${T[lang]["claim.points"]}</p>
-    `;
-  } else {
-    const tierTxt = (G.tier==='—' ? (lang==='el'?'Common → Uncommon':'Common → Uncommon') : G.tier);
-    body.innerHTML=`
-      <p>${T[lang]["mint.cta"].replace('{tier}', tierTxt)}</p>
-      <div class="row" style="margin-top:10px">
-        <label for="mintEmail" style="min-width:160px;text-align:left">${T[lang]["mint.emailLabel"]}</label>
-        <input type="email" id="mintEmail" placeholder="${T[lang]["mint.emailPlaceholder"]}" />
-      </div>
-      <div class="row">
-        <button class="btn" id="doMintBtn">${T[lang]["btn.mintNow"]}</button>
-      </div>
-      <div class="status" id="mintStatus"></div>
-      <p class="mini">${T[lang]["claim.mini"]}</p>
-    `;
-    document.getElementById('doMintBtn').onclick=handleMint;
-  }
+function openClaimInfo(){
+  document.getElementById('modalTitle').textContent = 'Claiming';
+  document.getElementById('modalBody').innerHTML = '<p>Claim unlocks after Stage 1. Keep playing for rarer tiers!</p>';
   modal.classList.add('show');
 }
-function isValidEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
-async function handleMint(){
-  const lang=currentLang(); const email=(document.getElementById('mintEmail').value||'').trim();
-  const mintStatus=document.getElementById('mintStatus'); const btn=document.getElementById('doMintBtn');
-  if(!isValidEmail(email)){ mintStatus.innerHTML='<span class="pill err">Invalid email</span>'; return; }
-  const G=getState();
-  btn.classList.add('disabled'); btn.disabled=true;
-  mintStatus.textContent=T[lang]["mint.sending"];
-  try{
-    const payload={
-      email,
-      tier:G.tier,
-      stage:G.stage,
-      completed:Array.from(G.done||[])
-    };
-    const resp=await fetch('/api/mint',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    if(!resp.ok) throw new Error('HTTP '+resp.status);
-    mintStatus.innerHTML='<span class="pill ok">'+T[lang]["mint.success"]+'</span>';
-  }catch(err){
-    mintStatus.innerHTML='<span class="pill err">'+T[lang]["mint.error"]+'</span>';
-  }finally{
-    btn.classList.remove('disabled'); btn.disabled=false;
-  }
-}
 
-/* overall render cycle */
+/* ========= season/lang boot ========= */
 function renderAll(){ applyLangToDom(); applySeasonNote(); renderAttractions(); render(); }
-
-/* reset */
 document.getElementById('resetBtn').onclick=()=>{ clearStore(); render(); };
 
-/* lang + season init & handlers */
-langSelect.value=localStorage.getItem(LS_LANG)||'en';
-langSelect.addEventListener('change',()=>{ localStorage.setItem(LS_LANG,langSelect.value); renderAll(); });
-seasonSelect.value=localStorage.getItem(LS_SEASON)||'auto';
-seasonSelect.addEventListener('change',()=>{ localStorage.setItem(LS_SEASON,seasonSelect.value); renderAll(); });
+const langSelectEl=document.getElementById('langSelect');
+langSelectEl.value=localStorage.getItem(LS_LANG)||'en';
+langSelectEl.addEventListener('change',()=>{ localStorage.setItem(LS_LANG,langSelectEl.value); renderAll(); });
+
+const seasonSelectEl=document.getElementById('seasonSelect');
+seasonSelectEl.value=localStorage.getItem(LS_SEASON)||'auto';
+seasonSelectEl.addEventListener('change',()=>{ localStorage.setItem(LS_SEASON,seasonSelectEl.value); renderAll(); });
 
 /* utils */
 function haversine(lat1,lon1,lat2,lon2){
