@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -40,7 +40,8 @@
   .chip{ display:flex; align-items:center; gap:8px; background:#fff; border:1px solid #eee;
     padding:8px 12px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.06); font-size:14px; }
   .chip select{ border:1px solid #e6e6e6; border-radius:10px; padding:6px 10px }
-.hero-wrap{ display:flex; justify-content:center; padding:22px 16px 10px; }
+
+  .hero-wrap{ display:flex; justify-content:center; padding:22px 16px 10px; }
   .hero-frame{ width:min(1020px,90vw); height:clamp(260px,48vw,560px);
     background:#fff; border:10px solid #fff; border-radius:18px; box-shadow:0 12px 36px rgba(0,0,0,.14);
     position:relative; overflow:hidden; }
@@ -53,11 +54,11 @@
     cursor:pointer; user-select:none; } .nav:hover{ filter:brightness(1.03) }
   .nav.prev{ left:10px } .nav.next{ right:10px }
 
-  /* animated fox banner (μικρό, «ζωντανό» αλλά διακριτικό) */
-  .fox-banner{ display:flex; justify-content:center; margin:28px auto 6px; }
-  .fox-banner img{ width:240px; height:auto; border-radius:14px;
-    animation:bounce 2.8s infinite ease-in-out; box-shadow:0 6px 20px rgba(0,0,0,.08); }
-  @keyframes bounce{ 0%,100%{ transform:translateY(0)} 50%{ transform:translateY(-8px)} }
+  /* animated fox banner */
+  .fox-banner{ display:flex; justify-content:center; margin:30px auto; }
+  .fox-banner img{ width:300px; height:auto; border-radius:14px;
+    animation:bounce 2.8s infinite ease-in-out; box-shadow:0 6px 20px rgba(0,0,0,.1); }
+  @keyframes bounce{ 0%,100%{ transform:translateY(0)} 50%{ transform:translateY(-10px)} }
 
   .quests{ max-width:min(1060px,92vw); margin:32px auto; padding:6px; }
   .card{ background:#fff; border-radius:14px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.08); margin-bottom:14px; }
@@ -70,37 +71,6 @@
   .pill{ display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; font-size:13px; font-weight:600; margin:3px 6px 0 0 }
   .ok{ background:#eaf7f0; color:var(--ok) } .warn{ background:#fff6e0; color:var(--warn) } .err{ background:#fdecec; color:var(--err) }
   .status{ margin-top:6px; font-size:14px; color:#666 }
-
-  .overall{ display:flex; align-items:center; gap:12px; }
-  .overall .meter{ flex:1; height:10px; background:#eee; border-radius:999px; overflow:hidden; }
-  .overall .meter > span{ display:block; height:100%; width:0%; background:linear-gradient(90deg,#1f9d55,#ff7a00); transition:width .35s ease; }
-  .overall .pct{ min-width:42px; font-weight:700; color:#444 }
-
-  .cta{ text-align:center; padding:42px 20px 70px }
-  .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px); color:var(--ink2) }
-  .cta p{ margin:0 0 16px; color:#777 }
-
-  footer{ text-align:center; padding:18px; color:#999; font-size:13px }
-
-  .modal{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:50; }
-  .modal.show{ display:flex }
-  .modal-card{ background:#fff; border-radius:16px; padding:26px 28px; box-shadow:0 20px 60px rgba(0,0,0,.25);
-    text-align:center; min-width:min(90vw,520px); }
-  .modal-card h3{ margin:0 0 10px }
-  .modal-card p{ margin:0 0 10px; color:#555 }
-  .modal-card .mini{ font-size:12px; color:#777; margin-top:4px }
-  .close{ border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer; }
-  .disabled{ opacity:.55; cursor:not-allowed }
-
-  #victory{ position:fixed; inset:0; display:none; align-items:center; justify-content:center;
-    background:rgba(0,0,0,.55); z-index:9999; }
-  #victory.show{ display:flex; animation:fadeIn .25s ease }
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-  .victory-card{ position:relative; text-align:center; background:#fff; border-radius:20px;
-    padding:28px 28px 22px; box-shadow:0 24px 80px rgba(0,0,0,.35); overflow:hidden; }
-  .victory-card h2{ margin:0 0 6px; font-size:clamp(22px,4vw,32px); color:#222 }
-  .victory-card p{ margin:0 0 14px; color:#666 }
-  .trophy{ font-size:64px; margin-bottom:8px; animation:pop .5s ease both }
 </style>
 </head>
 <body>
@@ -129,7 +99,6 @@
       </div>
     </div>
   </header>
-
   <section class="hero-wrap">
     <div class="hero-frame" id="heroFrame">
       <div class="badge" data-i18n="slider.badge">NFT Preview</div>
@@ -139,14 +108,13 @@
     </div>
   </section>
 
-  <!-- Μικρό «ζωντανό» banner με την αλεπού -->
+  <!-- Fox banner (μικρή «παιχνιδιάρικη» κίνηση) -->
   <div class="fox-banner">
-    <!-- χρησιμοποίησε είτε μια μικρή gif (π.χ. public/photos/fox.gif) είτε png (θα κάνει bounce animation) -->
-    <img src="public/photos/fox.gif" onerror="this.src='public/photos/fox.png'" alt="Happy Fox" />
+    <img src="public/photos/fox.png" alt="Happy Fox mascot" />
   </div>
 
   <section class="quests">
-  <!-- ===== Stage 1 ===== -->
+    <!-- ===== Stage 1 ===== -->
     <div class="card" id="s1Card">
       <h3 data-i18n="s1.title">Stage 1 — Warm-up (🎯 complete 3/3)</h3>
       <p data-i18n="s1.desc">You need: 1 social + 1 shop + <strong>1 of the attractions</strong> (extra attractions = bonus).</p>
@@ -228,15 +196,14 @@
       <div class="row"><button class="btn ghost" id="s3AttrBtn" data-i18n="btn.markVisited" style="margin-top:6px">Mark visited</button></div>
       <div class="status" id="s3AttrStatus"></div>
     </div>
-!-- ===== Progress ===== -->
+
+    <!-- ===== Progress ===== -->
     <div class="card" id="progressCard">
       <h3 data-i18n="progress.title">Your Progress</h3>
 
-      <div class="overall" style="margin:8px 0 10px; display:flex; align-items:center; gap:12px;">
-        <div class="meter" style="flex:1; height:10px; background:#eee; border-radius:999px; overflow:hidden;">
-          <span id="overallFill" style="display:block; height:100%; width:0%; background:linear-gradient(90deg,#1f9d55,#ff7a00); transition:width .35s ease;"></span>
-        </div>
-        <div class="pct" id="overallPct" style="min-width:42px; font-weight:700; color:#444">0%</div>
+      <div class="overall" style="margin:8px 0 10px">
+        <div class="meter"><span id="overallFill"></span></div>
+        <div class="pct" id="overallPct">0%</div>
       </div>
 
       <div id="progressPills" class="row" style="flex-wrap:wrap"></div>
@@ -263,420 +230,140 @@
   <footer>© 2025 Happy Box. All rights reserved.</footer>
 
   <!-- Modal -->
-  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" style="position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:50;">
-    <div class="modal-card" style="background:#fff; border-radius:16px; padding:26px 28px; box-shadow:0 20px 60px rgba(0,0,0,.25); text-align:center; min-width:min(90vw,520px);">
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
       <h3 id="modalTitle">Claiming</h3>
       <div id="modalBody"></div>
-      <p class="mini" data-i18n="claim.mini" style="font-size:12px; color:#777; margin-top:4px">Your tier is calculated automatically from your completed quests.</p>
-      <button class="close" id="closeModal" data-i18n="btn.close" style="border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer;">Close</button>
+      <p class="mini" data-i18n="claim.mini">Your tier is calculated automatically from your completed quests.</p>
+      <button class="close" id="closeModal" data-i18n="btn.close">Close</button>
     </div>
   </div>
 
   <!-- Victory overlay -->
-  <div id="victory" aria-hidden="true" style="position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.55); z-index:9999;">
-    <div class="victory-card" style="position:relative; text-align:center; background:#fff; border-radius:20px; padding:28px 28px 22px; box-shadow:0 24px 80px rgba(0,0,0,.35); overflow:hidden;">
+  <div id="victory" aria-hidden="true" style="display:none">
+    <div class="victory-card">
       <div class="confetti-fx" id="confettiFx"></div>
-      <div class="trophy" style="font-size:64px; margin-bottom:8px;">🏆</div>
+      <div class="trophy">🏆</div>
       <h2 data-i18n="victory.title">All quests complete!</h2>
       <p data-i18n="victory.desc">You’ve reached 100% progress. Time to claim your top reward! 🎉</p>
       <button class="btn" id="victoryClose" data-i18n="btn.awesome">Awesome!</button>
     </div>
   </div>
-  !-- ===== Progress ===== -->
-    <div class="card" id="progressCard">
-      <h3 data-i18n="progress.title">Your Progress</h3>
+<!-- Scripts -->
+  <script type="module">
+  import QrScanner from "https://unpkg.com/qr-scanner@1.4.2/qr-scanner.min.js";
 
-      <div class="overall" style="margin:8px 0 10px; display:flex; align-items:center; gap:12px;">
-        <div class="meter" style="flex:1; height:10px; background:#eee; border-radius:999px; overflow:hidden;">
-          <span id="overallFill" style="display:block; height:100%; width:0%; background:linear-gradient(90deg,#1f9d55,#ff7a00); transition:width .35s ease;"></span>
-        </div>
-        <div class="pct" id="overallPct" style="min-width:42px; font-weight:700; color:#444">0%</div>
-      </div>
+  /* ========= constants ========= */
+  const LS_KEY='hb_demo_progress_v5';
+  const LS_VICTORY='hb_demo_victory_once';
+  const LS_LANG='hb_demo_lang';
+  const LS_UID_APP='hb_uid_v1';
+  const LS_EMAIL_APP='hb_email_v1';
 
-      <div id="progressPills" class="row" style="flex-wrap:wrap"></div>
-      <p class="status" id="tierLine">Tier: —</p>
-      <div class="row">
-        <button class="btn alt" id="resetBtn" data-i18n="btn.reset">Reset demo</button>
-        <button class="btn" id="claimBtn">🎁 <span data-i18n="btn.claim">Claim your Happy Box</span></button>
-      </div>
-      <p class="status" data-i18n="claim.note">
-        Claim becomes available once you complete <strong>Stage 1</strong>.
-        You can keep playing for rarer tiers!
-      </p>
-    </div>
-  </section>
-
-  <section class="cta">
-    <h2 data-i18n="cta.title">Explore • Play • Win</h2>
-    <p data-i18n="cta.desc">
-      It’s a friendly treasure-hunt across Kalavryta. Finish Stage 1 to unlock Stage 2 and go for rarer rewards!
-    </p>
-    <button id="mintInfoBtn" class="btn" data-i18n="btn.howClaim">How claiming works</button>
-  </section>
-
-  <footer>© 2025 Happy Box. All rights reserved.</footer>
-
-  <!-- Modal -->
-  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" style="position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:50;">
-    <div class="modal-card" style="background:#fff; border-radius:16px; padding:26px 28px; box-shadow:0 20px 60px rgba(0,0,0,.25); text-align:center; min-width:min(90vw,520px);">
-      <h3 id="modalTitle">Claiming</h3>
-      <div id="modalBody"></div>
-      <p class="mini" data-i18n="claim.mini" style="font-size:12px; color:#777; margin-top:4px">Your tier is calculated automatically from your completed quests.</p>
-      <button class="close" id="closeModal" data-i18n="btn.close" style="border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer;">Close</button>
-    </div>
-  </div>
-
-  <!-- Victory overlay -->
-  <div id="victory" aria-hidden="true" style="position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.55); z-index:9999;">
-    <div class="victory-card" style="position:relative; text-align:center; background:#fff; border-radius:20px; padding:28px 28px 22px; box-shadow:0 24px 80px rgba(0,0,0,.35); overflow:hidden;">
-      <div class="confetti-fx" id="confettiFx"></div>
-      <div class="trophy" style="font-size:64px; margin-bottom:8px;">🏆</div>
-      <h2 data-i18n="victory.title">All quests complete!</h2>
-      <p data-i18n="victory.desc">You’ve reached 100% progress. Time to claim your top reward! 🎉</p>
-      <button class="btn" id="victoryClose" data-i18n="btn.awesome">Awesome!</button>
-    </div>
-  </div>
-!-- Scripts -->
-<script type="module">
-import QrScanner from "https://unpkg.com/qr-scanner@1.4.2/qr-scanner.min.js";
-
-/* ========= constants ========= */
-const LS_KEY='hb_demo_progress_v5';
-const LS_VICTORY='hb_demo_victory_once';
-const LS_LANG='hb_demo_lang';
-const LS_UID_APP='hb_uid_v1';
-const LS_EMAIL_APP='hb_email_v1';
-
-/* ========= UID & Email helpers ========= */
-function ensureUid(){
-  let uid=localStorage.getItem(LS_UID_APP);
-  if(!uid){
-    const rnd=(crypto&&crypto.getRandomValues)?crypto.getRandomValues(new Uint8Array(16)):null;
-    uid = rnd ? Array.from(rnd).map(x=>x.toString(16).padStart(2,'0')).join('') : String(Date.now())+Math.random().toString(16).slice(2);
-    localStorage.setItem(LS_UID_APP,uid);
+  /* ========= UID & Email helpers ========= */
+  function ensureUid(){
+    let uid=localStorage.getItem(LS_UID_APP);
+    if(!uid){
+      const rnd=(crypto&&crypto.getRandomValues)?crypto.getRandomValues(new Uint8Array(16)):null;
+      uid = rnd ? Array.from(rnd).map(x=>x.toString(16).padStart(2,'0')).join('') : String(Date.now())+Math.random().toString(16).slice(2);
+      localStorage.setItem(LS_UID_APP,uid);
+    }
+    return uid;
   }
-  return uid;
-}
-function getEmail(){
-  const el=document.getElementById('userEmail');
-  return (el&&el.value?el.value:localStorage.getItem(LS_EMAIL_APP)||'').trim().toLowerCase();
-}
-function setEmail(v){
-  localStorage.setItem(LS_EMAIL_APP,(v||'').trim().toLowerCase());
-  const el=document.getElementById('userEmail'); if(el) el.value=(v||'');
-}
-document.addEventListener('DOMContentLoaded',()=>{ 
-  const saved=localStorage.getItem(LS_EMAIL_APP)||''; 
-  const el=document.getElementById('userEmail'); 
-  if(el){ el.value=saved; el.addEventListener('input',()=>setEmail(el.value)); } 
-});
-const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-/* ========= i18n ========= */
-const T = {
-  en:{
-    edition:"Kalavryta Edition",
-    intro:"A joyful mini-game for travelers! Follow the fox, complete quests around Kalavryta and level-up your reward. Unlock one of <strong>1,000 digital souvenirs in NFT form</strong> — the higher your tier, the rarer your gift. Participation is free! Don’t wait a moment… Have fun, explore, win!",
-    "lang.label":"Language:",
-    "slider.badge":"NFT Preview",
-    "s1.title":"Stage 1 — Warm-up (🎯 complete 3/3)",
-    "s1.desc":"You need: 1 social + 1 shop + <strong>1 of the attractions</strong> (extra attractions = bonus).",
-    "s2.title":"Stage 2 — Explore more (🎯 complete 3/3)",
-    "s2.desc":"Requires Stage 1 complete. You need: 2 shops + <strong>1 of the attractions</strong> (extras = bonus).",
-    "s3.title":"Stage 3 — The finale (🎯 complete 4/4)",
-    "s3.desc":"Requires Stage 2 complete. You need: 3 shops + <strong>1 of the attractions</strong> (extras = bonus).",
-    "social.label":"📸 Post with hashtag #myhappybox",
-    "shops.s1":"🏪 Partner Shop (Stage 1)",
-    "shops.s2":"🏪 Partner Shops (Stage 2)",
-    "shops.s3":"🏪 Partner Shops (Stage 3)",
-    "attr.pick":"🗺️ Attractions — pick at least one:",
-    "btn.submit":"Submit link",
-    "btn.verify":"Verify QR",
-    "btn.markVisited":"Mark visited",
-    "btn.verifyBoth":"Verify both",
-    "btn.verifyAll":"Verify all",
-    "btn.reset":"Reset demo",
-    "btn.claim":"Claim your Happy Box",
-    "btn.howClaim":"How claiming works",
-    "btn.close":"Close",
-    "btn.awesome":"Awesome!",
-    "progress.title":"Your Progress",
-    "claim.note":"Claim becomes available once you complete <strong>Stage 1</strong>. You can keep playing for rarer tiers!",
-    "claim.mini":"Your tier is calculated automatically from your completed quests.",
-    "victory.title":"All quests complete!",
-    "victory.desc":"You’ve reached 100% progress. Time to claim your top reward! 🎉",
-    "cta.title":"Explore • Play • Win",
-    "cta.desc":"It’s a friendly treasure-hunt across Kalavryta. Finish Stage 1 to unlock Stage 2 and go for rarer rewards!"
-  },
-  el:{
-    edition:"Kalavryta Edition",
-    intro:"Ένα χαρούμενο mini-game για ταξιδιώτες! Ακολούθησε την αλεπού, κάνε quests στα Καλάβρυτα και ανέβασε το reward σου. Κλείδωσε ένα από τα <strong>1.000 συλλεκτικά ψηφιακά αναμνηστικά σε μορφή NFT</strong> — όσο πιο υψηλό tier, τόσο πιο σπάνιο το δώρο σου. Η συμμετοχή είναι δωρεάν! Μην περιμένεις στιγμή… Διασκέδασε, εξερεύνησε, κέρδισε!",
-    "lang.label":"Γλώσσα:",
-    "slider.badge":"NFT Preview",
-    "s1.title":"Στάδιο 1 — Ζέσταμα (🎯 3/3)",
-    "s1.desc":"Χρειάζεσαι: 1 social + 1 κατάστημα + <strong>1 από τα αξιοθέατα</strong> (έξτρα αξιοθέατα = bonus).",
-    "s2.title":"Στάδιο 2 — Περισσότερη εξερεύνηση (🎯 3/3)",
-    "s2.desc":"Απαιτείται ολοκλήρωση Σταδίου 1. Θέλεις: 2 καταστήματα + <strong>1 από τα αξιοθέατα</strong> (έξτρα = bonus).",
-    "s3.title":"Στάδιο 3 — Τελικός (🎯 4/4)",
-    "s3.desc":"Απαιτείται ολοκλήρωση Σταδίου 2. Θέλεις: 3 καταστήματα + <strong>1 από τα αξιοθέατα</strong> (έξτρα = bonus).",
-    "social.label":"📸 Ανέβασε post με #myhappybox",
-    "shops.s1":"🏪 Συνεργαζόμενο κατάστημα (Στάδιο 1)",
-    "shops.s2":"🏪 Συνεργαζόμενα καταστήματα (Στάδιο 2)",
-    "shops.s3":"🏪 Συνεργαζόμενα καταστήματα (Στάδιο 3)",
-    "attr.pick":"🗺️ Αξιοθέατα — διάλεξε τουλ. ένα:",
-    "btn.submit":"Υποβολή link",
-    "btn.verify":"Έλεγχος QR",
-    "btn.markVisited":"Σήμανση επίσκεψης",
-    "btn.verifyBoth":"Έλεγχος και των δύο",
-    "btn.verifyAll":"Έλεγχος όλων",
-    "btn.reset":"Reset demo",
-    "btn.claim":"Πάρε το Happy Box σου",
-    "btn.howClaim":"Πώς λειτουργεί το claim",
-    "btn.close":"Κλείσιμο",
-    "btn.awesome":"Τέλειο!",
-    "progress.title":"Η Πρόοδός σου",
-    "claim.note":"Το claim ενεργοποιείται μόλις ολοκληρώσεις το <strong>Στάδιο 1</strong>. Μπορείς να συνεχίσεις για σπανιότερα tiers!",
-    "claim.mini":"Το tier υπολογίζεται αυτόματα από τα quests που έχεις ολοκληρώσει.",
-    "victory.title":"Ολοκλήρωσες όλες τις αποστολές!",
-    "victory.desc":"Έφτασες 100% πρόοδο. Ώρα για το κορυφαίο reward! 🎉",
-    "cta.title":"Explore • Play • Win",
-    "cta.desc":"Ένα φιλικό κυνήγι θησαυρού στα Καλάβρυτα. Τελείωσε το Στάδιο 1 για να ξεκλειδώσεις το Στάδιο 2 και πήγαινε για πιο σπάνια δώρα!"
+  function getEmail(){
+    const el=document.getElementById('userEmail');
+    return (el&&el.value?el.value:localStorage.getItem(LS_EMAIL_APP)||'').trim().toLowerCase();
   }
-};
-function currentLang(){ return localStorage.getItem(LS_LANG)||'en'; }
-function applyLangToDom(){
-  const lang=currentLang();
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    const k=el.getAttribute('data-i18n'); const txt=T[lang][k]; if(txt) el.innerHTML=txt;
+  function setEmail(v){
+    localStorage.setItem(LS_EMAIL_APP,(v||'').trim().toLowerCase());
+    const el=document.getElementById('userEmail'); if(el) el.value=(v||'');
+  }
+  document.addEventListener('DOMContentLoaded',()=>{ 
+    const saved=localStorage.getItem(LS_EMAIL_APP)||''; 
+    const el=document.getElementById('userEmail'); 
+    if(el){ el.value=saved; el.addEventListener('input',()=>setEmail(el.value)); } 
   });
-  const map = [
-    ['s1PostUrl', lang==='el'?"Δημόσιο link (π.χ. Instagram)":"Public post URL (e.g. Instagram)"],
-    ['s1Qr',      lang==='el'?"QR κωδικός (κρυφό)":"Enter QR code (hidden)"],
-    ['s2QrA',     lang==='el'?"QR για Κατάστημα 2A (κρυφό)":"QR code Shop 2A (hidden)"],
-    ['s2QrB',     lang==='el'?"QR για Κατάστημα 2B (κρυφό)":"QR code Shop 2B (hidden)"],
-    ['s3QrA',     lang==='el'?"QR για Κατάστημα 3A (κρυφό)":"QR for Shop 3A (hidden)"],
-    ['s3QrB',     lang==='el'?"QR για Κατάστημα 3B (κρυφό)":"QR for Shop 3B (hidden)"],
-    ['s3QrC',     lang==='el'?"QR για Κατάστημα 3C (κρυφό)":"QR for Shop 3C (hidden)"],
-  ];
-  map.forEach(([id,ph])=>{ const el=document.getElementById(id); if(el) el.placeholder=ph; });
-}
+  const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/* ========= slider ========= */
-const slides=Array.from({length:26},(_,i)=>`public/photos/${i+2}.png`);
-let sidx=0,timer; 
-const heroImg=document.getElementById('heroImg'), frame=document.getElementById('heroFrame');
-function show(n){ sidx=(n+slides.length)%slides.length; if(!heroImg) return;
-  heroImg.style.opacity=0; 
-  setTimeout(()=>{ heroImg.src=slides[sidx]; heroImg.onload=()=>heroImg.style.opacity=1; },180); 
-}
-function start(){ timer=setInterval(()=>show(sidx+1),4000) } 
-function stop(){ clearInterval(timer) }
-document.getElementById('prevBtn')?.addEventListener('click',()=>{stop();show(sidx-1);start()});
-document.getElementById('nextBtn')?.addEventListener('click',()=>{stop();show(sidx+1);start()});
-if(frame){ frame.onmouseenter=stop; frame.onmouseleave=start; show(0); start(); }
-
-/* ========= attractions & layout ========= */
-const ATTR = {
-  museum:{en:"Municipal Museum of the Kalavryta Holocaust 🏛️", el:"Δημοτικό Μουσείο Καλαβρυτινού Ολοκαυτώματος 🏛️", checkpoint:"museum"},
-  agialavra:{en:"Monastery of Agia Lavra ⛪", el:"Μονή Αγίας Λαύρας ⛪", checkpoint:"agiaLavra"},
-  square:{en:"Petmezai Square 🏞️", el:"Πλατεία Πετμεζαίων 🏞️", checkpoint:"petmezaionSquare"},
-  hill:{en:"Place of Sacrifice / Hill of Kapi ⛰️", el:"Τόπος Θυσίας / Λόφος του Καπί ⛰️", checkpoint:"kapi"},
-  heroes:{en:"Heroes of 1821 Monument 🗿", el:"Μνημείο Ηρώων Αγωνιστών του 1821 🗿", checkpoint:"heroes1821"},
-  ski:{en:"Kalavryta Ski Center 🎿", el:"Χιονοδρομικό κέντρο Καλαβρύτων 🎿", checkpoint:"skiCenter"},
-  odontotos:{en:"Odontotos Rack Railway 🚆", el:"Οδοντωτός 🚆", checkpoint:"vouraikosGorge"},
-  cave:{en:"Cave of Lakes 🕳️", el:"Σπήλαιο των Λιμνών 🕳️", checkpoint:"caveOfLakes"},
-  gorge:{en:"Vouraikos Gorge 🏞️", el:"Φαράγγι του Βουραϊκού 🏞️", checkpoint:"vouraikosGorge"},
-  makellaria:{en:"Holy Monastery of Makellaria ⛪", el:"Ιερά Μονή Μακελλαριάς ⛪", checkpoint:"moniMakellarias"},
-  tower:{en:"Petmezai Tower 🏰", el:"Πύργος Πετμεζαίων 🏰", checkpoint:"pyrgosPetmezaion"}
-};
-const LAYOUTS = { s1:['museum','agialavra','square'], s2:['hill','heroes','odontotos','ski'], s3:['gorge','cave','makellaria','tower'] };
-const s1AttrList=document.getElementById('s1AttrList');
-const s2AttrList=document.getElementById('s2AttrList');
-const s3AttrList=document.getElementById('s3AttrList');
-function makeAttrRow(stageKey, key, label){
-  const wrap=document.createElement('div');
-  wrap.style.display='flex'; wrap.style.alignItems='center'; wrap.style.gap='8px'; wrap.style.flexWrap='wrap';
-  const lab=document.createElement('label'); lab.style.display='flex'; lab.style.alignItems='center'; lab.style.gap='6px';
-  const cb=document.createElement('input'); cb.type='checkbox'; cb.id=`${stageKey}_${key}`;
-  lab.appendChild(cb); lab.appendChild(document.createTextNode(' '+label));
-  wrap.appendChild(lab);
-  const btn=document.createElement('button'); btn.className='btn ghost'; btn.textContent='📍 Verify by location';
-  btn.addEventListener('click', ()=> verifyAttractionByGeo(stageKey, key));
-  wrap.appendChild(btn);
-  return wrap;
-}
-function renderAttractions(){
-  const lang=currentLang();
-  if(s1AttrList){ s1AttrList.innerHTML=''; LAYOUTS.s1.forEach(k=> s1AttrList.appendChild(makeAttrRow('s1', k, ATTR[k][lang]))); }
-  if(s2AttrList){ s2AttrList.innerHTML=''; LAYOUTS.s2.forEach(k=> s2AttrList.appendChild(makeAttrRow('s2', k, ATTR[k][lang]))); }
-  if(s3AttrList){ s3AttrList.innerHTML=''; LAYOUTS.s3.forEach(k=> s3AttrList.appendChild(makeAttrRow('s3', k, ATTR[k][lang]))); }
-}
-
-/* ========= local store & progress ========= */
-function loadStore(){ try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}')}catch{return{}} }
-function saveStore(o){ localStorage.setItem(LS_KEY, JSON.stringify(o||{})) }
-function clearStore(){ localStorage.removeItem(LS_KEY); localStorage.removeItem(LS_VICTORY); }
-function addDone(key){ const s=loadStore(); s.completed=Array.from(new Set([...(s.completed||[]), key])); saveStore(s); }
-
-const pills=document.getElementById('progressPills'), tierLine=document.getElementById('tierLine');
-const overallFill=document.getElementById('overallFill'), overallPct=document.getElementById('overallPct');
-function getState(){
-  const done=new Set((loadStore().completed)||[]);
-  const s1Attrs=LAYOUTS.s1.map(k=>'s1:attr:'+k);
-  const s1={ post:done.has('s1:post'), shop:done.has('s1:shop'), attrOk:s1Attrs.some(k=>done.has(k)) };
-  const s1ok=s1.post&&s1.shop&&s1.attrOk;
-  const s2Attrs=LAYOUTS.s2.map(k=>'s2:attr:'+k);
-  const s2={ shopA:done.has('s2:shopA'), shopB:done.has('s2:shopB'), attrOk:s1ok&&s2Attrs.some(k=>done.has(k)) };
-  const s2ok=s1ok&&s2.shopA&&s2.shopB&&s2.attrOk;
-  const s3Attrs=LAYOUTS.s3.map(k=>'s3:attr:'+k);
-  const s3={ shopA:done.has('s3:shopA'), shopB:done.has('s3:shopB'), shopC:done.has('s3:shopC'), attrOk:s2ok&&s3Attrs.some(k=>done.has(k)) };
-  const s3ok=s2ok&&s3.shopA&&s3.shopB&&s3.shopC&&s3.attrOk;
-  const overallCount=(s1.post?1:0)+(s1.shop?1:0)+(s1.attrOk?1:0)+
-                     (s2.shopA?1:0)+(s2.shopB?1:0)+(s2.attrOk?1:0)+
-                     (s3.shopA?1:0)+(s3.shopB?1:0)+(s3.shopC?1:0)+(s3.attrOk?1:0);
-  const tier = s3ok ? 'Legendary'
-             : s2ok ? 'Rare → Ultra Rare'
-             : s1ok ? 'Common → Uncommon'
-             : '—';
-  return {done, s1ok, s2ok, s3ok, overallCount, tier};
-}
-function pill(text){ const el=document.createElement('span'); el.className='pill ok'; el.textContent=text; return el; }
-function render(){
-  const st=getState();
-  const s2Card=document.getElementById('s2Card'); if(s2Card) s2Card.style.display = st.s1ok ? '' : 'none';
-  const s3Card=document.getElementById('s3Card'); if(s3Card) s3Card.style.display = st.s2ok ? '' : 'none';
-  if(pills){ pills.innerHTML=''; st.done && st.done.forEach?.(k=>pills.appendChild(pill(k))); }
-  const pct=Math.round(st.overallCount/10*100);
-  if(overallFill) overallFill.style.width=pct+'%'; 
-  if(overallPct) overallPct.textContent=pct+'%';
-  if(tierLine) tierLine.textContent='Tier: '+st.tier;
-  if(pct===100) triggerVictoryOnce();
-}
-
-/* ========= Social verify (API) ========= */
-async function verifySocial(url, statusEl, questKey){
-  const lang=currentLang();
-  if(!/^https?:\/\//i.test(url)){ 
-    statusEl.innerHTML = lang==='el' ? '<span class="pill err">Βάλε έγκυρο link</span>' : '<span class="pill err">Paste a valid public URL</span>'; 
-    return;
-  }
-  statusEl.textContent = lang==='el' ? 'Έλεγχος…' : 'Checking…';
-  try{
-    const resp = await fetch('/api/verify-social',{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ url, hashtag:'#myhappybox' })
+  /* ========= i18n ========= */
+  const T = {
+    en:{
+      edition:"Kalavryta Edition",
+      intro:"A joyful mini-game for travelers! Follow the fox, complete quests around Kalavryta and level-up your reward. Unlock one of <strong>1,000 digital souvenirs in NFT form</strong> — the higher your tier, the rarer your gift. Participation is free! Don’t wait a moment… Have fun, explore, win!",
+      "lang.label":"Language:",
+      "slider.badge":"NFT Preview",
+      "s1.title":"Stage 1 — Warm-up (🎯 complete 3/3)",
+      "s1.desc":"You need: 1 social + 1 shop + <strong>1 of the attractions</strong> (extra attractions = bonus).",
+      "s2.title":"Stage 2 — Explore more (🎯 complete 3/3)",
+      "s2.desc":"Requires Stage 1 complete. You need: 2 shops + <strong>1 of the attractions</strong> (extras = bonus).",
+      "s3.title":"Stage 3 — The finale (🎯 complete 4/4)",
+      "s3.desc":"Requires Stage 2 complete. You need: 3 shops + <strong>1 of the attractions</strong> (extras = bonus).",
+      "social.label":"📸 Post with hashtag #myhappybox",
+      "shops.s1":"🏪 Partner Shop (Stage 1)",
+      "shops.s2":"🏪 Partner Shops (Stage 2)",
+      "shops.s3":"🏪 Partner Shops (Stage 3)",
+      "attr.pick":"🗺️ Attractions — pick at least one:",
+      "btn.submit":"Submit link",
+      "btn.verify":"Verify QR",
+      "btn.markVisited":"Mark visited",
+      "btn.reset":"Reset demo",
+      "btn.claim":"Claim your Happy Box",
+      "btn.howClaim":"How claiming works",
+      "btn.close":"Close",
+      "btn.awesome":"Awesome!",
+      "progress.title":"Your Progress",
+      "claim.note":"Claim becomes available once you complete <strong>Stage 1</strong>. You can keep playing for rarer tiers!",
+      "claim.mini":"Your tier is calculated automatically from your completed quests.",
+      "victory.title":"All quests complete!",
+      "victory.desc":"You’ve reached 100% progress. Time to claim your top reward! 🎉",
+      "cta.title":"Explore • Play • Win",
+      "cta.desc":"It’s a friendly treasure-hunt across Kalavryta. Finish Stage 1 to unlock Stage 2 and go for rarer rewards!"
+    },
+    el:{
+      edition:"Kalavryta Edition",
+      intro:"Ένα χαρούμενο mini-game για ταξιδιώτες! Ακολούθησε την αλεπού, κάνε quests στα Καλάβρυτα και ανέβασε το reward σου. Κλείδωσε ένα από τα <strong>1.000 συλλεκτικά ψηφιακά αναμνηστικά σε μορφή NFT</strong> — όσο πιο υψηλό tier, τόσο πιο σπάνιο το δώρο σου. Η συμμετοχή είναι δωρεάν! Μην περιμένεις στιγμή… Διασκέδασε, εξερεύνησε, κέρδισε!",
+      "lang.label":"Γλώσσα:",
+      "slider.badge":"NFT Preview",
+      "s1.title":"Στάδιο 1 — Ζέσταμα (🎯 3/3)",
+      "s1.desc":"Χρειάζεσαι: 1 social + 1 κατάστημα + <strong>1 από τα αξιοθέατα</strong> (έξτρα αξιοθέατα = bonus).",
+      "s2.title":"Στάδιο 2 — Περισσότερη εξερεύνηση (🎯 3/3)",
+      "s2.desc":"Απαιτείται ολοκλήρωση Σταδίου 1. Θέλεις: 2 καταστήματα + <strong>1 από τα αξιοθέατα</strong> (έξτρα = bonus).",
+      "s3.title":"Στάδιο 3 — Τελικός (🎯 4/4)",
+      "s3.desc":"Απαιτείται ολοκλήρωση Σταδίου 2. Θέλεις: 3 καταστήματα + <strong>1 από τα αξιοθέατα</strong> (έξτρα = bonus).",
+      "social.label":"📸 Ανέβασε post με #myhappybox",
+      "shops.s1":"🏪 Συνεργαζόμενο κατάστημα (Στάδιο 1)",
+      "shops.s2":"🏪 Συνεργαζόμενα καταστήματα (Στάδιο 2)",
+      "shops.s3":"🏪 Συνεργαζόμενα καταστήματα (Στάδιο 3)",
+      "attr.pick":"🗺️ Αξιοθέατα — διάλεξε τουλ. ένα:",
+      "btn.submit":"Υποβολή link",
+      "btn.verify":"Έλεγχος QR",
+      "btn.markVisited":"Σήμανση επίσκεψης",
+      "btn.reset":"Reset demo",
+      "btn.claim":"Πάρε το Happy Box σου",
+      "btn.howClaim":"Πώς λειτουργεί το claim",
+      "btn.close":"Κλείσιμο",
+      "btn.awesome":"Τέλειο!",
+      "progress.title":"Η Πρόοδός σου",
+      "claim.note":"Το claim ενεργοποιείται μόλις ολοκληρώσεις το <strong>Στάδιο 1</strong>. Μπορείς να συνεχίσεις για σπανιότερα tiers!",
+      "claim.mini":"Το tier υπολογίζεται αυτόματα από τα quests που έχεις ολοκληρώσει.",
+      "victory.title":"Ολοκλήρωσες όλες τις αποστολές!",
+      "victory.desc":"Έφτασες 100% πρόοδο. Ώρα για το κορυφαίο reward! 🎉",
+      "cta.title":"Explore • Play • Win",
+      "cta.desc":"Ένα φιλικό κυνήγι θησαυρού στα Καλάβρυτα. Τελείωσε το Στάδιο 1 για να ξεκλειδώσεις το Στάδιο 2 και πήγαινε για πιο σπάνια δώρα!"
+    }
+  };
+  function currentLang(){ return localStorage.getItem(LS_LANG)||'en'; }
+  function applyLangToDom(){
+    const lang=currentLang();
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const k=el.getAttribute('data-i18n'); const txt=T[lang][k]; if(txt) el.innerHTML=txt;
     });
-    const data = await resp.json().catch(()=>({}));
-    if(!resp.ok || !data?.ok){
-      statusEl.innerHTML = lang==='el' ? '<span class="pill err">Δεν βρέθηκε #myhappybox</span>' : '<span class="pill err">#myhappybox not found</span>';
-      return;
-    }
-    addDone(questKey);
-    statusEl.innerHTML = '<span class="pill ok">Verified</span>';
-    render();
-  }catch{
-    statusEl.innerHTML = '<span class="pill err">Server error</span>';
   }
-}
 
-/* ========= QR verify (STRICT, masked) ========= */
-function maskInput(el){ if(!el) return; el.type='password'; el.value='••••'; el.setAttribute('autocomplete','off'); el.setAttribute('readonly','readonly'); setTimeout(()=>el.blur(),0); }
-function setCode(el, code){ if(!el) return; el.dataset.code=code; maskInput(el); }
-function getCode(el){ return el?.dataset?.code?.trim() || ''; }
-function setStatus(el, html){ if(el) el.innerHTML = html; }
+  /* ... υπόλοιπα functions για slider, verifySocial, verifyQR, scanInto, verifyAttractionByGeo, render κλπ (όπως σου είχα δώσει πριν) ... */
 
-async function verifyQR(questId, inputEl, statusEl){
-  const uid=ensureUid(); const email=getEmail();
-  if(!EMAIL_RE.test(email||'')){ return setStatus(statusEl,'<span class="pill err">Βάλε έγκυρο email</span>'); }
-  const code = getCode(inputEl);
-  if(!code){ return setStatus(statusEl,'<span class="pill err">Σκάναρε το QR</span>'); }
-  setStatus(statusEl,'Επαλήθευση…');
-  try{
-    const r=await fetch('/api/verify-qr',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({uid,email,code,questId})});
-    const data=await r.json().catch(()=>({}));
-    if(!r.ok){
-      if(data?.error==='already used') setStatus(statusEl,'<span class="pill warn">Ήδη χρησιμοποιήθηκε για αυτό το email</span>');
-      else if(data?.error==='invalid code') setStatus(statusEl,'<span class="pill err">Λάθος QR code</span>');
-      else if(data?.error==='wrong code for this quest') setStatus(statusEl,'<span class="pill err">Λάθος QR για αυτό το στάδιο</span>');
-      else setStatus(statusEl,`<span class="pill err">${data.error||('HTTP '+r.status)}</span>`);
-      return;
-    }
-    setStatus(statusEl,'<span class="pill ok">QR verified ✅</span>');
-    addDone(questId); 
-    if(inputEl){ inputEl.dataset.code=''; inputEl.value=''; inputEl.type='password'; }
-    render();
-  }catch{ setStatus(statusEl,'<span class="pill err">Δίκτυο/Server error</span>'); }
-}
-
-/* ========= QR CAMERA ========= */
-async function scanInto(inputEl){
-  const overlay=document.createElement('div');
-  overlay.style.position='fixed'; overlay.style.inset='0'; overlay.style.background='rgba(0,0,0,.7)';
-  overlay.style.display='flex'; overlay.style.alignItems='center'; overlay.style.justifyContent='center'; overlay.style.zIndex='9999';
-  const box=document.createElement('div'); box.style.background='#000'; box.style.borderRadius='12px'; box.style.padding='8px';
-  const video=document.createElement('video'); video.style.width='min(92vw,520px)'; video.style.height='auto'; video.playsInline=true;
-  const close=document.createElement('button'); close.textContent='Close'; close.className='btn'; close.style.marginTop='8px';
-  box.appendChild(video); box.appendChild(close); overlay.appendChild(box); document.body.appendChild(overlay);
-
-  const scanner=new QrScanner(video, result=>{
-    const code=(result?.data||result||'').trim();
-    setCode(inputEl, code);
-    scanner.stop(); overlay.remove();
-  }, { returnDetailedScanResult:true, highlightScanRegion:true, highlightCodeOutline:true });
-
-  await scanner.start();
-  close.onclick=()=>{ scanner.stop(); overlay.remove(); };
-}
-
-/* ========= GEOLOCATION for attractions ========= */
-async function verifyAttractionByGeo(stageKey, key){
-  const statusEl = document.getElementById(stageKey==='s1'?'s1AttrStatus':stageKey==='s2'?'s2AttrStatus':'s3AttrStatus');
-  const uid=ensureUid(); const questId=`${stageKey}:attr:${key}`;
-  if(!navigator.geolocation){ return setStatus(statusEl,'<span class="pill err">Geolocation not supported</span>'); }
-  setStatus(statusEl,'Checking location…');
-  navigator.geolocation.getCurrentPosition(async pos=>{
-    try{
-      const body={ uid, lat:pos.coords.latitude, lon:pos.coords.longitude, checkpoint:ATTR[key].checkpoint, questId };
-      const r=await fetch('/api/geo-check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-      const data=await r.json().catch(()=>({}));
-      if(!r.ok){ setStatus(statusEl,`<span class="pill err">${data.error||('HTTP '+r.status)}</span>`); return; }
-      if(data.ok){
-        addDone(questId);
-        const cb=document.getElementById(`${stageKey}_${key}`); if(cb) cb.checked=true;
-        setStatus(statusEl,'<span class="pill ok">Location verified ✅</span>');
-        render();
-      }else{
-        const km=(data.distance/1000).toFixed(2);
-        setStatus(statusEl,`<span class="pill warn">Too far (~${km} km)</span>`);
-      }
-    }catch{ setStatus(statusEl,'<span class="pill err">Server error</span>'); }
-  }, err=> setStatus(statusEl, `<span class="pill err">${err.message}</span>`), {enableHighAccuracy:true,timeout:15000});
-}
-
-/* ========= interactions ========= */
-document.getElementById('langSelect')?.addEventListener('change',(e)=>{ localStorage.setItem(LS_LANG, e.target.value); renderAll(); });
-
-// Social (Stage 1 — ίδια λογική για όποιο άλλο stage ζητήσεις)
-document.getElementById('s1PostBtn')?.addEventListener('click',()=>{
-  const url=document.getElementById('s1PostUrl')?.value.trim();
-  const stS=document.getElementById('s1PostStatus');
-  if(!stS) return;
-  verifySocial(url, stS, 's1:post');
-});
-
-// QR buttons (κωδικός κρυφός, απαιτείται scan)
-document.getElementById('s1ScanBtn')?.addEventListener('click',()=> scanInto(document.getElementById('s1Qr')));
-document.getElementById('s1QrBtn')?.addEventListener('click',()=> verifyQR('s1:shop', document.getElementById('s1Qr'), document.getElementById('s1QrStatus')));
-
-document.getElementById('s2ScanABtn')?.addEventListener('click',()=> scanInto(document.getElementById('s2QrA')));
-document.getElementById('s2QrBtnA')?.addEventListener('click',()=> verifyQR('s2:shopA', document.getElementById('s2QrA'), document.getElementById('s2QrStatus')));
-document.getElementById('s2ScanBBtn')?.addEventListener('click',()=> scanInto(document.getElementById('s2QrB')));
-document.getElementById('s2QrBtnB')?.addEventListener('click',()=> verifyQR('s2:shopB', document.getElementById('s2QrB'), document.getElementById('s2QrStatus')));
-
-document.getElementById('s3ScanABtn')?.addEventListener('click',()=> scanInto(document.getElementById('s3QrA')));
-document.getElementById('s3QrBtnA')?.addEventListener('click',()=> verifyQR('s3:shopA', document.getElementById('s3QrA'), document.getElementById('s3QrStatus')));
-document.getElementById('s3ScanBBtn')?.addEventListener('click',()=> scanInto
-                                             
-</script>
+  /* first paint */
+  renderAll();
+  </script>
 </body>
 </html>
