@@ -54,11 +54,11 @@
     cursor:pointer; user-select:none; } .nav:hover{ filter:brightness(1.03) }
   .nav.prev{ left:10px } .nav.next{ right:10px }
 
-  .example{ max-width:min(1020px,90vw); margin:26px auto 0; padding:18px 14px 8px;
-    border-radius:18px; background:rgba(255,255,255,.65); box-shadow:0 8px 26px rgba(0,0,0,.08); }
-  .example h4{ margin:0 0 10px 6px; font-size:13px; color:#666; font-weight:600; }
-  .example-img{ display:block; width:100%; height:auto; border-radius:12px;
-    background:#fff; border:10px solid #fff; box-shadow:0 8px 26px rgba(0,0,0,.08); }
+  /* animated fox banner */
+  .fox-banner{ display:flex; justify-content:center; margin:30px auto; }
+  .fox-banner img{ width:300px; height:auto; border-radius:14px;
+    animation:bounce 2.8s infinite ease-in-out; box-shadow:0 6px 20px rgba(0,0,0,.1); }
+  @keyframes bounce{ 0%,100%{ transform:translateY(0)} 50%{ transform:translateY(-10px)} }
 
   .quests{ max-width:min(1060px,92vw); margin:32px auto; padding:6px; }
   .card{ background:#fff; border-radius:14px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.08); margin-bottom:14px; }
@@ -71,50 +71,6 @@
   .pill{ display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; font-size:13px; font-weight:600; margin:3px 6px 0 0 }
   .ok{ background:#eaf7f0; color:var(--ok) } .warn{ background:#fff6e0; color:var(--warn) } .err{ background:#fdecec; color:var(--err) }
   .status{ margin-top:6px; font-size:14px; color:#666 }
-
-  .stage{ display:flex; align-items:center; gap:12px; margin:10px 0 6px }
-  .step{ display:flex; align-items:center; gap:8px; color:#666; }
-  .dot{ width:22px; height:22px; border-radius:50%; border:2px solid #ddd; display:grid; place-items:center; font-size:12px; background:#fff }
-  .step.done .dot{ border-color:var(--ok); background:#eaf7f0; color:var(--ok) }
-  .bar{ flex:1; height:4px; background:#eee; border-radius:999px; position:relative; overflow:hidden }
-  .bar > span{ position:absolute; inset:0 0 0 auto; width:0%; background:linear-gradient(90deg,#27c498,#ffb84d); transition:width .4s ease }
-  .sublabel{ font-size:12px; color:#888 }
-
-  .overall{ display:flex; align-items:center; gap:12px; }
-  .overall .meter{ flex:1; height:10px; background:#eee; border-radius:999px; overflow:hidden; }
-  .overall .meter > span{ display:block; height:100%; width:0%; background:linear-gradient(90deg,#1f9d55,#ff7a00); transition:width .35s ease; }
-  .overall .pct{ min-width:42px; font-weight:700; color:#444 }
-
-  .cta{ text-align:center; padding:42px 20px 70px }
-  .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px); color:var(--ink2) }
-  .cta p{ margin:0 0 16px; color:#muted }
-
-  footer{ text-align:center; padding:18px; color:#999; font-size:13px }
-
-  .modal{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:50; }
-  .modal.show{ display:flex }
-  .modal-card{ background:#fff; border-radius:16px; padding:26px 28px; box-shadow:0 20px 60px rgba(0,0,0,.25);
-    text-align:center; min-width:min(90vw,520px); }
-  .modal-card h3{ margin:0 0 10px }
-  .modal-card p{ margin:0 0 10px; color:#555 }
-  .modal-card .mini{ font-size:12px; color:#777; margin-top:4px }
-  .close{ border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer; }
-  .disabled{ opacity:.55; cursor:not-allowed }
-
-  #victory{ position:fixed; inset:0; display:none; align-items:center; justify-content:center;
-    background:rgba(0,0,0,.55); z-index:9999; }
-  #victory.show{ display:flex; animation:fadeIn .25s ease }
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-  .victory-card{ position:relative; text-align:center; background:#fff; border-radius:20px;
-    padding:28px 28px 22px; box-shadow:0 24px 80px rgba(0,0,0,.35); overflow:hidden; }
-  .victory-card h2{ margin:0 0 6px; font-size:clamp(22px,4vw,32px); color:#222 }
-  .victory-card p{ margin:0 0 14px; color:#666 }
-  .trophy{ font-size:64px; margin-bottom:8px; animation:pop .5s ease both }
-  .confetti-fx{ position:absolute; inset:-20px; pointer-events:none }
-  .piece{ position:absolute; width:10px; height:14px; border-radius:2px; opacity:.9;
-    animation:fall 1.2s linear forwards, spin 1.2s linear forwards; }
-  @keyframes fall{ from{ transform:translateY(-40vh) } to{ transform:translateY(60vh) } }
-  @keyframes spin{ from{ transform:rotate(0) } to{ transform:rotate(720deg) } }
 </style>
 </head>
 <body>
@@ -124,13 +80,11 @@
     <h1 class="title"><span class="my">my</span> Happy Box <span class="gift">🎁</span></h1>
     <div class="edition" data-i18n="edition">Kalavryta Edition</div>
     <p class="sub" data-i18n="intro">
-      A joyful mini-game for travelers! Complete quests around Kalavryta to level-up your reward.  
-      Unlock one of <strong>1,000 limited-edition NFT photos</strong> — the rarer your tier, the rarer your art.
-      Have fun, explore, win surprises!
+      A joyful mini-game for travelers! Follow the fox, complete quests around Kalavryta and level-up your reward.  
+      Unlock one of <strong>1,000 digital souvenirs in NFT form</strong> — the rarer your tier, the rarer your gift. Participation is free! Don’t wait a moment... Have fun, explore, win!
     </p>
 
     <div class="controls">
-      <!-- Email -->
       <div class="chip">
         <label for="userEmail" style="font-size:14px;margin-right:6px">Email:</label>
         <input type="email" id="userEmail" placeholder="you@example.com" style="border:1px solid #e6e6e6;border-radius:10px;padding:6px 10px;min-width:220px">
@@ -143,42 +97,29 @@
           <option value="el">Ελληνικά</option>
         </select>
       </div>
-
-      <div class="chip">
-        <span data-i18n="season.label">Season in Kalavryta:</span>
-        <select id="seasonSelect">
-          <option value="auto" data-i18n="season.auto">Auto (recommended)</option>
-          <option value="winter" data-i18n="season.winter">Winter (Dec–Mar)</option>
-          <option value="spring" data-i18n="season.spring">Spring (Apr–May)</option>
-          <option value="summer" data-i18n="season.summer">Summer (Jun–Sep)</option>
-          <option value="autumn" data-i18n="season.autumn">Autumn (Oct–Nov)</option>
-        </select>
-        <span id="seasonNote" class="sublabel">We’ll adapt attractions to access & weather.</span>
-      </div>
     </div>
   </header>
 
   <section class="hero-wrap">
     <div class="hero-frame" id="heroFrame">
-      <div class="badge" data-i18n="slider.badge">Kalavryta preview</div>
-      <img id="heroImg" class="hero-img" src="public/photos/2.png" alt="Kalavryta preview" />
+      <div class="badge" data-i18n="slider.badge">NFT Preview</div>
+      <img id="heroImg" class="hero-img" src="public/photos/2.png" alt="NFT Preview" />
       <div class="nav prev" id="prevBtn" aria-label="Previous">‹</div>
       <div class="nav next" id="nextBtn" aria-label="Next">›</div>
     </div>
   </section>
 
-  <section class="example">
-    <h4 data-i18n="bundle.title">Bundle example</h4>
-    <img class="example-img" src="public/photos/1.png" alt="Bundle Minted example" />
-  </section>
+  <div class="fox-banner">
+    <img src="public/photos/fox.png" alt="Happy Fox" />
+  </div>
 
   <section class="quests">
-
     <!-- ===== Stage 1 ===== -->
     <div class="card" id="s1Card">
       <h3 data-i18n="s1.title">Stage 1 — Warm-up (🎯 complete 3/3)</h3>
       <p data-i18n="s1.desc">You need: 1 social + 1 shop + <strong>1 of the attractions</strong> (extra attractions = bonus).</p>
 
+      <!-- Social -->
       <div class="row"><span data-i18n="social.label">📸 Post with hashtag #myhappybox</span></div>
       <div class="row">
         <input type="text" id="s1PostUrl" placeholder="Public post URL (e.g. Instagram)">
@@ -186,14 +127,16 @@
       </div>
       <div class="status" id="s1PostStatus"></div>
 
+      <!-- Shop -->
       <div class="row" style="margin-top:10px"><span data-i18n="shops.s1">🏪 Partner Shop (Stage 1)</span></div>
       <div class="row" style="gap:6px;flex-wrap:wrap">
-        <input type="text" id="s1Qr" placeholder="Enter QR code (placeholder)">
+        <input type="text" id="s1Qr" placeholder="Enter QR code (hidden)">
         <button class="btn" id="s1QrBtn" data-i18n="btn.verify">Verify QR</button>
         <button class="btn ghost" id="s1ScanBtn">📷 Scan QR</button>
       </div>
       <div class="status" id="s1QrStatus"></div>
 
+      <!-- Attractions -->
       <div class="row" style="margin-top:10px"><span data-i18n="attr.pick">🗺️ Attractions — pick at least one:</span></div>
       <div class="row" id="s1AttrList"></div>
       <div class="row"><button class="btn ghost" id="s1AttrBtn" data-i18n="btn.markVisited">Mark visited</button></div>
@@ -205,18 +148,20 @@
       <h3 data-i18n="s2.title">Stage 2 — Explore more (🎯 complete 3/3)</h3>
       <p data-i18n="s2.desc">Requires Stage 1 complete. You need: 2 shops + <strong>1 of the attractions</strong> (extras = bonus).</p>
 
+      <!-- Shops -->
       <div class="row"><span data-i18n="shops.s2">🏪 Partner Shops (Stage 2)</span></div>
       <div class="row" style="gap:6px;flex-wrap:wrap">
-        <input type="text" id="s2QrA" placeholder="Enter QR code for Shop 2A">
+        <input type="text" id="s2QrA" placeholder="QR code Shop 2A (hidden)">
         <button class="btn" id="s2QrBtnA">Verify 2A</button>
         <button class="btn ghost" id="s2ScanABtn">📷 Scan 2A</button>
 
-        <input type="text" id="s2QrB" placeholder="Enter QR code for Shop 2B">
+        <input type="text" id="s2QrB" placeholder="QR code Shop 2B (hidden)">
         <button class="btn" id="s2QrBtnB">Verify 2B</button>
         <button class="btn ghost" id="s2ScanBBtn">📷 Scan 2B</button>
       </div>
       <div class="status" id="s2QrStatus"></div>
 
+      <!-- Attractions -->
       <div class="row" style="margin-top:10px"><span data-i18n="attr.pick">🗺️ Attractions — pick at least one:</span></div>
       <div class="row" id="s2AttrList" style="gap:14px; align-items:flex-start"></div>
       <div class="row"><button class="btn ghost" id="s2AttrBtn" data-i18n="btn.markVisited">Mark visited</button></div>
@@ -228,28 +173,29 @@
       <h3 data-i18n="s3.title">Stage 3 — The finale (🎯 complete 4/4)</h3>
       <p data-i18n="s3.desc">Requires Stage 2 complete. You need: 3 shops + <strong>1 of the attractions</strong> (extras = bonus).</p>
 
+      <!-- Shops -->
       <div class="row"><span data-i18n="shops.s3">🏪 Partner Shops (Stage 3)</span></div>
       <div class="row" style="gap:6px;flex-wrap:wrap">
-        <input type="text" id="s3QrA" placeholder="QR for Shop 3A">
+        <input type="text" id="s3QrA" placeholder="QR for Shop 3A (hidden)">
         <button class="btn" id="s3QrBtnA">Verify 3A</button>
         <button class="btn ghost" id="s3ScanABtn">📷 Scan 3A</button>
 
-        <input type="text" id="s3QrB" placeholder="QR for Shop 3B">
+        <input type="text" id="s3QrB" placeholder="QR for Shop 3B (hidden)">
         <button class="btn" id="s3QrBtnB">Verify 3B</button>
         <button class="btn ghost" id="s3ScanBBtn">📷 Scan 3B</button>
 
-        <input type="text" id="s3QrC" placeholder="QR for Shop 3C">
+        <input type="text" id="s3QrC" placeholder="QR for Shop 3C (hidden)">
         <button class="btn" id="s3QrBtnC">Verify 3C</button>
         <button class="btn ghost" id="s3ScanCBtn">📷 Scan 3C</button>
       </div>
       <div class="status" id="s3QrStatus"></div>
 
+      <!-- Attractions -->
       <div class="row" style="margin-top:10px"><span data-i18n="attr.pick">🗺️ Attractions — pick at least one:</span></div>
       <div class="row" id="s3AttrList" style="flex-direction:column; align-items:flex-start"></div>
       <div class="row"><button class="btn ghost" id="s3AttrBtn" data-i18n="btn.markVisited" style="margin-top:6px">Mark visited</button></div>
       <div class="status" id="s3AttrStatus"></div>
     </div>
-
     <!-- ===== Progress ===== -->
     <div class="card" id="progressCard">
       <h3 data-i18n="progress.title">Your Progress</h3>
@@ -265,13 +211,18 @@
         <button class="btn alt" id="resetBtn" data-i18n="btn.reset">Reset demo</button>
         <button class="btn" id="claimBtn">🎁 <span data-i18n="btn.claim">Claim your Happy Box</span></button>
       </div>
-      <p class="status" data-i18n="claim.note">Claim becomes available once you complete <strong>Stage 1</strong>. You can keep playing for rarer tiers!</p>
+      <p class="status" data-i18n="claim.note">
+        Claim becomes available once you complete <strong>Stage 1</strong>.
+        You can keep playing for rarer tiers!
+      </p>
     </div>
   </section>
 
   <section class="cta">
     <h2 data-i18n="cta.title">Explore • Play • Win</h2>
-    <p data-i18n="cta.desc">It’s a friendly treasure-hunt across Kalavryta. Finish Stage 1 to unlock Stage 2 and go for rarer rewards!</p>
+    <p data-i18n="cta.desc">
+      It’s a friendly treasure-hunt across Kalavryta. Finish Stage 1 to unlock Stage 2 and go for rarer rewards!
+    </p>
     <button id="mintInfoBtn" class="btn" data-i18n="btn.howClaim">How claiming works</button>
   </section>
 
@@ -297,15 +248,13 @@
       <button class="btn" id="victoryClose" data-i18n="btn.awesome">Awesome!</button>
     </div>
   </div>
-
-<!-- QR scanner lib (ESM) -->
+<!-- Scripts — Part 2.1 -->
 <script type="module">
 import QrScanner from "https://unpkg.com/qr-scanner@1.4.2/qr-scanner.min.js";
 
 /* ========= constants ========= */
 const LS_KEY='hb_demo_progress_v5';
 const LS_VICTORY='hb_demo_victory_once';
-const LS_SEASON='hb_demo_season';
 const LS_LANG='hb_demo_lang';
 const LS_UID_APP='hb_uid_v1';
 const LS_EMAIL_APP='hb_email_v1';
@@ -328,23 +277,21 @@ function setEmail(v){
   localStorage.setItem(LS_EMAIL_APP,(v||'').trim().toLowerCase());
   const el=document.getElementById('userEmail'); if(el) el.value=(v||'');
 }
-document.addEventListener('DOMContentLoaded',()=>{ const saved=localStorage.getItem(LS_EMAIL_APP)||''; const el=document.getElementById('userEmail'); if(el){ el.value=saved; el.addEventListener('input',()=>setEmail(el.value)); } });
+document.addEventListener('DOMContentLoaded',()=>{ 
+  const saved=localStorage.getItem(LS_EMAIL_APP)||''; 
+  const el=document.getElementById('userEmail'); 
+  if(el){ el.value=saved; el.addEventListener('input',()=>setEmail(el.value)); } 
+});
 const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /* ========= i18n ========= */
 const T = {
   en:{
     edition:"Kalavryta Edition",
-    intro:"A joyful mini-game for travelers! Complete quests around Kalavryta to level-up your reward. Unlock one of <strong>1,000 limited-edition NFT photos</strong> — the rarer your tier, the rarer your art. Have fun, explore, win surprises!",
+    // ΝΕΟ εισαγωγικό (ίδιο νόημα με το ελληνικό)
+    intro:"A joyful mini-game for travelers! Follow the fox, complete quests around Kalavryta and level-up your reward. Unlock one of <strong>1,000 digital souvenirs in NFT form</strong> — the higher your tier, the rarer your gift. Participation is free! Don’t wait a moment… Have fun, explore, win!",
     "lang.label":"Language:",
-    "season.label":"Season in Kalavryta:",
-    "season.auto":"Auto (recommended)",
-    "season.winter":"Winter (Dec–Mar)",
-    "season.spring":"Spring (Apr–May)",
-    "season.summer":"Summer (Jun–Sep)",
-    "season.autumn":"Autumn (Oct–Nov)",
-    "slider.badge":"Kalavryta preview",
-    "bundle.title":"Bundle example",
+    "slider.badge":"NFT Preview",
     "stage.title":"Stage",
     "stage.subtitle":"Play to unlock the next!",
     "s1.title":"Stage 1 — Warm-up (🎯 complete 3/3)",
@@ -375,16 +322,10 @@ const T = {
   },
   el:{
     edition:"Kalavryta Edition",
-    intro:"Ένα χαρούμενο mini-game για ταξιδιώτες! Κάνε quests στα Καλάβρυτα και ανέβασε το reward σου. Κλείδωσε ένα από τα <strong>1.000 συλλεκτικά NFT</strong> — όσο πιο υψηλό tier, τόσο πιο σπάνιο το έργο. Διασκέδασε, εξερεύνησε, κέρδισε!",
+    // ΝΕΟ ελληνικό εισαγωγικό
+    intro:"Ένα χαρούμενο mini-game για ταξιδιώτες! Ακολούθησε την αλεπού, κάνε quests στα Καλάβρυτα και ανέβασε το reward σου. Κλείδωσε ένα από τα <strong>1.000 συλλεκτικά ψηφιακά αναμνηστικά σε μορφή NFT</strong> — όσο πιο υψηλό tier, τόσο πιο σπάνιο το δώρο σου. Η συμμετοχή είναι δωρεάν! Μην περιμένεις στιγμή… Διασκέδασε, εξερεύνησε, κέρδισε!",
     "lang.label":"Γλώσσα:",
-    "season.label":"Εποχή στα Καλάβρυτα:",
-    "season.auto":"Αυτόματο (προτείνεται)",
-    "season.winter":"Χειμώνας (Δεκ–Μαρ)",
-    "season.spring":"Άνοιξη (Απρ–Μαι)",
-    "season.summer":"Καλοκαίρι (Ιουν–Σεπ)",
-    "season.autumn":"Φθινόπωρο (Οκτ–Νοε)",
-    "slider.badge":"Προεπισκόπηση Καλαβρύτων",
-    "bundle.title":"Παράδειγμα bundle",
+    "slider.badge":"NFT Preview",
     "stage.title":"Στάδιο",
     "stage.subtitle":"Παίξε για να ξεκλειδώσεις το επόμενο!",
     "s1.title":"Στάδιο 1 — Ζέσταμα (🎯 3/3)",
@@ -409,7 +350,9 @@ const T = {
     "btn.close":"Κλείσιμο",
     "btn.awesome":"Τέλειο!",
     "claim.note":"Το claim ενεργοποιείται μόλις ολοκληρώσεις το <strong>Στάδιο 1</strong>. Μπορείς να συνεχίσεις για σπανιότερα tiers!",
-    "claim.mini":"Το tier υπολογίζεται αυτόματα από τα quests."
+    "claim.mini":"Το tier υπολογίζεται αυτόματα από τα quests που έχεις ολοκληρώσει.",
+    "victory.title":"Ολοκλήρωσες όλες τις αποστολές!",
+    "victory.desc":"Έφτασες 100% πρόοδο. Ώρα για το κορυφαίο reward! 🎉"
   }
 };
 function currentLang(){ return localStorage.getItem(LS_LANG)||'en'; }
@@ -418,45 +361,35 @@ function applyLangToDom(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const k=el.getAttribute('data-i18n'); const txt=T[lang][k]; if(txt) el.innerHTML=txt;
   });
-  // placeholders
-  document.getElementById('s1PostUrl').placeholder = lang==='el'?"Δημόσιο link (π.χ. Instagram)":"Public post URL (e.g. Instagram)";
-  document.getElementById('s1Qr').placeholder      = lang==='el'?"QR κωδικός (placeholder)":"Enter QR code (placeholder)";
-  document.getElementById('s2QrA').placeholder     = lang==='el'?"QR για Κατάστημα 2A":"Enter QR code for Shop 2A";
-  document.getElementById('s2QrB').placeholder     = lang==='el'?"QR για Κατάστημα 2B":"Enter QR code for Shop 2B";
-  document.getElementById('s3QrA').placeholder     = lang==='el'?"QR για Κατάστημα 3A":"QR for Shop 3A";
-  document.getElementById('s3QrB').placeholder     = lang==='el'?"QR για Κατάστημα 3B":"QR for Shop 3B";
-  document.getElementById('s3QrC').placeholder     = lang==='el'?"QR για Κατάστημα 3C":"QR for Shop 3C";
+  // placeholders (αν υπάρχουν αυτά τα πεδία στο DOM)
+  const map = [
+    ['s1PostUrl', lang==='el'?"Δημόσιο link (π.χ. Instagram)":"Public post URL (e.g. Instagram)"],
+    ['s1Qr',      lang==='el'?"QR κωδικός":"Enter QR code"],
+    ['s2QrA',     lang==='el'?"QR για Κατάστημα 2A":"Enter QR code for Shop 2A"],
+    ['s2QrB',     lang==='el'?"QR για Κατάστημα 2B":"Enter QR code for Shop 2B"],
+    ['s3QrA',     lang==='el'?"QR για Κατάστημα 3A":"QR for Shop 3A"],
+    ['s3QrB',     lang==='el'?"QR για Κατάστημα 3B":"QR for Shop 3B"],
+    ['s3QrC',     lang==='el'?"QR για Κατάστημα 3C":"QR for Shop 3C"],
+  ];
+  map.forEach(([id,ph])=>{ const el=document.getElementById(id); if(el) el.placeholder=ph; });
 }
 
 /* ========= slider (2..27) ========= */
 const slides=Array.from({length:26},(_,i)=>`public/photos/${i+2}.png`);
-let sidx=0,timer; const heroImg=document.getElementById('heroImg'), frame=document.getElementById('heroFrame');
-function show(n){ sidx=(n+slides.length)%slides.length; heroImg.style.opacity=0; setTimeout(()=>{ heroImg.src=slides[sidx]; heroImg.onload=()=>heroImg.style.opacity=1; },180); }
-function start(){ timer=setInterval(()=>show(sidx+1),4000) } function stop(){ clearInterval(timer) }
-document.getElementById('prevBtn').onclick=()=>{stop();show(sidx-1);start()}; document.getElementById('nextBtn').onclick=()=>{stop();show(sidx+1);start()};
-frame.onmouseenter=stop; frame.onmouseleave=start; show(0); start();
-
-/* ========= season selection ========= */
-const seasonSelect=document.getElementById('seasonSelect');
-const seasonNote=document.getElementById('seasonNote');
-const langSelect=document.getElementById('langSelect');
-function autoSeason(){ const m=new Date().getMonth()+1; if(m===12||m<=3) return 'winter'; if(m<=5) return 'spring'; if(m<=9) return 'summer'; return 'autumn'; }
-function effectiveSeason(){ const set=localStorage.getItem(LS_SEASON)||'auto'; return set==='auto'?autoSeason():set; }
-function applySeasonNote(){
-  const lang=currentLang(), eff=effectiveSeason();
-  const map = {
-    en:{winter:"Winter mode: Ski may appear earlier.", spring:"Spring mode", summer:"Summer mode", autumn:"Autumn mode"},
-    el:{winter:"Χειμώνας: Το Χιονοδρομικό μπορεί να εμφανιστεί νωρίτερα.", spring:"Άνοιξη: Προσαρμόζουμε τα αξιοθέατα.", summer:"Καλοκαίρι: Προσαρμογή πρόσβασης.", autumn:"Φθινόπωρο: Προσαρμογή πρόσβασης."}
-  };
-  seasonNote.textContent = map[lang][eff];
+let sidx=0,timer; 
+const heroImg=document.getElementById('heroImg'), frame=document.getElementById('heroFrame');
+function show(n){ sidx=(n+slides.length)%slides.length; if(!heroImg) return;
+  heroImg.style.opacity=0; 
+  setTimeout(()=>{ heroImg.src=slides[sidx]; heroImg.onload=()=>heroImg.style.opacity=1; },180); 
 }
-langSelect.value=localStorage.getItem(LS_LANG)||'en';
-langSelect.addEventListener('change',()=>{ localStorage.setItem(LS_LANG,langSelect.value); renderAll(); });
-seasonSelect.value=localStorage.getItem(LS_SEASON)||'auto';
-seasonSelect.addEventListener('change',()=>{ localStorage.setItem(LS_SEASON,seasonSelect.value); renderAll(); });
+function start(){ timer=setInterval(()=>show(sidx+1),4000) } 
+function stop(){ clearInterval(timer) }
+document.getElementById('prevBtn')?.addEventListener('click',()=>{stop();show(sidx-1);start()});
+document.getElementById('nextBtn')?.addEventListener('click',()=>{stop();show(sidx+1);start()});
+if(frame){ frame.onmouseenter=stop; frame.onmouseleave=start; show(0); start(); }
 
-/* ========= attractions dictionary + layouts ========= */
-/* ΣΗΜΑΝΤΙΚΟ: εδώ ορίζονται ΟΛΕΣ οι τοποθεσίες & το checkpoint που στέλνεται στο /api/geo-check */
+/* ========= Attractions dictionary + layouts ========= */
+/* checkpoint: αντιστοιχεί στα keys του /api/geo-check που μου έδωσες */
 const ATTR = {
   museum:{en:"Municipal Museum of the Kalavryta Holocaust 🏛️", el:"Δημοτικό Μουσείο Καλαβρυτινού Ολοκαυτώματος 🏛️", checkpoint:"museum"},
   agialavra:{en:"Monastery of Agia Lavra ⛪", el:"Μονή Αγίας Λαύρας ⛪", checkpoint:"agiaLavra"},
@@ -471,10 +404,9 @@ const ATTR = {
   tower:{en:"Petmezai Tower 🏰", el:"Πύργος Πετμεζαίων 🏰", checkpoint:"pyrgosPetmezaion"}
 };
 const LAYOUTS = {
-  winter:{ s1:['museum','agialavra','square'], s2:['hill','heroes','ski','odontotos'], s3:['cave','gorge','makellaria','tower'] },
-  spring:{ s1:['museum','agialavra','square'], s2:['hill','heroes','odontotos'],     s3:['gorge','cave','makellaria','tower','ski'] },
-  summer:{ s1:['museum','agialavra','square'], s2:['hill','heroes','odontotos'],     s3:['gorge','cave','makellaria','tower','ski'] },
-  autumn:{ s1:['museum','agialavra','square'], s2:['hill','heroes','odontotos'],     s3:['gorge','cave','makellaria','tower','ski'] }
+  s1:['museum','agialavra','square'],
+  s2:['hill','heroes','odontotos','ski'],
+  s3:['gorge','cave','makellaria','tower']
 };
 const s1AttrList=document.getElementById('s1AttrList');
 const s2AttrList=document.getElementById('s2AttrList');
@@ -494,11 +426,10 @@ function makeAttrRow(stageKey, key, label){
   return wrap;
 }
 function renderAttractions(){
-  const lang=currentLang(), eff=effectiveSeason(), layout=LAYOUTS[eff];
-  s1AttrList.innerHTML=''; s2AttrList.innerHTML=''; s3AttrList.innerHTML='';
-  layout.s1.forEach(k=> s1AttrList.appendChild(makeAttrRow('s1', k, ATTR[k][lang])));
-  layout.s2.forEach(k=> s2AttrList.appendChild(makeAttrRow('s2', k, ATTR[k][lang])));
-  layout.s3.forEach(k=> s3AttrList.appendChild(makeAttrRow('s3', k, ATTR[k][lang])));
+  const lang=currentLang();
+  if(s1AttrList){ s1AttrList.innerHTML=''; LAYOUTS.s1.forEach(k=> s1AttrList.appendChild(makeAttrRow('s1', k, ATTR[k][lang]))); }
+  if(s2AttrList){ s2AttrList.innerHTML=''; LAYOUTS.s2.forEach(k=> s2AttrList.appendChild(makeAttrRow('s2', k, ATTR[k][lang]))); }
+  if(s3AttrList){ s3AttrList.innerHTML=''; LAYOUTS.s3.forEach(k=> s3AttrList.appendChild(makeAttrRow('s3', k, ATTR[k][lang]))); }
 }
 
 /* ========= store & stage/tier ========= */
@@ -512,14 +443,15 @@ const overallFill=document.getElementById('overallFill'), overallPct=document.ge
 
 function getState(){
   const done=new Set((loadStore().completed)||[]);
-  const eff=effectiveSeason(), layout=LAYOUTS[eff];
-  const s1Attrs=layout.s1.map(k=>'s1:attr:'+k);
+  const s1Attrs=LAYOUTS.s1.map(k=>'s1:attr:'+k);
   const s1={ post:done.has('s1:post'), shop:done.has('s1:shop'), attrOk:s1Attrs.some(k=>done.has(k)) };
   const s1ok=s1.post&&s1.shop&&s1.attrOk;
-  const s2Attrs=layout.s2.map(k=>'s2:attr:'+k);
+
+  const s2Attrs=LAYOUTS.s2.map(k=>'s2:attr:'+k);
   const s2={ shopA:done.has('s2:shopA'), shopB:done.has('s2:shopB'), attrOk:s1ok&&s2Attrs.some(k=>done.has(k)) };
   const s2ok=s1ok&&s2.shopA&&s2.shopB&&s2.attrOk;
-  const s3Attrs=layout.s3.map(k=>'s3:attr:'+k);
+
+  const s3Attrs=LAYOUTS.s3.map(k=>'s3:attr:'+k);
   const s3={ shopA:done.has('s3:shopA'), shopB:done.has('s3:shopB'), shopC:done.has('s3:shopC'), attrOk:s2ok&&s3Attrs.some(k=>done.has(k)) };
   const s3ok=s2ok&&s3.shopA&&s3.shopB&&s3.shopC&&s3.attrOk;
 
@@ -535,33 +467,92 @@ function getState(){
 function pill(text){ const el=document.createElement('span'); el.className='pill ok'; el.textContent=text; return el; }
 function render(){
   const st=getState();
-  document.getElementById('s2Card').style.display = st.s1ok ? '' : 'none';
-  document.getElementById('s3Card').style.display = st.s2ok ? '' : 'none';
-  pills.innerHTML=''; st.done && st.done.forEach?.(k=>pills.appendChild(pill(k)));
+  const s2Card=document.getElementById('s2Card'); if(s2Card) s2Card.style.display = st.s1ok ? '' : 'none';
+  const s3Card=document.getElementById('s3Card'); if(s3Card) s3Card.style.display = st.s2ok ? '' : 'none';
+  if(pills){ pills.innerHTML=''; st.done && st.done.forEach?.(k=>pills.appendChild(pill(k))); }
   const pct=Math.round(st.overallCount/10*100);
-  overallFill.style.width=pct+'%'; overallPct.textContent=pct+'%';
-  tierLine.textContent='Tier: '+st.tier;
+  if(overallFill) overallFill.style.width=pct+'%'; 
+  if(overallPct) overallPct.textContent=pct+'%';
+  if(tierLine) tierLine.textContent='Tier: '+st.tier;
   if(pct===100) triggerVictoryOnce();
 }
 
-/* ========= VERIFY HELPERS ========= */
+/* ========= Social verify (API) ========= */
+/* Κοινή λογική για οποιοδήποτε stage ζητήσει social-URL: */
+async function verifySocial(url, statusEl, questKey){
+  const lang=currentLang();
+  if(!/^https?:\/\//i.test(url)){ 
+    statusEl.innerHTML = lang==='el' ? '<span class="pill err">Βάλε έγκυρο link</span>' : '<span class="pill err">Paste a valid public URL</span>'; 
+    return;
+  }
+  statusEl.textContent = lang==='el' ? 'Έλεγχος…' : 'Checking…';
+  try{
+    const resp = await fetch('/api/verify-social',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ url, hashtag:'#myhappybox' })
+    });
+    const data = await resp.json().catch(()=>({}));
+    if(!resp.ok || !data?.ok){
+      statusEl.innerHTML = lang==='el' ? '<span class="pill err">Δεν βρέθηκε #myhappybox</span>' : '<span class="pill err">#myhappybox not found</span>';
+      return;
+    }
+    // OK
+    addDone(questKey);
+    statusEl.innerHTML = '<span class="pill ok">Verified</span>';
+    render();
+  }catch{
+    statusEl.innerHTML = '<span class="pill err">Server error</span>';
+  }
+}
+/* ========= QR verify (STRICT API) ========= */
+/* Ζητούμενο: να ΜΗ φαίνεται ο κωδικός όταν σκανάρεται/πληκτρολογείται.
+   Λύση: αποθηκεύουμε τον πραγματικό κωδικό σε dataset και εμφανίζουμε "••••". */
+function maskInput(el){
+  if(!el) return;
+  el.type='password';
+  el.value='••••';
+  el.setAttribute('autocomplete','off');
+  el.setAttribute('readonly','readonly'); // δεν επιτρέπει copy/paste (αν θες να επιτρέπεται πληκτρολόγηση, αφαίρεσέ το)
+  setTimeout(()=>{ el.blur(); },0);
+}
+function setCode(el, code){
+  if(!el) return;
+  el.dataset.code = code;
+  maskInput(el);
+}
+function getCode(el){
+  if(!el) return '';
+  return (el.dataset.code || '').trim();
+}
+
 function setStatus(el, html){ if(el) el.innerHTML = html; }
-async function verifyQR(questId, code, statusEl){
+
+async function verifyQR(questId, inputEl, statusEl){
   const uid=ensureUid(); const email=getEmail();
   if(!EMAIL_RE.test(email||'')){ return setStatus(statusEl,'<span class="pill err">Βάλε έγκυρο email</span>'); }
-  if(!code){ return setStatus(statusEl,'<span class="pill err">Βάλε τον κωδικό QR</span>'); }
+  const code = getCode(inputEl);
+  if(!code){ return setStatus(statusEl,'<span class="pill err">Σκάναρε το QR</span>'); }
+
   setStatus(statusEl,'Επαλήθευση…');
   try{
-    const r=await fetch('/api/verify-qr',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({uid,email,code,questId})});
+    const r=await fetch('/api/verify-qr',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({uid,email,code,questId})
+    });
     const data=await r.json().catch(()=>({}));
     if(!r.ok){
       if(data?.error==='already used') setStatus(statusEl,'<span class="pill warn">Ήδη χρησιμοποιήθηκε για αυτό το email</span>');
       else if(data?.error==='invalid code') setStatus(statusEl,'<span class="pill err">Λάθος QR code</span>');
+      else if(data?.error==='wrong code for this quest') setStatus(statusEl,'<span class="pill err">Λάθος QR για αυτό το στάδιο</span>');
       else setStatus(statusEl,`<span class="pill err">${data.error||('HTTP '+r.status)}</span>`);
       return;
     }
     setStatus(statusEl,'<span class="pill ok">QR verified ✅</span>');
-    addDone(questId); render();
+    addDone(questId); 
+    // καθάρισε το dataset (για να μη γίνεται reuse)
+    if(inputEl){ inputEl.dataset.code=''; inputEl.value=''; inputEl.type='password'; }
+    render();
   }catch{ setStatus(statusEl,'<span class="pill err">Δίκτυο/Server error</span>'); }
 }
 
@@ -576,7 +567,8 @@ async function scanInto(inputEl){
   box.appendChild(video); box.appendChild(close); overlay.appendChild(box); document.body.appendChild(overlay);
 
   const scanner=new QrScanner(video, result=>{
-    inputEl.value = (result?.data || result || '').trim();
+    const code=(result?.data||result||'').trim();
+    setCode(inputEl, code); // ΑΠΟΘΗΚΕΥΣΗ ΣΕ DATASET + ΜΑΣΚΑ
     scanner.stop(); overlay.remove();
   }, { returnDetailedScanResult:true, highlightScanRegion:true, highlightCodeOutline:true });
 
@@ -610,86 +602,88 @@ async function verifyAttractionByGeo(stageKey, key){
 }
 
 /* ========= interactions ========= */
-document.getElementById('s1PostBtn').onclick=()=>{
-  const lang=currentLang();
-  const url=document.getElementById('s1PostUrl').value.trim();
+// Language switch
+document.getElementById('langSelect')?.addEventListener('change',(e)=>{
+  localStorage.setItem(LS_LANG, e.target.value);
+  renderAll();
+});
+
+// Social (Stage 1 — παράδειγμα, ίδια λογική για όποιο άλλο stage θες αργότερα)
+document.getElementById('s1PostBtn')?.addEventListener('click',()=>{
+  const url=document.getElementById('s1PostUrl')?.value.trim();
   const stS=document.getElementById('s1PostStatus');
-  if(!/^https?:\/\//i.test(url)){ stS.innerHTML= lang==='el' ? '<span class="pill err">Βάλε έγκυρο link</span>' : '<span class="pill err">Paste a valid public URL</span>'; return; }
-  if(!/#?myhappybox/i.test(url)){ stS.innerHTML= lang==='el' ? '<span class="pill warn">Βάλε #myhappybox</span>' : '<span class="pill warn">Include #myhappybox</span>'; }
-  addDone('s1:post'); stS.innerHTML='<span class="pill ok">Submitted</span>'; render();
-};
+  if(!stS) return;
+  verifySocial(url, stS, 's1:post');
+});
 
-/* shop QR -> API */
-document.getElementById('s1QrBtn').onclick=()=>{
-  const code=document.getElementById('s1Qr').value.trim();
-  verifyQR('s1:shop', code, document.getElementById('s1QrStatus'));
-};
-document.getElementById('s2QrBtnA').onclick=()=>{
-  const code=document.getElementById('s2QrA').value.trim();
-  verifyQR('s2:shopA', code, document.getElementById('s2QrStatus'));
-};
-document.getElementById('s2QrBtnB').onclick=()=>{
-  const code=document.getElementById('s2QrB').value.trim();
-  verifyQR('s2:shopB', code, document.getElementById('s2QrStatus'));
-};
-document.getElementById('s3QrBtnA').onclick=()=>{
-  const code=document.getElementById('s3QrA').value.trim();
-  verifyQR('s3:shopA', code, document.getElementById('s3QrStatus'));
-};
-document.getElementById('s3QrBtnB').onclick=()=>{
-  const code=document.getElementById('s3QrB').value.trim();
-  verifyQR('s3:shopB', code, document.getElementById('s3QrStatus'));
-};
-document.getElementById('s3QrBtnC').onclick=()=>{
-  const code=document.getElementById('s3QrC').value.trim();
-  verifyQR('s3:shopC', code, document.getElementById('s3QrStatus'));
-};
+// QR verify buttons (ΔΕΝ εμφανίζεται ο κωδικός — απαιτείται scan)
+document.getElementById('s1ScanBtn')?.addEventListener('click',()=> scanInto(document.getElementById('s1Qr')));
+document.getElementById('s1QrBtn')?.addEventListener('click',()=>{
+  verifyQR('s1:shop', document.getElementById('s1Qr'), document.getElementById('s1QrStatus'));
+});
 
-/* QR camera scan buttons */
-document.getElementById('s1ScanBtn').onclick=()=> scanInto(document.getElementById('s1Qr'));
-document.getElementById('s2ScanABtn').onclick=()=> scanInto(document.getElementById('s2QrA'));
-document.getElementById('s2ScanBBtn').onclick=()=> scanInto(document.getElementById('s2QrB'));
-document.getElementById('s3ScanABtn').onclick=()=> scanInto(document.getElementById('s3QrA'));
-document.getElementById('s3ScanBBtn').onclick=()=> scanInto(document.getElementById('s3QrB'));
-document.getElementById('s3ScanCBtn').onclick=()=> scanInto(document.getElementById('s3QrC'));
+document.getElementById('s2ScanABtn')?.addEventListener('click',()=> scanInto(document.getElementById('s2QrA')));
+document.getElementById('s2QrBtnA')?.addEventListener('click',()=>{
+  verifyQR('s2:shopA', document.getElementById('s2QrA'), document.getElementById('s2QrStatus'));
+});
+document.getElementById('s2ScanBBtn')?.addEventListener('click',()=> scanInto(document.getElementById('s2QrB')));
+document.getElementById('s2QrBtnB')?.addEventListener('click',()=>{
+  verifyQR('s2:shopB', document.getElementById('s2QrB'), document.getElementById('s2QrStatus'));
+});
 
-/* checkbox fallback */
-document.getElementById('s1AttrBtn').onclick=()=>{
-  const eff=effectiveSeason(), layout=LAYOUTS[eff].s1;
+document.getElementById('s3ScanABtn')?.addEventListener('click',()=> scanInto(document.getElementById('s3QrA')));
+document.getElementById('s3QrBtnA')?.addEventListener('click',()=>{
+  verifyQR('s3:shopA', document.getElementById('s3QrA'), document.getElementById('s3QrStatus'));
+});
+document.getElementById('s3ScanBBtn')?.addEventListener('click',()=> scanInto(document.getElementById('s3QrB')));
+document.getElementById('s3QrBtnB')?.addEventListener('click',()=>{
+  verifyQR('s3:shopB', document.getElementById('s3QrB'), document.getElementById('s3QrStatus'));
+});
+document.getElementById('s3ScanCBtn')?.addEventListener('click',()=> scanInto(document.getElementById('s3QrC')));
+document.getElementById('s3QrBtnC')?.addEventListener('click',()=>{
+  verifyQR('s3:shopC', document.getElementById('s3QrC'), document.getElementById('s3QrStatus'));
+});
+
+// Checkbox fallbacks (αν τα θέλεις προσωρινά)
+document.getElementById('s1AttrBtn')?.addEventListener('click',()=>{
   const stS=document.getElementById('s1AttrStatus'); let picked=false;
-  layout.forEach(k=>{ const cb=document.getElementById('s1_'+k); if(cb&&cb.checked){ addDone('s1:attr:'+k); picked=true; }});
-  stS.innerHTML=picked?'<span class="pill ok">Marked</span>':'<span class="pill warn">Pick at least one</span>'; render();
-};
-document.getElementById('s2AttrBtn').onclick=()=>{
-  const eff=effectiveSeason(), layout=LAYOUTS[eff].s2; const stS=document.getElementById('s2AttrStatus'); let picked=false;
-  layout.forEach(k=>{ const cb=document.getElementById('s2_'+k); if(cb&&cb.checked){ addDone('s2:attr:'+k); picked=true; }});
-  stS.innerHTML=picked?'<span class="pill ok">Marked</span>':'<span class="pill warn">Select at least one</span>'; render();
-};
-document.getElementById('s3AttrBtn').onclick=()=>{
-  const eff=effectiveSeason(), layout=LAYOUTS[eff].s3; const stS=document.getElementById('s3AttrStatus'); let picked=false;
-  layout.forEach(k=>{ const cb=document.getElementById('s3_'+k); if(cb&&cb.checked){ addDone('s3:attr:'+k); picked=true; }});
-  stS.innerHTML=picked?'<span class="pill ok">Marked</span>':'<span class="pill warn">Pick at least one</span>'; render();
-};
+  LAYOUTS.s1.forEach(k=>{ const cb=document.getElementById('s1_'+k); if(cb&&cb.checked){ addDone('s1:attr:'+k); picked=true; }});
+  if(stS) stS.innerHTML=picked?'<span class="pill ok">Marked</span>':'<span class="pill warn">Pick at least one</span>'; 
+  render();
+});
+document.getElementById('s2AttrBtn')?.addEventListener('click',()=>{
+  const stS=document.getElementById('s2AttrStatus'); let picked=false;
+  LAYOUTS.s2.forEach(k=>{ const cb=document.getElementById('s2_'+k); if(cb&&cb.checked){ addDone('s2:attr:'+k); picked=true; }});
+  if(stS) stS.innerHTML=picked?'<span class="pill ok">Marked</span>':'<span class="pill warn">Select at least one</span>'; 
+  render();
+});
+document.getElementById('s3AttrBtn')?.addEventListener('click',()=>{
+  const stS=document.getElementById('s3AttrStatus'); let picked=false;
+  LAYOUTS.s3.forEach(k=>{ const cb=document.getElementById('s3_'+k); if(cb&&cb.checked){ addDone('s3:attr:'+k); picked=true; }});
+  if(stS) stS.innerHTML=picked?'<span class="pill ok">Marked</span>':'<span class="pill warn">Pick at least one</span>'; 
+  render();
+});
 
-/* CLAIM modal (όπως πριν, σύντομα) */
+/* CLAIM modal */
 const modal=document.getElementById('modal');
-document.getElementById('mintInfoBtn').onclick=()=>openClaimInfo();
-document.getElementById('claimBtn').onclick=()=>openClaimInfo();
-document.getElementById('closeModal').onclick=()=>modal.classList.remove('show');
-modal.onclick=(e)=>{ if(e.target===modal) modal.classList.remove('show'); };
-function openClaimInfo(){ modal.classList.add('show'); }
+document.getElementById('mintInfoBtn')?.addEventListener('click',()=>openClaimInfo());
+document.getElementById('claimBtn')?.addEventListener('click',()=>openClaimInfo());
+document.getElementById('closeModal')?.addEventListener('click',()=>modal?.classList.remove('show'));
+modal?.addEventListener('click',(e)=>{ if(e.target===modal) modal.classList.remove('show'); });
+function openClaimInfo(){ modal?.classList.add('show'); }
 
 /* Victory */
-function triggerVictoryOnce(){ if(localStorage.getItem(LS_VICTORY)==='yes') return; localStorage.setItem(LS_VICTORY,'yes'); }
+const victoryEl=document.getElementById('victory');
+function triggerVictoryOnce(){ if(localStorage.getItem(LS_VICTORY)==='yes') return; localStorage.setItem(LS_VICTORY,'yes'); victoryEl?.classList.add('show'); }
+document.getElementById('victoryClose')?.addEventListener('click',()=> victoryEl?.classList.remove('show'));
+victoryEl?.addEventListener('click',(e)=>{ if(e.target===victoryEl) victoryEl.classList.remove('show'); });
 
 /* overall render */
-function renderAll(){ applyLangToDom(); applySeasonNote(); renderAttractions(); render(); }
+function renderAll(){ applyLangToDom(); renderAttractions(); render(); }
 
 /* reset */
-document.getElementById('resetBtn').onclick=()=>{ clearStore(); render(); };
+document.getElementById('resetBtn')?.addEventListener('click',()=>{ clearStore(); render(); });
 
 /* first paint */
 renderAll();
 </script>
-</body>
-</html>
