@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,6 +60,62 @@
   .example h4{ margin:0 0 10px 6px; font-size:13px; color:#666; font-weight:600; }
   .example-img{ display:block; width:100%; height:auto; border-radius:12px;
     background:#fff; border:10px solid #fff; box-shadow:0 8px 26px rgba(0,0,0,.08); }
+
+  .quests{ max-width:min(1060px,92vw); margin:32px auto; padding:6px; }
+  .card{ background:#fff; border-radius:14px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.08); margin-bottom:14px; }
+  .card h3{ margin:4px 0 6px; font-size:20px } .card p{ margin:0 0 12px; color:#666 }
+  .row{ display:flex; gap:8px; align-items:center; margin:8px 0; flex-wrap:wrap }
+  .row input[type="text"], .row input[type="email"]{ flex:1; min-width:220px; padding:10px 12px; border:1px solid #e6e6e6; border-radius:10px; font-size:15px; }
+  .btn{ appearance:none; border:none; cursor:pointer; color:#fff; background:var(--brand);
+    padding:10px 14px; border-radius:10px; font-weight:700; box-shadow:0 8px 20px rgba(255,122,0,.3); }
+  .btn.alt{ background:#444 } .btn.ghost{ background:#fff; color:#333; border:1px solid #ddd }
+  .pill{ display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; font-size:13px; font-weight:600; margin:3px 6px 0 0 }
+  .ok{ background:#eaf7f0; color:var(--ok) } .warn{ background:#fff6e0; color:var(--warn) } .err{ background:#fdecec; color:var(--err) }
+  .status{ margin-top:6px; font-size:14px; color:#666 }
+
+  .stage{ display:flex; align-items:center; gap:12px; margin:10px 0 6px }
+  .step{ display:flex; align-items:center; gap:8px; color:#666; }
+  .dot{ width:22px; height:22px; border-radius:50%; border:2px solid #ddd; display:grid; place-items:center; font-size:12px; background:#fff }
+  .step.done .dot{ border-color:var(--ok); background:#eaf7f0; color:var(--ok) }
+  .bar{ flex:1; height:4px; background:#eee; border-radius:999px; position:relative; overflow:hidden }
+  .bar > span{ position:absolute; inset:0 0 0 auto; width:0%; background:linear-gradient(90deg,#27c498,#ffb84d); transition:width .4s ease }
+  .sublabel{ font-size:12px; color:#888 }
+
+  .overall{ display:flex; align-items:center; gap:12px; }
+  .overall .meter{ flex:1; height:10px; background:#eee; border-radius:999px; overflow:hidden; }
+  .overall .meter > span{ display:block; height:100%; width:0%; background:linear-gradient(90deg,#1f9d55,#ff7a00); transition:width .35s ease; }
+  .overall .pct{ min-width:42px; font-weight:700; color:#444 }
+
+  .cta{ text-align:center; padding:42px 20px 70px }
+  .cta h2{ margin:0 0 10px; font-size:clamp(20px,4vw,28px); color:var(--ink2) }
+  .cta p{ margin:0 0 16px; color:#muted }
+
+  footer{ text-align:center; padding:18px; color:#999; font-size:13px }
+
+  .modal{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:50; }
+  .modal.show{ display:flex }
+  .modal-card{ background:#fff; border-radius:16px; padding:26px 28px; box-shadow:0 20px 60px rgba(0,0,0,.25);
+    text-align:center; min-width:min(90vw,520px); }
+  .modal-card h3{ margin:0 0 10px }
+  .modal-card p{ margin:0 0 10px; color:#555 }
+  .modal-card .mini{ font-size:12px; color:#777; margin-top:4px }
+  .close{ border:none; background:#eee; border-radius:10px; padding:10px 16px; cursor:pointer; }
+  .disabled{ opacity:.55; cursor:not-allowed }
+
+  #victory{ position:fixed; inset:0; display:none; align-items:center; justify-content:center;
+    background:rgba(0,0,0,.55); z-index:9999; }
+  #victory.show{ display:flex; animation:fadeIn .25s ease }
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .victory-card{ position:relative; text-align:center; background:#fff; border-radius:20px;
+    padding:28px 28px 22px; box-shadow:0 24px 80px rgba(0,0,0,.35); overflow:hidden; }
+  .victory-card h2{ margin:0 0 6px; font-size:clamp(22px,4vw,32px); color:#222 }
+  .victory-card p{ margin:0 0 14px; color:#666 }
+  .trophy{ font-size:64px; margin-bottom:8px; animation:pop .5s ease both }
+  .confetti-fx{ position:absolute; inset:-20px; pointer-events:none }
+  .piece{ position:absolute; width:10px; height:14px; border-radius:2px; opacity:.9;
+    animation:fall 1.2s linear forwards, spin 1.2s linear forwards; }
+  @keyframes fall{ from{ transform:translateY(-40vh) } to{ transform:translateY(60vh) } }
+  @keyframes spin{ from{ transform:rotate(0) } to{ transform:rotate(720deg) } }
 </style>
 </head>
 <body>
@@ -69,7 +126,7 @@
     <div class="edition" data-i18n="edition">Kalavryta Edition</div>
     <p class="sub" data-i18n="intro">
       A joyful mini-game for travelers! Complete quests around Kalavryta to level-up your reward.  
-      Unlock one of <strong>1,000 digital souvenirs in NFT form</strong> — the rarer your tier, the rarer your gift.
+      Unlock one of <strong>1,000 limited-edition NFT photos</strong> — the rarer your tier, the rarer your art.
       Have fun, explore, win surprises!
     </p>
 
@@ -116,16 +173,13 @@
     <img class="example-img" src="public/photos/1.png" alt="Bundle Minted example" />
   </section>
 
-
----
-  section class="quests">
+  <section class="quests">
 
     <!-- ===== Stage 1 ===== -->
     <div class="card" id="s1Card">
       <h3 data-i18n="s1.title">Stage 1 — Warm-up (🎯 complete 3/3)</h3>
       <p data-i18n="s1.desc">You need: 1 social + 1 shop + <strong>1 of the attractions</strong> (extra attractions = bonus).</p>
 
-      <!-- Social -->
       <div class="row"><span data-i18n="social.label">📸 Post with hashtag #myhappybox</span></div>
       <div class="row">
         <input type="text" id="s1PostUrl" placeholder="Public post URL (e.g. Instagram)">
@@ -133,7 +187,6 @@
       </div>
       <div class="status" id="s1PostStatus"></div>
 
-      <!-- Shop -->
       <div class="row" style="margin-top:10px"><span data-i18n="shops.s1">🏪 Partner Shop (Stage 1)</span></div>
       <div class="row" style="gap:6px;flex-wrap:wrap">
         <input type="text" id="s1Qr" placeholder="Enter QR code (placeholder)">
@@ -142,7 +195,6 @@
       </div>
       <div class="status" id="s1QrStatus"></div>
 
-      <!-- Attractions -->
       <div class="row" style="margin-top:10px"><span data-i18n="attr.pick">🗺️ Attractions — pick at least one:</span></div>
       <div class="row" id="s1AttrList"></div>
       <div class="row"><button class="btn ghost" id="s1AttrBtn" data-i18n="btn.markVisited">Mark visited</button></div>
@@ -154,7 +206,6 @@
       <h3 data-i18n="s2.title">Stage 2 — Explore more (🎯 complete 3/3)</h3>
       <p data-i18n="s2.desc">Requires Stage 1 complete. You need: 2 shops + <strong>1 of the attractions</strong> (extras = bonus).</p>
 
-      <!-- Shops -->
       <div class="row"><span data-i18n="shops.s2">🏪 Partner Shops (Stage 2)</span></div>
       <div class="row" style="gap:6px;flex-wrap:wrap">
         <input type="text" id="s2QrA" placeholder="Enter QR code for Shop 2A">
@@ -167,7 +218,6 @@
       </div>
       <div class="status" id="s2QrStatus"></div>
 
-      <!-- Attractions -->
       <div class="row" style="margin-top:10px"><span data-i18n="attr.pick">🗺️ Attractions — pick at least one:</span></div>
       <div class="row" id="s2AttrList" style="gap:14px; align-items:flex-start"></div>
       <div class="row"><button class="btn ghost" id="s2AttrBtn" data-i18n="btn.markVisited">Mark visited</button></div>
@@ -179,7 +229,6 @@
       <h3 data-i18n="s3.title">Stage 3 — The finale (🎯 complete 4/4)</h3>
       <p data-i18n="s3.desc">Requires Stage 2 complete. You need: 3 shops + <strong>1 of the attractions</strong> (extras = bonus).</p>
 
-      <!-- Shops -->
       <div class="row"><span data-i18n="shops.s3">🏪 Partner Shops (Stage 3)</span></div>
       <div class="row" style="gap:6px;flex-wrap:wrap">
         <input type="text" id="s3QrA" placeholder="QR for Shop 3A">
@@ -196,7 +245,6 @@
       </div>
       <div class="status" id="s3QrStatus"></div>
 
-      <!-- Attractions -->
       <div class="row" style="margin-top:10px"><span data-i18n="attr.pick">🗺️ Attractions — pick at least one:</span></div>
       <div class="row" id="s3AttrList" style="flex-direction:column; align-items:flex-start"></div>
       <div class="row"><button class="btn ghost" id="s3AttrBtn" data-i18n="btn.markVisited" style="margin-top:6px">Mark visited</button></div>
@@ -218,9 +266,7 @@
         <button class="btn alt" id="resetBtn" data-i18n="btn.reset">Reset demo</button>
         <button class="btn" id="claimBtn">🎁 <span data-i18n="btn.claim">Claim your Happy Box</span></button>
       </div>
-      <p class="status" data-i18n="claim.note">
-        Claim becomes available once you complete <strong>Stage 1</strong>. You can keep playing for rarer tiers!
-      </p>
+      <p class="status" data-i18n="claim.note">Claim becomes available once you complete <strong>Stage 1</strong>. You can keep playing for rarer tiers!</p>
     </div>
   </section>
 
@@ -252,7 +298,8 @@
       <button class="btn" id="victoryClose" data-i18n="btn.awesome">Awesome!</button>
     </div>
   </div>
-!-- QR scanner lib (ESM) -->
+
+<!-- QR scanner lib (ESM) -->
 <script type="module">
 import QrScanner from "https://unpkg.com/qr-scanner@1.4.2/qr-scanner.min.js";
 
@@ -282,11 +329,7 @@ function setEmail(v){
   localStorage.setItem(LS_EMAIL_APP,(v||'').trim().toLowerCase());
   const el=document.getElementById('userEmail'); if(el) el.value=(v||'');
 }
-document.addEventListener('DOMContentLoaded',()=>{ 
-  const saved=localStorage.getItem(LS_EMAIL_APP)||''; 
-  const el=document.getElementById('userEmail'); 
-  if(el){ el.value=saved; el.addEventListener('input',()=>setEmail(el.value)); } 
-});
+document.addEventListener('DOMContentLoaded',()=>{ const saved=localStorage.getItem(LS_EMAIL_APP)||''; const el=document.getElementById('userEmail'); if(el){ el.value=saved; el.addEventListener('input',()=>setEmail(el.value)); } });
 const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /* ========= i18n ========= */
@@ -377,31 +420,22 @@ function applyLangToDom(){
     const k=el.getAttribute('data-i18n'); const txt=T[lang][k]; if(txt) el.innerHTML=txt;
   });
   // placeholders
-  const map = [
-    ['s1PostUrl', lang==='el'?"Δημόσιο link (π.χ. Instagram)":"Public post URL (e.g. Instagram)"],
-    ['s1Qr',      lang==='el'?"QR κωδικός (placeholder)":"Enter QR code (placeholder)"],
-    ['s2QrA',     lang==='el'?"QR για Κατάστημα 2A":"Enter QR code for Shop 2A"],
-    ['s2QrB',     lang==='el'?"QR για Κατάστημα 2B":"Enter QR code for Shop 2B"],
-    ['s3QrA',     lang==='el'?"QR για Κατάστημα 3A":"QR for Shop 3A"],
-    ['s3QrB',     lang==='el'?"QR για Κατάστημα 3B":"QR for Shop 3B"],
-    ['s3QrC',     lang==='el'?"QR για Κατάστημα 3C":"QR for Shop 3C"],
-  ];
-  map.forEach(([id,ph])=>{ const el=document.getElementById(id); if(el) el.placeholder=ph; });
+  document.getElementById('s1PostUrl').placeholder = lang==='el'?"Δημόσιο link (π.χ. Instagram)":"Public post URL (e.g. Instagram)";
+  document.getElementById('s1Qr').placeholder      = lang==='el'?"QR κωδικός (placeholder)":"Enter QR code (placeholder)";
+  document.getElementById('s2QrA').placeholder     = lang==='el'?"QR για Κατάστημα 2A":"Enter QR code for Shop 2A";
+  document.getElementById('s2QrB').placeholder     = lang==='el'?"QR για Κατάστημα 2B":"Enter QR code for Shop 2B";
+  document.getElementById('s3QrA').placeholder     = lang==='el'?"QR για Κατάστημα 3A":"QR for Shop 3A";
+  document.getElementById('s3QrB').placeholder     = lang==='el'?"QR για Κατάστημα 3B":"QR for Shop 3B";
+  document.getElementById('s3QrC').placeholder     = lang==='el'?"QR για Κατάστημα 3C":"QR for Shop 3C";
 }
 
 /* ========= slider (2..27) ========= */
 const slides=Array.from({length:26},(_,i)=>`public/photos/${i+2}.png`);
-let sidx=0,timer; 
-const heroImg=document.getElementById('heroImg'), frame=document.getElementById('heroFrame');
-function show(n){ sidx=(n+slides.length)%slides.length; if(!heroImg) return;
-  heroImg.style.opacity=0; 
-  setTimeout(()=>{ heroImg.src=slides[sidx]; heroImg.onload=()=>heroImg.style.opacity=1; },180); 
-}
-function start(){ timer=setInterval(()=>show(sidx+1),4000) } 
-function stop(){ clearInterval(timer) }
-document.getElementById('prevBtn')?.addEventListener('click',()=>{stop();show(sidx-1);start()});
-document.getElementById('nextBtn')?.addEventListener('click',()=>{stop();show(sidx+1);start()});
-if(frame){ frame.onmouseenter=stop; frame.onmouseleave=start; show(0); start(); }
+let sidx=0,timer; const heroImg=document.getElementById('heroImg'), frame=document.getElementById('heroFrame');
+function show(n){ sidx=(n+slides.length)%slides.length; heroImg.style.opacity=0; setTimeout(()=>{ heroImg.src=slides[sidx]; heroImg.onload=()=>heroImg.style.opacity=1; },180); }
+function start(){ timer=setInterval(()=>show(sidx+1),4000) } function stop(){ clearInterval(timer) }
+document.getElementById('prevBtn').onclick=()=>{stop();show(sidx-1);start()}; document.getElementById('nextBtn').onclick=()=>{stop();show(sidx+1);start()};
+frame.onmouseenter=stop; frame.onmouseleave=start; show(0); start();
 
 /* ========= season selection ========= */
 const seasonSelect=document.getElementById('seasonSelect');
@@ -415,16 +449,15 @@ function applySeasonNote(){
     en:{winter:"Winter mode: Ski may appear earlier.", spring:"Spring mode", summer:"Summer mode", autumn:"Autumn mode"},
     el:{winter:"Χειμώνας: Το Χιονοδρομικό μπορεί να εμφανιστεί νωρίτερα.", spring:"Άνοιξη: Προσαρμόζουμε τα αξιοθέατα.", summer:"Καλοκαίρι: Προσαρμογή πρόσβασης.", autumn:"Φθινόπωρο: Προσαρμογή πρόσβασης."}
   };
-  if(seasonNote) seasonNote.textContent = map[lang][eff];
+  seasonNote.textContent = map[lang][eff];
 }
-if(langSelect){ langSelect.value=localStorage.getItem(LS_LANG)||'en';
-  langSelect.addEventListener('change',()=>{ localStorage.setItem(LS_LANG,langSelect.value); renderAll(); });
-}
-if(seasonSelect){ seasonSelect.value=localStorage.getItem(LS_SEASON)||'auto';
-  seasonSelect.addEventListener('change',()=>{ localStorage.setItem(LS_SEASON,seasonSelect.value); renderAll(); });
-}
+langSelect.value=localStorage.getItem(LS_LANG)||'en';
+langSelect.addEventListener('change',()=>{ localStorage.setItem(LS_LANG,langSelect.value); renderAll(); });
+seasonSelect.value=localStorage.getItem(LS_SEASON)||'auto';
+seasonSelect.addEventListener('change',()=>{ localStorage.setItem(LS_SEASON,seasonSelect.value); renderAll(); });
 
 /* ========= attractions dictionary + layouts ========= */
+/* ΣΗΜΑΝΤΙΚΟ: εδώ ορίζονται ΟΛΕΣ οι τοποθεσίες & το checkpoint που στέλνεται στο /api/geo-check */
 const ATTR = {
   museum:{en:"Municipal Museum of the Kalavryta Holocaust 🏛️", el:"Δημοτικό Μουσείο Καλαβρυτινού Ολοκαυτώματος 🏛️", checkpoint:"museum"},
   agialavra:{en:"Monastery of Agia Lavra ⛪", el:"Μονή Αγίας Λαύρας ⛪", checkpoint:"agiaLavra"},
@@ -463,12 +496,10 @@ function makeAttrRow(stageKey, key, label){
 }
 function renderAttractions(){
   const lang=currentLang(), eff=effectiveSeason(), layout=LAYOUTS[eff];
-  if(s1AttrList) s1AttrList.innerHTML='';
-  if(s2AttrList) s2AttrList.innerHTML='';
-  if(s3AttrList) s3AttrList.innerHTML='';
-  layout.s1.forEach(k=> s1AttrList?.appendChild(makeAttrRow('s1', k, ATTR[k][lang])));
-  layout.s2.forEach(k=> s2AttrList?.appendChild(makeAttrRow('s2', k, ATTR[k][lang])));
-  layout.s3.forEach(k=> s3AttrList?.appendChild(makeAttrRow('s3', k, ATTR[k][lang])));
+  s1AttrList.innerHTML=''; s2AttrList.innerHTML=''; s3AttrList.innerHTML='';
+  layout.s1.forEach(k=> s1AttrList.appendChild(makeAttrRow('s1', k, ATTR[k][lang])));
+  layout.s2.forEach(k=> s2AttrList.appendChild(makeAttrRow('s2', k, ATTR[k][lang])));
+  layout.s3.forEach(k=> s3AttrList.appendChild(makeAttrRow('s3', k, ATTR[k][lang])));
 }
 
 /* ========= store & stage/tier ========= */
@@ -486,11 +517,9 @@ function getState(){
   const s1Attrs=layout.s1.map(k=>'s1:attr:'+k);
   const s1={ post:done.has('s1:post'), shop:done.has('s1:shop'), attrOk:s1Attrs.some(k=>done.has(k)) };
   const s1ok=s1.post&&s1.shop&&s1.attrOk;
-
   const s2Attrs=layout.s2.map(k=>'s2:attr:'+k);
   const s2={ shopA:done.has('s2:shopA'), shopB:done.has('s2:shopB'), attrOk:s1ok&&s2Attrs.some(k=>done.has(k)) };
   const s2ok=s1ok&&s2.shopA&&s2.shopB&&s2.attrOk;
-
   const s3Attrs=layout.s3.map(k=>'s3:attr:'+k);
   const s3={ shopA:done.has('s3:shopA'), shopB:done.has('s3:shopB'), shopC:done.has('s3:shopC'), attrOk:s2ok&&s3Attrs.some(k=>done.has(k)) };
   const s3ok=s2ok&&s3.shopA&&s3.shopB&&s3.shopC&&s3.attrOk;
@@ -507,13 +536,12 @@ function getState(){
 function pill(text){ const el=document.createElement('span'); el.className='pill ok'; el.textContent=text; return el; }
 function render(){
   const st=getState();
-  const s2Card=document.getElementById('s2Card'); if(s2Card) s2Card.style.display = st.s1ok ? '' : 'none';
-  const s3Card=document.getElementById('s3Card'); if(s3Card) s3Card.style.display = st.s2ok ? '' : 'none';
-  if(pills){ pills.innerHTML=''; st.done && st.done.forEach?.(k=>pills.appendChild(pill(k))); }
+  document.getElementById('s2Card').style.display = st.s1ok ? '' : 'none';
+  document.getElementById('s3Card').style.display = st.s2ok ? '' : 'none';
+  pills.innerHTML=''; st.done && st.done.forEach?.(k=>pills.appendChild(pill(k)));
   const pct=Math.round(st.overallCount/10*100);
-  if(overallFill) overallFill.style.width=pct+'%'; 
-  if(overallPct) overallPct.textContent=pct+'%';
-  if(tierLine) tierLine.textContent='Tier: '+st.tier;
+  overallFill.style.width=pct+'%'; overallPct.textContent=pct+'%';
+  tierLine.textContent='Tier: '+st.tier;
   if(pct===100) triggerVictoryOnce();
 }
 
@@ -583,9 +611,6 @@ async function verifyAttractionByGeo(stageKey, key){
 }
 
 /* ========= interactions ========= */
-// language & season already wired above via change handlers
-
-// Social (Stage 1)
 document.getElementById('s1PostBtn').onclick=()=>{
   const lang=currentLang();
   const url=document.getElementById('s1PostUrl').value.trim();
@@ -647,7 +672,7 @@ document.getElementById('s3AttrBtn').onclick=()=>{
   stS.innerHTML=picked?'<span class="pill ok">Marked</span>':'<span class="pill warn">Pick at least one</span>'; render();
 };
 
-/* CLAIM modal */
+/* CLAIM modal (όπως πριν, σύντομα) */
 const modal=document.getElementById('modal');
 document.getElementById('mintInfoBtn').onclick=()=>openClaimInfo();
 document.getElementById('claimBtn').onclick=()=>openClaimInfo();
@@ -655,11 +680,8 @@ document.getElementById('closeModal').onclick=()=>modal.classList.remove('show')
 modal.onclick=(e)=>{ if(e.target===modal) modal.classList.remove('show'); };
 function openClaimInfo(){ modal.classList.add('show'); }
 
-/* Victory (μόνο flag όπως στο δικό σου code) */
-function triggerVictoryOnce(){ 
-  if(localStorage.getItem(LS_VICTORY)==='yes') return; 
-  localStorage.setItem(LS_VICTORY,'yes'); 
-}
+/* Victory */
+function triggerVictoryOnce(){ if(localStorage.getItem(LS_VICTORY)==='yes') return; localStorage.setItem(LS_VICTORY,'yes'); }
 
 /* overall render */
 function renderAll(){ applyLangToDom(); applySeasonNote(); renderAttractions(); render(); }
@@ -669,4 +691,6 @@ document.getElementById('resetBtn').onclick=()=>{ clearStore(); render(); };
 
 /* first paint */
 renderAll();
-</script
+</script>
+</body>
+</html>
