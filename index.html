@@ -4,31 +4,34 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Τίτλος σελίδας (φαίνεται στο tab του browser) -->
   <title>Ανώνυμη Φιλοσοφική Καθοδήγηση | Καθαρές Αποφάσεις</title>
-
-  <!-- Περιγραφή για Google / social previews -->
   <meta name="description" content="Ανώνυμη, γραπτή φιλοσοφική καθοδήγηση για αποφάσεις ζωής. Χωρίς κάμερα, χωρίς έκθεση. Δομημένη αποσαφήνιση αξιών και επιλογών." />
 
   <style>
     /* =========================
-       ΒΑΣΙΚΟ ΣΤΥΛ (minimal / σοβαρό)
+       ΦΩΤΕΙΝΟ / ΧΑΡΜΟΣΥΝΟ THEME (pastel)
        ========================= */
     :root{
-      --bg: #0b0f14;
-      --card: rgba(255,255,255,0.06);
-      --card2: rgba(255,255,255,0.09);
-      --text: rgba(255,255,255,0.92);
-      --muted: rgba(255,255,255,0.70);
-      --muted2: rgba(255,255,255,0.55);
-      --border: rgba(255,255,255,0.14);
-      --accent: #c7b37a;
-      --accent2: #f1e2b6;
-      --ok: #79d2a6;
-      --warn: #ffcc66;
+      --bg1: #fff7ef;   /* ζεστό off-white */
+      --bg2: #f3fbff;   /* πολύ απαλό γαλάζιο */
+      --card: rgba(255,255,255,0.88);
+      --card2: rgba(255,255,255,0.72);
+
+      --text: rgba(12,18,28,0.92);
+      --muted: rgba(12,18,28,0.70);
+      --muted2: rgba(12,18,28,0.55);
+
+      --border: rgba(12,18,28,0.12);
+
+      --accent: #2bb3a0;   /* μέντα */
+      --accent2:#ffb84d;   /* απαλό πορτοκαλί */
+      --accent3:#7a8cff;   /* lavendar/blue */
+
+      --ok: #2bb3a0;
+      --warn: #ffb84d;
 
       --radius: 18px;
-      --shadow: 0 18px 40px rgba(0,0,0,0.55);
+      --shadow: 0 18px 40px rgba(12,18,28,0.10);
       --maxw: 1040px;
     }
 
@@ -38,10 +41,10 @@
       margin: 0;
       font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
       background:
-        radial-gradient(1200px 700px at 12% 8%, rgba(199,179,122,0.18), transparent 60%),
-        radial-gradient(900px 600px at 88% 12%, rgba(241,226,182,0.10), transparent 55%),
-        radial-gradient(900px 700px at 50% 95%, rgba(121,210,166,0.10), transparent 55%),
-        var(--bg);
+        radial-gradient(900px 600px at 12% 8%, rgba(43,179,160,0.18), transparent 60%),
+        radial-gradient(900px 600px at 88% 12%, rgba(255,184,77,0.18), transparent 60%),
+        radial-gradient(900px 700px at 50% 95%, rgba(122,140,255,0.14), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
       color: var(--text);
       line-height: 1.55;
     }
@@ -61,14 +64,14 @@
     }
     .brand{
       display:flex; align-items:center; gap: 10px;
-      font-weight: 650;
+      font-weight: 750;
       letter-spacing: 0.2px;
     }
     .sigil{
       width: 34px; height: 34px; border-radius: 12px;
-      background: linear-gradient(145deg, rgba(199,179,122,0.35), rgba(255,255,255,0.06));
+      background: linear-gradient(145deg, rgba(43,179,160,0.35), rgba(255,184,77,0.25));
       border: 1px solid var(--border);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.35);
+      box-shadow: 0 10px 20px rgba(12,18,28,0.08);
     }
     nav{
       display:flex; gap: 12px; flex-wrap: wrap;
@@ -79,11 +82,23 @@
       padding: 8px 10px;
       border-radius: 12px;
       border: 1px solid transparent;
+      background: transparent;
     }
-    nav a:hover{ border-color: var(--border); background: rgba(255,255,255,0.03); }
+    nav a:hover{ border-color: var(--border); background: rgba(255,255,255,0.55); }
 
     /* =========================
-       HERO
+       CARDS
+       ========================= */
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    /* =========================
+       HERO (με φωτογραφία)
        ========================= */
     .hero{
       margin-top: 10px;
@@ -96,20 +111,45 @@
       .hero{ grid-template-columns: 1fr; }
     }
 
-    .card{
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+    .hero-main{
+      position: relative;
+      min-height: 420px;
     }
 
-    .hero-main{ padding: 28px; }
+    /* CC0 εικόνα (Wikimedia Commons) */
+    .hero-photo{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      object-fit: cover;
+      filter: saturate(1.08) contrast(1.03);
+      transform: scale(1.02);
+    }
+
+    /* “glass” overlay για να διαβάζεται το κείμενο */
+    .hero-overlay{
+      position:absolute; inset:0;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.72) 48%, rgba(255,255,255,0.52) 100%);
+    }
+    @media (max-width: 900px){
+      .hero-overlay{
+        background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.78) 55%, rgba(255,255,255,0.62) 100%);
+      }
+    }
+
+    .hero-content{
+      position: relative;
+      padding: 28px;
+      max-width: 72ch;
+    }
+
     .kicker{
       color: var(--muted);
-      font-size: 14px;
-      letter-spacing: 0.18em;
+      font-size: 13px;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       margin-bottom: 10px;
+      font-weight: 700;
     }
     h1{
       margin: 0 0 10px 0;
@@ -130,7 +170,7 @@
       font-size: 13px;
       color: var(--muted);
       border: 1px solid var(--border);
-      background: rgba(255,255,255,0.03);
+      background: rgba(255,255,255,0.65);
       padding: 8px 10px;
       border-radius: 999px;
     }
@@ -140,18 +180,20 @@
       padding: 12px 14px;
       border-radius: 14px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.72);
       color: var(--text);
-      font-weight: 600;
+      font-weight: 800;
       cursor: pointer;
       transition: transform .08s ease, background .15s ease, border-color .15s ease;
     }
-    .btn:hover{ background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.22); }
+    .btn:hover{ background: rgba(255,255,255,0.92); border-color: rgba(12,18,28,0.18); }
     .btn:active{ transform: translateY(1px); }
+
     .btn.primary{
-      border-color: rgba(199,179,122,0.42);
-      background: linear-gradient(145deg, rgba(199,179,122,0.24), rgba(255,255,255,0.06));
+      border-color: rgba(43,179,160,0.30);
+      background: linear-gradient(145deg, rgba(43,179,160,0.28), rgba(255,184,77,0.22));
     }
+
     .fineprint{
       margin-top: 12px;
       color: var(--muted2);
@@ -159,30 +201,45 @@
     }
 
     /* =========================
-       SIDE CARD (γρήγορη περίληψη)
+       SIDE CARD (με φωτογραφία)
        ========================= */
-    .hero-side{ padding: 22px; display:flex; flex-direction:column; gap: 14px; }
-    .side-title{ font-weight: 650; }
+    .hero-side{ display:flex; flex-direction:column; }
+    .side-photo{
+      width:100%;
+      height: 160px;
+      object-fit: cover;
+      filter: saturate(1.08) contrast(1.02);
+    }
+    .hero-side-inner{
+      padding: 18px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+    .side-title{ font-weight: 850; }
     .side-list{ margin: 0; padding-left: 18px; color: var(--muted); }
     .badge{
       display:flex; align-items:center; gap: 8px;
       padding: 10px 12px;
       border-radius: 14px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,0.03);
+      background: rgba(255,255,255,0.65);
       color: var(--muted);
       font-size: 13px;
     }
     .dot{
       width: 10px; height: 10px; border-radius: 50%;
       background: var(--ok);
-      box-shadow: 0 0 0 4px rgba(121,210,166,0.15);
+      box-shadow: 0 0 0 4px rgba(43,179,160,0.14);
     }
 
     /* =========================
        SECTIONS
        ========================= */
     section{ margin-top: 18px; }
+
+    .section-pad{ padding: 22px; }
+
     .grid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
@@ -190,14 +247,51 @@
     }
     @media (max-width: 900px){ .grid{ grid-template-columns: 1fr; } }
 
-    .box{ padding: 18px; border-radius: var(--radius); border: 1px solid var(--border); background: rgba(255,255,255,0.03); }
+    .box{
+      padding: 18px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.70);
+    }
     .box h3{ margin: 0 0 8px 0; font-size: 16px; }
     .box p{ margin: 0; color: var(--muted); font-size: 14.5px; }
 
     .divider{
       height: 1px;
-      background: rgba(255,255,255,0.10);
+      background: rgba(12,18,28,0.10);
       margin: 16px 0;
+    }
+
+    /* =========================
+       “Υπόβαθρο” layout με εικόνα
+       ========================= */
+    .about{
+      display:grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+    @media (max-width: 900px){
+      .about{ grid-template-columns: 1fr; }
+    }
+    .about-photo{
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      filter: saturate(1.08) contrast(1.02);
+    }
+    .about-text{
+      padding: 18px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.70);
+    }
+    .about-text ul{
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
     }
 
     /* =========================
@@ -210,44 +304,44 @@
     }
     @media (max-width: 900px){ .pricing{ grid-template-columns: 1fr; } }
 
-    .price-card{ padding: 18px; }
-    .price-name{ font-weight: 700; }
+    .price-card{ padding: 18px; box-shadow:none; }
+    .price-name{ font-weight: 900; }
     .price{
       margin-top: 8px;
-      font-size: 24px;
-      font-weight: 800;
+      font-size: 26px;
+      font-weight: 950;
       letter-spacing: -0.02em;
     }
-    .price small{ font-size: 14px; color: var(--muted); font-weight: 600; }
+    .price small{ font-size: 14px; color: var(--muted); font-weight: 800; }
     .price-desc{ margin-top: 8px; color: var(--muted); font-size: 14.5px; }
     .price-ul{ margin: 12px 0 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
     .price-card.featured{
-      background: linear-gradient(145deg, rgba(199,179,122,0.18), rgba(255,255,255,0.04));
-      border-color: rgba(199,179,122,0.35);
+      background: linear-gradient(145deg, rgba(43,179,160,0.16), rgba(255,184,77,0.18));
+      border-color: rgba(43,179,160,0.22);
     }
 
     /* =========================
-       ΦΟΡΜΑ (ανώνυμο αίτημα)
+       ΦΟΡΜΑ
        ========================= */
     .form{
       padding: 18px;
       display:grid;
       gap: 12px;
     }
-    label{ font-size: 13px; color: var(--muted); display:block; margin-bottom: 6px; }
+    label{ font-size: 13px; color: var(--muted); display:block; margin-bottom: 6px; font-weight: 750; }
     input, textarea, select{
       width: 100%;
       padding: 12px 12px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(12,18,28,0.14);
+      background: rgba(255,255,255,0.85);
       color: var(--text);
       outline: none;
     }
     textarea{ min-height: 120px; resize: vertical; }
     input:focus, textarea:focus, select:focus{
-      border-color: rgba(199,179,122,0.45);
-      box-shadow: 0 0 0 4px rgba(199,179,122,0.10);
+      border-color: rgba(43,179,160,0.36);
+      box-shadow: 0 0 0 4px rgba(43,179,160,0.12);
     }
 
     .footer{
@@ -259,7 +353,8 @@
       gap: 12px;
       flex-wrap: wrap;
     }
-    .tiny a{ text-decoration: underline; text-decoration-color: rgba(255,255,255,0.25); }
+    .tiny a{ text-decoration: underline; text-decoration-color: rgba(12,18,28,0.20); }
+    .credits{ color: var(--muted2); }
   </style>
 </head>
 
@@ -275,8 +370,9 @@
 
       <nav aria-label="Πλοήγηση">
         <a href="#πώς">Πώς λειτουργεί</a>
-        <a href="#πακέτα">Πακέτα</a>
-        <a href="#συχνές">Συχνές ερωτήσεις</a>
+        <a href="#υπόβαθρο">Υπόβαθρο</a>
+        <a href="#πακέτα">Τιμές</a>
+        <a href="#συχνές">FAQ</a>
         <a href="#επικοινωνία">Αίτημα</a>
       </nav>
     </header>
@@ -284,52 +380,78 @@
     <!-- HERO -->
     <div class="hero">
       <div class="card hero-main">
-        <div class="kicker">Γραπτή • Δομημένη • Χωρίς έκθεση</div>
-        <h1>Καθαρές αποφάσεις ζωής, χωρίς θόρυβο.</h1>
-        <p class="sub">
-          Ένας σοβαρός φιλοσοφικός διάλογος (γραπτώς) για ανθρώπους που θέλουν
-          αποσαφήνιση αξιών, επιλογών και συνεπειών — όχι “motivational” γενικότητες.
-        </p>
+        <!--
+          ΦΩΤΟΓΡΑΦΙΑ CC0 (Wikimedia Commons)
+          Πηγή (CC0): https://commons.wikimedia.org/wiki/File:Wing_with_morning_sunrise_sky.jpg
+        -->
+        <img
+          class="hero-photo"
+          src="https://commons.wikimedia.org/wiki/Special:FilePath/Wing_with_morning_sunrise_sky.jpg"
+          alt="Φωτεινός ουρανός με πρωινό φως"
+          loading="lazy"
+        />
+        <div class="hero-overlay" aria-hidden="true"></div>
 
-        <div class="pillrow" role="list">
-          <div class="pill" role="listitem">Χωρίς κάμερα</div>
-          <div class="pill" role="listitem">Χωρίς πραγματικό όνομα</div>
-          <div class="pill" role="listitem">Απολύτως ανώνυμο αίτημα</div>
-          <div class="pill" role="listitem">Πρακτικό πλαίσιο απόφασης</div>
-        </div>
+        <div class="hero-content">
+          <div class="kicker">Γραπτή • Δομημένη • Χωρίς έκθεση</div>
+          <h1>Καθαρές αποφάσεις ζωής, με ηρεμία και ακρίβεια.</h1>
+          <p class="sub">
+            Ανώνυμη φιλοσοφική καθοδήγηση (γραπτώς) για ανθρώπους που θέλουν
+            αποσαφήνιση αξιών, επιλογών και συνεπειών — με πρακτικό πλαίσιο σκέψης, όχι γενικότητες.
+          </p>
 
-        <div class="cta-row">
-          <a class="btn primary" href="#επικοινωνία">Ζήτησε καθοδήγηση</a>
-          <a class="btn" href="#πώς">Δες τη διαδικασία</a>
-        </div>
+          <div class="pillrow" role="list">
+            <div class="pill" role="listitem">Χωρίς κάμερα</div>
+            <div class="pill" role="listitem">Χωρίς πραγματικό όνομα</div>
+            <div class="pill" role="listitem">Απολύτως ανώνυμο αίτημα</div>
+            <div class="pill" role="listitem">Δομημένη αποσαφήνιση</div>
+          </div>
 
-        <div class="fineprint">
-          Σημαντικό: Δεν παρέχεται ψυχοθεραπεία, διάγνωση ή αντιμετώπιση κλινικών ζητημάτων.
-          Αν βρίσκεσαι σε κίνδυνο ή έντονη κρίση, απευθύνσου σε επαγγελματία ψυχικής υγείας ή στις αρμόδιες υπηρεσίες.
+          <div class="cta-row">
+            <a class="btn primary" href="#επικοινωνία">Ζήτησε καθοδήγηση</a>
+            <a class="btn" href="#πώς">Δες τη διαδικασία</a>
+          </div>
+
+          <div class="fineprint">
+            Σημαντικό: Δεν παρέχεται ψυχοθεραπεία, διάγνωση ή αντιμετώπιση κλινικών ζητημάτων.
+            Αν βρίσκεσαι σε κίνδυνο ή έντονη κρίση, απευθύνσου σε επαγγελματία ψυχικής υγείας ή στις αρμόδιες υπηρεσίες.
+          </div>
         </div>
       </div>
 
       <div class="card hero-side">
-        <div class="side-title">Τι θα λάβεις</div>
+        <!--
+          ΦΩΤΟΓΡΑΦΙΑ CC0 (Wikimedia Commons)
+          Πηγή (CC0): https://commons.wikimedia.org/wiki/File:Open_book_1_(Unsplash).jpg
+        -->
+        <img
+          class="side-photo"
+          src="https://commons.wikimedia.org/wiki/Special:FilePath/Open_book_1_(Unsplash).jpg"
+          alt="Ανοιχτό βιβλίο σε ζεστό φως"
+          loading="lazy"
+        />
 
-        <div class="badge"><span class="dot" aria-hidden="true"></span> Γραπτή ανάλυση 2–3 σελίδων</div>
-        <div class="badge"><span class="dot" aria-hidden="true"></span> Πλαίσιο απόφασης + ερωτήματα στοχασμού</div>
-        <div class="badge"><span class="dot" aria-hidden="true"></span> 1 follow-up διευκρίνισης</div>
+        <div class="hero-side-inner">
+          <div class="side-title">Τι θα λάβεις</div>
+          <div class="badge"><span class="dot" aria-hidden="true"></span> Γραπτή ανάλυση 2–3 σελίδων</div>
+          <div class="badge"><span class="dot" aria-hidden="true"></span> Πλαίσιο απόφασης + ερωτήματα</div>
+          <div class="badge"><span class="dot" aria-hidden="true"></span> 1 follow-up διευκρίνισης</div>
 
-        <div class="divider"></div>
+          <div class="divider"></div>
 
-        <div class="side-title">Θεματικές που ταιριάζουν</div>
-        <ul class="side-list">
-          <li>καριέρα / αλλαγή πορείας</li>
-          <li>ηθικά διλήμματα</li>
-          <li>νόημα / προτεραιότητες</li>
-          <li>όρια, ευθύνη, ελευθερία</li>
-        </ul>
+          <div class="side-title">Θεματικές που ταιριάζουν</div>
+          <ul class="side-list">
+            <li>καριέρα / αλλαγή πορείας</li>
+            <li>ηθικά διλήμματα</li>
+            <li>νόημα / προτεραιότητες</li>
+            <li>όρια, ευθύνη, ελευθερία</li>
+          </ul>
+        </div>
       </div>
     </div>
 
     <!-- ΠΩΣ ΛΕΙΤΟΥΡΓΕΙ -->
-    <section id="πώς" class="card" style="margin-top:18px; padding:22px;">
+    <section id="πώς" class="card section-pad">
       <h2 style="margin:0 0 10px 0;">Πώς λειτουργεί</h2>
       <p style="margin:0 0 14px 0; color: var(--muted);">
         Στόχος: να μετατρέψουμε ένα “μπερδεμένο” δίλημμα σε καθαρή δομή:
@@ -354,17 +476,49 @@
       </div>
     </section>
 
-    <!-- ΠΑΚΕΤΑ -->
-    <section id="πακέτα" class="card" style="margin-top:18px; padding:22px;">
-      <h2 style="margin:0 0 10px 0;">Πακέτα</h2>
+    <!-- ΥΠΟΒΑΘΡΟ (ανώνυμα, χωρίς όνομα) -->
+    <section id="υπόβαθρο" class="card section-pad">
+      <h2 style="margin:0 0 10px 0;">Υπόβαθρο</h2>
       <p style="margin:0 0 14px 0; color: var(--muted);">
-        Ενδεικτικές τιμές (άλλαξέ τες όπως σε βολεύει). Η λογική είναι “σαφές αποτέλεσμα”, όχι “ώρα χρέωσης”.
+        Η προσέγγιση είναι ανθρωπιστική και στοχαστική, με έμφαση στη σαφήνεια, την ευθύνη και τη συνέπεια.
       </p>
 
+      <div class="about">
+        <div>
+          <!--
+            ΦΩΤΟΓΡΑΦΙΑ CC0 (Wikimedia Commons)
+            Πηγή (CC0): https://commons.wikimedia.org/wiki/File:Desk-laptop-notebook-pen_(23958719819).jpg
+          -->
+          <img
+            class="about-photo"
+            src="https://commons.wikimedia.org/wiki/Special:FilePath/Desk-laptop-notebook-pen_(23958719819).jpg"
+            alt="Γραφείο με σημειωματάριο και στυλό"
+            loading="lazy"
+          />
+        </div>
+
+        <div class="about-text">
+          <div style="font-weight:900; font-size:16px;">Σύντομη παρουσίαση (χωρίς έκθεση)</div>
+          <ul>
+            <li><strong>Φιλόλογος</strong> με ακαδημαϊκό υπόβαθρο στις ανθρωπιστικές επιστήμες.</li>
+            <li><strong>Μεταπτυχιακή κατάρτιση</strong> στον φιλοσοφικό στοχασμό και στη μεθοδολογία του αναστοχασμού.</li>
+            <li><strong>Εμπειρία</strong> σε ανθρωπιστικό πλαίσιο με <strong>ευάλωτους πληθυσμούς</strong>, με σεβασμό, εχεμύθεια και έμφαση στην αξιοπρέπεια.</li>
+          </ul>
+          <div class="fineprint" style="margin-top:12px;">
+            Για λόγους ιδιωτικότητας, η υπηρεσία παρέχεται χωρίς δημόσια έκθεση προσωπικών στοιχείων.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ΤΙΜΕΣ / ΠΑΚΕΤΑ -->
+    <section id="πακέτα" class="card section-pad">
+      <h2 style="margin:0 0 10px 0;">Τιμές παροχής υπηρεσιών</h2>
+
       <div class="pricing">
-        <div class="card price-card" style="box-shadow:none;">
+        <div class="card price-card">
           <div class="price-name">Μία Ανάλυση</div>
-          <div class="price">80€ <small>/ υπόθεση</small></div>
+          <div class="price">40€ <small>/ υπόθεση</small></div>
           <div class="price-desc">Για ένα συγκεκριμένο δίλημμα.</div>
           <ul class="price-ul">
             <li>ανάλυση 2–3 σελίδων</li>
@@ -373,9 +527,9 @@
           </ul>
         </div>
 
-        <div class="card price-card featured" style="box-shadow:none;">
+        <div class="card price-card featured">
           <div class="price-name">Τρίπτυχο Απόφασης</div>
-          <div class="price">210€ <small>/ μήνα</small></div>
+          <div class="price">100€ <small>/ μήνα</small></div>
           <div class="price-desc">Για σύνθετες αποφάσεις με 3 βήματα.</div>
           <ul class="price-ul">
             <li>3 αναλύσεις (διαδοχικές)</li>
@@ -384,9 +538,9 @@
           </ul>
         </div>
 
-        <div class="card price-card" style="box-shadow:none;">
+        <div class="card price-card">
           <div class="price-name">Μηνιαία Καθοδήγηση</div>
-          <div class="price">320€ <small>/ μήνα</small></div>
+          <div class="price">170€ <small>/ μήνα</small></div>
           <div class="price-desc">Συνεχής γραπτός διάλογος & αναστοχασμός.</div>
           <ul class="price-ul">
             <li>έως 4 “κύκλοι” ανάλυσης</li>
@@ -398,7 +552,7 @@
     </section>
 
     <!-- ΣΥΧΝΕΣ ΕΡΩΤΗΣΕΙΣ -->
-    <section id="συχνές" class="card" style="margin-top:18px; padding:22px;">
+    <section id="συχνές" class="card section-pad">
       <h2 style="margin:0 0 10px 0;">Συχνές ερωτήσεις</h2>
 
       <div class="grid">
@@ -420,18 +574,13 @@
     </section>
 
     <!-- ΕΠΙΚΟΙΝΩΝΙΑ -->
-    <section id="επικοινωνία" class="card" style="margin-top:18px;">
+    <section id="επικοινωνία" class="card">
       <div class="form">
         <h2 style="margin:0;">Ανώνυμο αίτημα καθοδήγησης</h2>
         <p style="margin:0; color: var(--muted);">
           Συμπλήρωσε τα παρακάτω. Με το “Αποστολή” θα ανοίξει το email σου έτοιμο (χωρίς να αποθηκεύεται κάτι στο site).
         </p>
 
-        <!--
-          ΣΗΜΑΝΤΙΚΟ:
-          Αυτός ο τρόπος είναι “χωρίς backend”: ανοίγει mailto στο πρόγραμμα email του χρήστη.
-          Αν θες πραγματική αποστολή φόρμας (χωρίς να ανοίγει email), χρειάζεσαι backend ή υπηρεσία όπως Formspree.
-        -->
         <div>
           <label for="email">Email για απάντηση (προαιρετικό αλλά προτείνεται)</label>
           <input id="email" type="email" placeholder="π.χ. name@domain.com" />
@@ -466,7 +615,10 @@
     <div class="footer">
       <div class="tiny">© <span id="year"></span> Ανώνυμη Φιλοσοφική Καθοδήγηση</div>
       <div class="tiny">
-        <a href="#πώς">Διαδικασία</a> · <a href="#πακέτα">Πακέτα</a> · <a href="#συχνές">FAQ</a>
+        <a href="#πώς">Διαδικασία</a> · <a href="#υπόβαθρο">Υπόβαθρο</a> · <a href="#πακέτα">Τιμές</a> · <a href="#συχνές">FAQ</a>
+      </div>
+      <div class="credits tiny">
+        Εικόνες: CC0 από Wikimedia Commons.
       </div>
     </div>
 
@@ -476,7 +628,6 @@
     // =========================
     // ΜΙΚΡΟ JS: ημερομηνία + mailto φόρμα
     // =========================
-
     document.getElementById("year").textContent = new Date().getFullYear();
 
     // Βάλε εδώ το email που θέλεις να λαμβάνεις αιτήματα:
@@ -492,7 +643,6 @@
         return;
       }
 
-      // Φτιάχνουμε θέμα + σώμα email
       const subject = encodeURIComponent("Ανώνυμο αίτημα — " + topic);
       const bodyLines = [
         "ΘΕΜΑ: " + topic,
@@ -506,8 +656,6 @@
         "Στάλθηκε από το one-page site (mailto)."
       ];
       const body = encodeURIComponent(bodyLines.join("\n"));
-
-      // Ανοίγει το πρόγραμμα email του χρήστη
       window.location.href = `mailto:${EMAIL_ΠΑΡΑΛΗΠΤΗ}?subject=${subject}&body=${body}`;
     }
 
