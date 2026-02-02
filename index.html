@@ -4,31 +4,24 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Ανώνυμη Φιλοσοφική Καθοδήγηση | Καθαρές Αποφάσεις</title>
-  <meta name="description" content="Ανώνυμη, γραπτή φιλοσοφική καθοδήγηση για αποφάσεις ζωής. Χωρίς κάμερα, χωρίς έκθεση. Δομημένη αποσαφήνιση αξιών και επιλογών." />
+  <title>MyHappyBox | Εργαλειοθήκη Φιλοσοφικού Στοχασμού</title>
+  <meta name="description" content="MyHappyBox — Εργαλειοθήκη φιλοσοφικού στοχασμού για χαρούμενη ζωή και λύση σε διανοητικά προβλήματα. Ανώνυμη, γραπτή φιλοσοφική καθοδήγηση για επιλογές ζωής." />
 
   <style>
-    /* =========================
-       ΦΩΤΕΙΝΟ / ΧΑΡΜΟΣΥΝΟ THEME (pastel)
-       ========================= */
     :root{
-      --bg1: #fff7ef;   /* ζεστό off-white */
-      --bg2: #f3fbff;   /* πολύ απαλό γαλάζιο */
+      --bg1: #fff7ef;
+      --bg2: #f3fbff;
       --card: rgba(255,255,255,0.88);
-      --card2: rgba(255,255,255,0.72);
-
       --text: rgba(12,18,28,0.92);
       --muted: rgba(12,18,28,0.70);
       --muted2: rgba(12,18,28,0.55);
-
       --border: rgba(12,18,28,0.12);
 
-      --accent: #2bb3a0;   /* μέντα */
-      --accent2:#ffb84d;   /* απαλό πορτοκαλί */
-      --accent3:#7a8cff;   /* lavendar/blue */
+      --accent: #2bb3a0;
+      --accent2:#ffb84d;
+      --accent3:#7a8cff;
 
       --ok: #2bb3a0;
-      --warn: #ffb84d;
 
       --radius: 18px;
       --shadow: 0 18px 40px rgba(12,18,28,0.10);
@@ -52,9 +45,6 @@
     a{ color: inherit; text-decoration: none; }
     .wrap{ max-width: var(--maxw); margin: 0 auto; padding: 28px 18px 60px; }
 
-    /* =========================
-       HEADER
-       ========================= */
     header{
       display:flex;
       align-items:center;
@@ -64,7 +54,7 @@
     }
     .brand{
       display:flex; align-items:center; gap: 10px;
-      font-weight: 750;
+      font-weight: 850;
       letter-spacing: 0.2px;
     }
     .sigil{
@@ -82,13 +72,9 @@
       padding: 8px 10px;
       border-radius: 12px;
       border: 1px solid transparent;
-      background: transparent;
     }
     nav a:hover{ border-color: var(--border); background: rgba(255,255,255,0.55); }
 
-    /* =========================
-       CARDS
-       ========================= */
     .card{
       background: var(--card);
       border: 1px solid var(--border);
@@ -97,9 +83,6 @@
       overflow: hidden;
     }
 
-    /* =========================
-       HERO (με φωτογραφία)
-       ========================= */
     .hero{
       margin-top: 10px;
       display:grid;
@@ -113,10 +96,8 @@
 
     .hero-main{
       position: relative;
-      min-height: 420px;
+      min-height: 440px;
     }
-
-    /* CC0 εικόνα (Wikimedia Commons) */
     .hero-photo{
       position:absolute; inset:0;
       width:100%; height:100%;
@@ -124,32 +105,29 @@
       filter: saturate(1.08) contrast(1.03);
       transform: scale(1.02);
     }
-
-    /* “glass” overlay για να διαβάζεται το κείμενο */
     .hero-overlay{
       position:absolute; inset:0;
       background:
-        linear-gradient(90deg, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.72) 48%, rgba(255,255,255,0.52) 100%);
+        linear-gradient(90deg, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.74) 50%, rgba(255,255,255,0.56) 100%);
     }
     @media (max-width: 900px){
       .hero-overlay{
-        background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.78) 55%, rgba(255,255,255,0.62) 100%);
+        background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.80) 55%, rgba(255,255,255,0.62) 100%);
       }
     }
 
     .hero-content{
       position: relative;
       padding: 28px;
-      max-width: 72ch;
+      max-width: 76ch;
     }
-
     .kicker{
       color: var(--muted);
       font-size: 13px;
       letter-spacing: 0.16em;
       text-transform: uppercase;
       margin-bottom: 10px;
-      font-weight: 700;
+      font-weight: 800;
     }
     h1{
       margin: 0 0 10px 0;
@@ -160,7 +138,7 @@
       color: var(--muted);
       font-size: 16px;
       margin: 0 0 18px 0;
-      max-width: 65ch;
+      max-width: 70ch;
     }
     .pillrow{
       display:flex; flex-wrap: wrap; gap: 10px;
@@ -182,27 +160,22 @@
       border: 1px solid var(--border);
       background: rgba(255,255,255,0.72);
       color: var(--text);
-      font-weight: 800;
+      font-weight: 900;
       cursor: pointer;
       transition: transform .08s ease, background .15s ease, border-color .15s ease;
     }
     .btn:hover{ background: rgba(255,255,255,0.92); border-color: rgba(12,18,28,0.18); }
     .btn:active{ transform: translateY(1px); }
-
     .btn.primary{
       border-color: rgba(43,179,160,0.30);
       background: linear-gradient(145deg, rgba(43,179,160,0.28), rgba(255,184,77,0.22));
     }
-
     .fineprint{
       margin-top: 12px;
       color: var(--muted2);
       font-size: 12.5px;
     }
 
-    /* =========================
-       SIDE CARD (με φωτογραφία)
-       ========================= */
     .hero-side{ display:flex; flex-direction:column; }
     .side-photo{
       width:100%;
@@ -216,7 +189,7 @@
       flex-direction:column;
       gap: 12px;
     }
-    .side-title{ font-weight: 850; }
+    .side-title{ font-weight: 900; }
     .side-list{ margin: 0; padding-left: 18px; color: var(--muted); }
     .badge{
       display:flex; align-items:center; gap: 8px;
@@ -233,11 +206,7 @@
       box-shadow: 0 0 0 4px rgba(43,179,160,0.14);
     }
 
-    /* =========================
-       SECTIONS
-       ========================= */
     section{ margin-top: 18px; }
-
     .section-pad{ padding: 22px; }
 
     .grid{
@@ -262,9 +231,6 @@
       margin: 16px 0;
     }
 
-    /* =========================
-       “Υπόβαθρο” layout με εικόνα
-       ========================= */
     .about{
       display:grid;
       grid-template-columns: 0.9fr 1.1fr;
@@ -294,9 +260,6 @@
       color: var(--muted);
     }
 
-    /* =========================
-       ΠΑΚΕΤΑ
-       ========================= */
     .pricing{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
@@ -305,14 +268,14 @@
     @media (max-width: 900px){ .pricing{ grid-template-columns: 1fr; } }
 
     .price-card{ padding: 18px; box-shadow:none; }
-    .price-name{ font-weight: 900; }
+    .price-name{ font-weight: 950; }
     .price{
       margin-top: 8px;
       font-size: 26px;
       font-weight: 950;
       letter-spacing: -0.02em;
     }
-    .price small{ font-size: 14px; color: var(--muted); font-weight: 800; }
+    .price small{ font-size: 14px; color: var(--muted); font-weight: 900; }
     .price-desc{ margin-top: 8px; color: var(--muted); font-size: 14.5px; }
     .price-ul{ margin: 12px 0 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
     .price-card.featured{
@@ -320,15 +283,12 @@
       border-color: rgba(43,179,160,0.22);
     }
 
-    /* =========================
-       ΦΟΡΜΑ
-       ========================= */
     .form{
       padding: 18px;
       display:grid;
       gap: 12px;
     }
-    label{ font-size: 13px; color: var(--muted); display:block; margin-bottom: 6px; font-weight: 750; }
+    label{ font-size: 13px; color: var(--muted); display:block; margin-bottom: 6px; font-weight: 850; }
     input, textarea, select{
       width: 100%;
       padding: 12px 12px;
@@ -365,7 +325,7 @@
     <header>
       <div class="brand">
         <div class="sigil" aria-hidden="true"></div>
-        <div>Ανώνυμη Φιλοσοφική Καθοδήγηση</div>
+        <div>MyHappyBox</div>
       </div>
 
       <nav aria-label="Πλοήγηση">
@@ -380,10 +340,7 @@
     <!-- HERO -->
     <div class="hero">
       <div class="card hero-main">
-        <!--
-          ΦΩΤΟΓΡΑΦΙΑ CC0 (Wikimedia Commons)
-          Πηγή (CC0): https://commons.wikimedia.org/wiki/File:Wing_with_morning_sunrise_sky.jpg
-        -->
+        <!-- CC0 εικόνα (Wikimedia Commons) -->
         <img
           class="hero-photo"
           src="https://commons.wikimedia.org/wiki/Special:FilePath/Wing_with_morning_sunrise_sky.jpg"
@@ -393,18 +350,19 @@
         <div class="hero-overlay" aria-hidden="true"></div>
 
         <div class="hero-content">
-          <div class="kicker">Γραπτή • Δομημένη • Χωρίς έκθεση</div>
-          <h1>Καθαρές αποφάσεις ζωής, με ηρεμία και ακρίβεια.</h1>
+          <div class="kicker">Εργαλειοθήκη • Στοχασμός • Πράξη</div>
+          <h1>MyHappyBox — Εργαλειοθήκη Φιλοσοφικού Στοχασμού για χαρούμενη ζωή και λύση σε διανοητικά προβλήματα.</h1>
           <p class="sub">
-            Ανώνυμη φιλοσοφική καθοδήγηση (γραπτώς) για ανθρώπους που θέλουν
-            αποσαφήνιση αξιών, επιλογών και συνεπειών — με πρακτικό πλαίσιο σκέψης, όχι γενικότητες.
+            Ανώνυμη φιλοσοφική συμβουλευτική (γραπτώς) για επιλογές ζωής.
+            Στόχος είναι να βρούμε καθαρή σκέψη, εσωτερική συνέπεια και πρακτικές κατευθύνσεις
+            απέναντι σε διλήμματα, υπερανάλυση, σύγχυση ή νοητική κόπωση.
           </p>
 
           <div class="pillrow" role="list">
             <div class="pill" role="listitem">Χωρίς κάμερα</div>
             <div class="pill" role="listitem">Χωρίς πραγματικό όνομα</div>
             <div class="pill" role="listitem">Απολύτως ανώνυμο αίτημα</div>
-            <div class="pill" role="listitem">Δομημένη αποσαφήνιση</div>
+            <div class="pill" role="listitem">Εργαλεία στοχασμού</div>
           </div>
 
           <div class="cta-row">
@@ -420,10 +378,7 @@
       </div>
 
       <div class="card hero-side">
-        <!--
-          ΦΩΤΟΓΡΑΦΙΑ CC0 (Wikimedia Commons)
-          Πηγή (CC0): https://commons.wikimedia.org/wiki/File:Open_book_1_(Unsplash).jpg
-        -->
+        <!-- CC0 εικόνα (Wikimedia Commons) -->
         <img
           class="side-photo"
           src="https://commons.wikimedia.org/wiki/Special:FilePath/Open_book_1_(Unsplash).jpg"
@@ -444,7 +399,7 @@
             <li>καριέρα / αλλαγή πορείας</li>
             <li>ηθικά διλήμματα</li>
             <li>νόημα / προτεραιότητες</li>
-            <li>όρια, ευθύνη, ελευθερία</li>
+            <li>υπερανάλυση / σύγχυση / νοητική κόπωση</li>
           </ul>
         </div>
       </div>
@@ -454,14 +409,14 @@
     <section id="πώς" class="card section-pad">
       <h2 style="margin:0 0 10px 0;">Πώς λειτουργεί</h2>
       <p style="margin:0 0 14px 0; color: var(--muted);">
-        Στόχος: να μετατρέψουμε ένα “μπερδεμένο” δίλημμα σε καθαρή δομή:
-        <strong>αξίες → επιλογές → συνέπειες → πράξη</strong>.
+        Στόχος: να μετατρέψουμε ένα “μπερδεμένο” ζήτημα σε καθαρή δομή:
+        <strong>τι συμβαίνει → τι μετράει (αξίες) → ποιες επιλογές υπάρχουν → ποιες συνέπειες → ποια πράξη</strong>.
       </p>
 
       <div class="grid">
         <div class="box">
           <h3>1) Ανώνυμο αίτημα</h3>
-          <p>Συμπληρώνεις φόρμα με το δίλημμά σου (χωρίς προσωπικά στοιχεία αν δεν θέλεις).</p>
+          <p>Συμπληρώνεις φόρμα με το ζήτημά σου (χωρίς προσωπικά στοιχεία αν δεν θέλεις).</p>
         </div>
 
         <div class="box">
@@ -471,7 +426,7 @@
 
         <div class="box">
           <h3>3) Follow-up</h3>
-          <p>Ένα επιπλέον γραπτό μήνυμα για διευκρίνιση, ώστε να “κλειδώσει” η απόφαση.</p>
+          <p>Ένα επιπλέον γραπτό μήνυμα για διευκρίνιση, ώστε να γίνει πιο σταθερή η επιλογή σου.</p>
         </div>
       </div>
     </section>
@@ -480,15 +435,12 @@
     <section id="υπόβαθρο" class="card section-pad">
       <h2 style="margin:0 0 10px 0;">Υπόβαθρο</h2>
       <p style="margin:0 0 14px 0; color: var(--muted);">
-        Η προσέγγιση είναι ανθρωπιστική και στοχαστική, με έμφαση στη σαφήνεια, την ευθύνη και τη συνέπεια.
+        Η προσέγγιση είναι ανθρωπιστική, φιλολογική και στοχαστική, με έμφαση στη σαφήνεια, την ευθύνη και την αξιοπρέπεια.
       </p>
 
       <div class="about">
         <div>
-          <!--
-            ΦΩΤΟΓΡΑΦΙΑ CC0 (Wikimedia Commons)
-            Πηγή (CC0): https://commons.wikimedia.org/wiki/File:Desk-laptop-notebook-pen_(23958719819).jpg
-          -->
+          <!-- CC0 εικόνα (Wikimedia Commons) -->
           <img
             class="about-photo"
             src="https://commons.wikimedia.org/wiki/Special:FilePath/Desk-laptop-notebook-pen_(23958719819).jpg"
@@ -498,11 +450,11 @@
         </div>
 
         <div class="about-text">
-          <div style="font-weight:900; font-size:16px;">Σύντομη παρουσίαση (χωρίς έκθεση)</div>
+          <div style="font-weight:950; font-size:16px;">Σύντομη παρουσίαση (χωρίς έκθεση)</div>
           <ul>
             <li><strong>Φιλόλογος</strong> με ακαδημαϊκό υπόβαθρο στις ανθρωπιστικές επιστήμες.</li>
             <li><strong>Μεταπτυχιακή κατάρτιση</strong> στον φιλοσοφικό στοχασμό και στη μεθοδολογία του αναστοχασμού.</li>
-            <li><strong>Εμπειρία</strong> σε ανθρωπιστικό πλαίσιο με <strong>ευάλωτους πληθυσμούς</strong>, με σεβασμό, εχεμύθεια και έμφαση στην αξιοπρέπεια.</li>
+            <li><strong>Εμπειρία</strong> σε ανθρωπιστικό πλαίσιο με <strong>ευάλωτους πληθυσμούς</strong>, με εχεμύθεια και σεβασμό.</li>
           </ul>
           <div class="fineprint" style="margin-top:12px;">
             Για λόγους ιδιωτικότητας, η υπηρεσία παρέχεται χωρίς δημόσια έκθεση προσωπικών στοιχείων.
@@ -519,7 +471,7 @@
         <div class="card price-card">
           <div class="price-name">Μία Ανάλυση</div>
           <div class="price">40€ <small>/ υπόθεση</small></div>
-          <div class="price-desc">Για ένα συγκεκριμένο δίλημμα.</div>
+          <div class="price-desc">Για ένα συγκεκριμένο ζήτημα/δίλημμα.</div>
           <ul class="price-ul">
             <li>ανάλυση 2–3 σελίδων</li>
             <li>πλαίσιο απόφασης</li>
@@ -541,12 +493,17 @@
         <div class="card price-card">
           <div class="price-name">Μηνιαία Καθοδήγηση</div>
           <div class="price">170€ <small>/ μήνα</small></div>
-          <div class="price-desc">Συνεχής γραπτός διάλογος & αναστοχασμός.</div>
+          <div class="price-desc">Συνεχής γραπτός διάλογος, αναστοχασμός και εμβάθυνση.</div>
           <ul class="price-ul">
             <li>έως 4 “κύκλοι” ανάλυσης</li>
             <li>πρόοδος & αναθεώρηση</li>
             <li>πλαίσιο πειθαρχίας/πράξης</li>
+            <li><strong>Εξερεύνηση φιλοσοφικών ρευμάτων</strong> (π.χ. Στωικοί, Επικούρειοι, Πλάτωνας, Αριστοτέλης κ.ά.) με εξειδικευμένες νουθεσίες για την περίπτωσή σου</li>
+            <li><strong>Συνοδευτικό υλικό τεκμηρίωσης</strong> (αποσπάσματα/σημεία αναφοράς) + <strong>εξατομικευμένο υλικό</strong> για πιο προσεκτική δουλειά</li>
           </ul>
+          <div class="fineprint" style="margin-top:10px;">
+            Το υλικό παρέχεται εκπαιδευτικά/μελετητικά για προσωπική χρήση και δεν υποκαθιστά θεραπευτική ή ιατρική καθοδήγηση.
+          </div>
         </div>
       </div>
     </section>
@@ -558,7 +515,7 @@
       <div class="grid">
         <div class="box">
           <h3>Είναι ψυχοθεραπεία;</h3>
-          <p>Όχι. Είναι φιλοσοφική αποσαφήνιση: αξίες, επιλογές, ευθύνη, νόημα, συνεκτικότητα.</p>
+          <p>Όχι. Είναι φιλοσοφική αποσαφήνιση: αξίες, επιλογές, ευθύνη, νόημα, συνέπεια σκέψης και πράξης.</p>
         </div>
 
         <div class="box">
@@ -592,13 +549,14 @@
             <option>Απόφαση καριέρας</option>
             <option>Ηθικό δίλημμα</option>
             <option>Νόημα / προτεραιότητες</option>
+            <option>Υπερανάλυση / σύγχυση</option>
             <option>Άλλο</option>
           </select>
         </div>
 
         <div>
-          <label for="message">Περιγραφή διλήμματος (όσο πιο συγκεκριμένα, τόσο καλύτερα)</label>
-          <textarea id="message" placeholder="Γράψε τι συμβαίνει, ποιες είναι οι 2–3 επιλογές που βλέπεις και τι σε κρατάει πίσω."></textarea>
+          <label for="message">Περιγραφή ζητήματος (όσο πιο συγκεκριμένα, τόσο καλύτερα)</label>
+          <textarea id="message" placeholder="Γράψε τι συμβαίνει, ποιες είναι οι επιλογές που βλέπεις και τι σε δυσκολεύει."></textarea>
         </div>
 
         <div class="cta-row">
@@ -613,7 +571,7 @@
     </section>
 
     <div class="footer">
-      <div class="tiny">© <span id="year"></span> Ανώνυμη Φιλοσοφική Καθοδήγηση</div>
+      <div class="tiny">© <span id="year"></span> MyHappyBox</div>
       <div class="tiny">
         <a href="#πώς">Διαδικασία</a> · <a href="#υπόβαθρο">Υπόβαθρο</a> · <a href="#πακέτα">Τιμές</a> · <a href="#συχνές">FAQ</a>
       </div>
@@ -625,9 +583,6 @@
   </div>
 
   <script>
-    // =========================
-    // ΜΙΚΡΟ JS: ημερομηνία + mailto φόρμα
-    // =========================
     document.getElementById("year").textContent = new Date().getFullYear();
 
     // Βάλε εδώ το email που θέλεις να λαμβάνεις αιτήματα:
@@ -639,11 +594,11 @@
       const msg = (document.getElementById("message").value || "").trim();
 
       if(!msg){
-        alert("Γράψε πρώτα μια σύντομη περιγραφή διλήμματος.");
+        alert("Γράψε πρώτα μια σύντομη περιγραφή ζητήματος.");
         return;
       }
 
-      const subject = encodeURIComponent("Ανώνυμο αίτημα — " + topic);
+      const subject = encodeURIComponent("MyHappyBox — Ανώνυμο αίτημα — " + topic);
       const bodyLines = [
         "ΘΕΜΑ: " + topic,
         "",
