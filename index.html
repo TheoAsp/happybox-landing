@@ -57,12 +57,16 @@
       font-weight: 850;
       letter-spacing: 0.2px;
     }
-    .sigil{
-      width: 34px; height: 34px; border-radius: 12px;
-      background: linear-gradient(145deg, rgba(43,179,160,0.35), rgba(255,184,77,0.25));
+    .logo{
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
       border: 1px solid var(--border);
       box-shadow: 0 10px 20px rgba(12,18,28,0.08);
+      object-fit: cover;
+      background: rgba(255,255,255,0.75);
     }
+
     nav{
       display:flex; gap: 12px; flex-wrap: wrap;
       color: var(--muted);
@@ -324,7 +328,8 @@
     <!-- HEADER -->
     <header>
       <div class="brand">
-        <div class="sigil" aria-hidden="true"></div>
+        <!-- Θα φορτώσει από: public/photos/logo.png  => στο browser: /photos/logo.png -->
+        <img class="logo" src="photos/logo.png" alt="MyHappyBox logo" />
         <div>MyHappyBox</div>
       </div>
 
@@ -340,7 +345,6 @@
     <!-- HERO -->
     <div class="hero">
       <div class="card hero-main">
-        <!-- CC0 εικόνα (Wikimedia Commons) -->
         <img
           class="hero-photo"
           src="https://commons.wikimedia.org/wiki/Special:FilePath/Wing_with_morning_sunrise_sky.jpg"
@@ -378,7 +382,6 @@
       </div>
 
       <div class="card hero-side">
-        <!-- CC0 εικόνα (Wikimedia Commons) -->
         <img
           class="side-photo"
           src="https://commons.wikimedia.org/wiki/Special:FilePath/Open_book_1_(Unsplash).jpg"
@@ -431,7 +434,7 @@
       </div>
     </section>
 
-    <!-- ΥΠΟΒΑΘΡΟ (ανώνυμα, χωρίς όνομα) -->
+    <!-- ΥΠΟΒΑΘΡΟ -->
     <section id="υπόβαθρο" class="card section-pad">
       <h2 style="margin:0 0 10px 0;">Υπόβαθρο</h2>
       <p style="margin:0 0 14px 0; color: var(--muted);">
@@ -440,7 +443,6 @@
 
       <div class="about">
         <div>
-          <!-- CC0 εικόνα (Wikimedia Commons) -->
           <img
             class="about-photo"
             src="https://commons.wikimedia.org/wiki/Special:FilePath/Desk-laptop-notebook-pen_(23958719819).jpg"
@@ -470,18 +472,23 @@
       <div class="pricing">
         <div class="card price-card">
           <div class="price-name">Μία Ανάλυση</div>
-          <div class="price">40€ <small>/ υπόθεση</small></div>
-          <div class="price-desc">Για ένα συγκεκριμένο ζήτημα/δίλημμα.</div>
+          <div class="price">Δωρεάν <small>/ υπόθεση</small></div>
+          <div class="price-desc">
+            Δοκίμασε την αξία της υπηρεσίας με 1 πλήρη ανάλυση.
+          </div>
           <ul class="price-ul">
             <li>ανάλυση 2–3 σελίδων</li>
             <li>πλαίσιο απόφασης</li>
             <li>1 follow-up</li>
           </ul>
+          <div class="fineprint" style="margin-top:10px;">
+            *Δωρεάν έως <strong>2 φορές ανά μέλος</strong>. Έπειτα <strong>10€ / υπόθεση</strong>.
+          </div>
         </div>
 
         <div class="card price-card featured">
           <div class="price-name">Τρίπτυχο Απόφασης</div>
-          <div class="price">100€ <small>/ μήνα</small></div>
+          <div class="price">30€ <small>/ μήνα</small></div>
           <div class="price-desc">Για σύνθετες αποφάσεις με 3 βήματα.</div>
           <ul class="price-ul">
             <li>3 αναλύσεις (διαδοχικές)</li>
@@ -492,7 +499,7 @@
 
         <div class="card price-card">
           <div class="price-name">Μηνιαία Καθοδήγηση</div>
-          <div class="price">170€ <small>/ μήνα</small></div>
+          <div class="price">60€ <small>/ μήνα</small></div>
           <div class="price-desc">Συνεχής γραπτός διάλογος, αναστοχασμός και εμβάθυνση.</div>
           <ul class="price-ul">
             <li>έως 4 “κύκλοι” ανάλυσης</li>
@@ -586,7 +593,7 @@
     document.getElementById("year").textContent = new Date().getFullYear();
 
     // Βάλε εδώ το email που θέλεις να λαμβάνεις αιτήματα:
-    const EMAIL_ΠΑΡΑΛΗΠΤΗ = "contact@myhappybox.gr"; // άλλαξέ το
+    const EMAIL_ΠΑΡΑΛΗΠΤΗ = "contact@myhappybox.gr";
 
     function αποστολήEmail(){
       const email = (document.getElementById("email").value || "").trim();
