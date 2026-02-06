@@ -308,6 +308,35 @@
       box-shadow: 0 0 0 4px rgba(43,179,160,0.12);
     }
 
+    /* NEW: Contact mini-cards */
+    .contact-cards{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .contact-card{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.70);
+      color: var(--muted);
+      font-size: 13.5px;
+      font-weight: 850;
+    }
+    .contact-card:hover{
+      background: rgba(255,255,255,0.92);
+      border-color: rgba(12,18,28,0.18);
+    }
+    .icon{
+      width: 18px;
+      height: 18px;
+      display:block;
+    }
+
     .footer{
       margin-top: 22px;
       color: var(--muted2);
@@ -328,8 +357,15 @@
     <!-- HEADER -->
     <header>
       <div class="brand">
-        <!-- Θα φορτώσει από: public/photos/logo.png  => στο browser: /photos/logo.png -->
-        <img class="logo" src="photos/logo.png" alt="MyHappyBox logo" />
+        <!-- Logo: public/photos/logo.png -->
+        <!-- Χρησιμοποιούμε σχετικό path + fallback για GitHub Pages subpath -->
+        <img
+          class="logo"
+          src="photos/logo.png"
+          alt="MyHappyBox logo"
+          loading="eager"
+          onerror="(function(img){var tries=['/photos/logo.png','/happybox-landing/photos/logo.png','public/photos/logo.png'];for(var i=0;i<tries.length;i++){if(img.src.indexOf(tries[i])===-1){img.src=tries[i];return;}}})(this)"
+        />
         <div>MyHappyBox</div>
       </div>
 
@@ -545,6 +581,26 @@
           Συμπλήρωσε τα παρακάτω. Με το “Αποστολή” θα ανοίξει το email σου έτοιμο (χωρίς να αποθηκεύεται κάτι στο site).
         </p>
 
+        <!-- NEW: Contact details (email + instagram) -->
+        <div class="contact-cards" aria-label="Στοιχεία επικοινωνίας">
+          <a class="contact-card" href="mailto:contact@myhappybox.gr">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v9A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5v-9Z" stroke="currentColor" stroke-width="1.8"/>
+              <path d="m6 8 6 4 6-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            contact@myhappybox.gr
+          </a>
+
+          <a class="contact-card" href="https://www.instagram.com/myhappybox_philosophy/?hl=en" target="_blank" rel="noopener noreferrer">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M7.5 3h9A4.5 4.5 0 0 1 21 7.5v9A4.5 4.5 0 0 1 16.5 21h-9A4.5 4.5 0 0 1 3 16.5v-9A4.5 4.5 0 0 1 7.5 3Z" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M17.2 6.8h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+            </svg>
+            @myhappybox_philosophy
+          </a>
+        </div>
+
         <div>
           <label for="email">Email για απάντηση (προαιρετικό αλλά προτείνεται)</label>
           <input id="email" type="email" placeholder="π.χ. name@domain.com" />
@@ -579,11 +635,15 @@
 
     <div class="footer">
       <div class="tiny">© <span id="year"></span> MyHappyBox</div>
+
       <div class="tiny">
         <a href="#πώς">Διαδικασία</a> · <a href="#υπόβαθρο">Υπόβαθρο</a> · <a href="#πακέτα">Τιμές</a> · <a href="#συχνές">FAQ</a>
       </div>
+
       <div class="credits tiny">
-        Εικόνες: CC0 από Wikimedia Commons.
+        <a href="mailto:contact@myhappybox.gr">contact@myhappybox.gr</a> ·
+        <a href="https://www.instagram.com/myhappybox_philosophy/?hl=en" target="_blank" rel="noopener noreferrer">Instagram</a>
+        · Εικόνες: CC0 από Wikimedia Commons.
       </div>
     </div>
 
@@ -592,7 +652,7 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // Βάλε εδώ το email που θέλεις να λαμβάνεις αιτήματα:
+    // Email παραλήπτη για τα αιτήματα (και συνεργασίες, αν το επιθυμείς ίδιο inbox)
     const EMAIL_ΠΑΡΑΛΗΠΤΗ = "contact@myhappybox.gr";
 
     function αποστολήEmail(){
