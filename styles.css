@@ -1,0 +1,1731 @@
+/* =========================================================
+   MyHappyBox — Κεντρικό αρχείο εμφάνισης
+   ========================================================= */
+
+/* ---------- Βασικές μεταβλητές ---------- */
+
+:root {
+  --color-primary: #d94252;
+  --color-primary-dark: #a92738;
+  --color-primary-light: #fff0f2;
+
+  --color-secondary: #276b8f;
+  --color-secondary-dark: #184b68;
+  --color-secondary-light: #eaf6fc;
+
+  --color-accent: #f5b942;
+  --color-accent-light: #fff7dc;
+
+  --color-green: #3b9d77;
+  --color-green-light: #eaf8f2;
+
+  --color-purple: #8066b4;
+  --color-purple-light: #f2edfc;
+
+  --color-orange: #db7b3f;
+  --color-orange-light: #fff1e7;
+
+  --color-pink: #cf628c;
+  --color-pink-light: #fff0f6;
+
+  --color-teal: #268b8d;
+  --color-teal-light: #e8f8f8;
+
+  --color-blue: #4d85c4;
+  --color-blue-light: #edf5ff;
+
+  --color-background: #fffaf5;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f8f4ef;
+
+  --color-text: #253247;
+  --color-text-soft: #566276;
+  --color-text-light: #768195;
+
+  --color-border: #e5e1dc;
+  --color-white: #ffffff;
+
+  --shadow-small:
+    0 8px 20px rgba(37, 50, 71, 0.08);
+
+  --shadow-medium:
+    0 18px 45px rgba(37, 50, 71, 0.12);
+
+  --shadow-large:
+    0 28px 70px rgba(37, 50, 71, 0.16);
+
+  --radius-small: 10px;
+  --radius-medium: 18px;
+  --radius-large: 28px;
+  --radius-round: 999px;
+
+  --container-width: 1200px;
+
+  --transition-fast: 160ms ease;
+  --transition-normal: 240ms ease;
+}
+
+/* ---------- Επαναφορά και γενικές ρυθμίσεις ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 110px;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family:
+    "Noto Sans",
+    "Noto Sans Arabic",
+    "Noto Sans Bengali",
+    Arial,
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body[dir="rtl"] {
+  font-family:
+    "Noto Sans Arabic",
+    "Noto Sans",
+    Arial,
+    sans-serif;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+p,
+h1,
+h2,
+h3 {
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+}
+
+section {
+  scroll-margin-top: 105px;
+}
+
+/* ---------- Προσβασιμότητα ---------- */
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 9999;
+  padding: 11px 16px;
+  border-radius: var(--radius-small);
+  background: var(--color-text);
+  color: var(--color-white);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform var(--transition-fast);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+:focus-visible {
+  outline: 4px solid rgba(245, 185, 66, 0.72);
+  outline-offset: 3px;
+}
+
+/* ---------- Κοινός περιορισμός πλάτους ---------- */
+
+.content-container {
+  width: min(
+    calc(100% - 40px),
+    var(--container-width)
+  );
+  margin-inline: auto;
+}
+
+/* =========================================================
+   Κεφαλίδα
+   ========================================================= */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(229, 225, 220, 0.86);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 5px 20px rgba(37, 50, 71, 0.06);
+  backdrop-filter: blur(14px);
+}
+
+.header-container {
+  width: min(
+    calc(100% - 40px),
+    var(--container-width)
+  );
+  min-height: 82px;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  flex-shrink: 0;
+  color: var(--color-text);
+  font-size: 1.24rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+
+.brand-symbol {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background:
+    linear-gradient(
+      135deg,
+      var(--color-primary-light),
+      var(--color-accent-light)
+    );
+  box-shadow: var(--shadow-small);
+  font-size: 1.6rem;
+}
+
+.language-selector {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.language-button {
+  min-height: 43px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 13px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-round);
+  background: var(--color-white);
+  color: var(--color-text);
+  font-size: 0.89rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.language-button:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.language-button.active {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-white);
+  box-shadow:
+    0 7px 18px rgba(217, 66, 82, 0.24);
+}
+
+/* =========================================================
+   Αρχική ενότητα
+   ========================================================= */
+
+.hero-section {
+  position: relative;
+  min-height: 760px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(255, 255, 255, 0.76),
+      transparent 22%
+    ),
+    radial-gradient(
+      circle at 88% 22%,
+      rgba(255, 239, 192, 0.72),
+      transparent 24%
+    ),
+    linear-gradient(
+      135deg,
+      #ffe8ab 0%,
+      #ffc6b0 47%,
+      #f3a9bd 100%
+    );
+}
+
+.hero-decoration {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.52;
+  filter: blur(1px);
+}
+
+.hero-decoration-one {
+  width: 320px;
+  height: 320px;
+  top: -110px;
+  right: -85px;
+  background: rgba(255, 255, 255, 0.54);
+}
+
+.hero-decoration-two {
+  width: 240px;
+  height: 240px;
+  bottom: -90px;
+  left: -80px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.hero-layout {
+  position: relative;
+  z-index: 2;
+  padding-block: 90px;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.35fr)
+    minmax(300px, 0.65fr);
+  align-items: center;
+  gap: clamp(45px, 7vw, 95px);
+}
+
+.hero-content {
+  max-width: 790px;
+}
+
+.section-label {
+  margin-bottom: 10px;
+  color: var(--color-primary-dark);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.hero-content h1 {
+  max-width: 780px;
+  margin-bottom: 26px;
+  color: var(--color-text);
+  font-size: clamp(3.1rem, 7vw, 6.3rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+}
+
+.hero-message {
+  max-width: 800px;
+  color: #3f4c60;
+  font-size: clamp(1rem, 1.5vw, 1.13rem);
+}
+
+.hero-message p {
+  margin-bottom: 15px;
+}
+
+.hero-emphasis {
+  padding: 17px 20px;
+  border-inline-start: 5px solid var(--color-primary);
+  border-radius: 0 var(--radius-medium) var(--radius-medium) 0;
+  background: rgba(255, 255, 255, 0.58);
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+body[dir="rtl"] .hero-emphasis {
+  border-radius:
+    var(--radius-medium)
+    0
+    0
+    var(--radius-medium);
+}
+
+.hero-actions {
+  margin-top: 31px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  flex-wrap: wrap;
+}
+
+.button {
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border: 2px solid transparent;
+  border-radius: 15px;
+  font-weight: 800;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.button-primary {
+  background: var(--color-text);
+  color: var(--color-white);
+  box-shadow:
+    0 13px 26px rgba(37, 50, 71, 0.22);
+}
+
+.button-primary:hover {
+  background: #172235;
+}
+
+.button-secondary {
+  border-color: rgba(37, 50, 71, 0.16);
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--color-text);
+}
+
+.button-secondary:hover {
+  border-color: var(--color-text);
+  background: var(--color-white);
+}
+
+.hero-visual {
+  min-height: 480px;
+  display: grid;
+  place-items: center;
+}
+
+.welcome-card {
+  position: relative;
+  width: min(100%, 380px);
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  border: 12px solid rgba(255, 255, 255, 0.48);
+  border-radius: 42% 58% 54% 46% / 50% 43% 57% 50%;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 244, 218, 0.74)
+    );
+  box-shadow: var(--shadow-large);
+  animation:
+    heroFloat 4.5s ease-in-out infinite;
+}
+
+.welcome-card::before {
+  content: "";
+  position: absolute;
+  width: 66%;
+  height: 66%;
+  border: 3px dashed rgba(217, 66, 82, 0.23);
+  border-radius: 50%;
+}
+
+.welcome-card-icon {
+  position: relative;
+  z-index: 2;
+  font-size: clamp(6rem, 12vw, 9rem);
+  filter:
+    drop-shadow(
+      0 16px 16px rgba(37, 50, 71, 0.16)
+    );
+}
+
+.welcome-card-heart,
+.welcome-card-book,
+.welcome-card-chat {
+  position: absolute;
+  z-index: 3;
+  width: 67px;
+  height: 67px;
+  display: grid;
+  place-items: center;
+  border: 5px solid rgba(255, 255, 255, 0.82);
+  border-radius: 22px;
+  background: var(--color-white);
+  box-shadow: var(--shadow-medium);
+  font-size: 2rem;
+}
+
+.welcome-card-heart {
+  top: 4%;
+  right: 4%;
+  transform: rotate(7deg);
+}
+
+.welcome-card-book {
+  bottom: 4%;
+  left: 4%;
+  transform: rotate(-7deg);
+}
+
+.welcome-card-chat {
+  right: -7%;
+  bottom: 25%;
+  transform: rotate(4deg);
+}
+
+@keyframes heroFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+
+  50% {
+    transform: translateY(-13px) rotate(1deg);
+  }
+}
+
+/* =========================================================
+   Γρήγορη πλοήγηση
+   ========================================================= */
+
+.quick-navigation {
+  position: relative;
+  z-index: 4;
+  margin-top: -42px;
+}
+
+.quick-navigation-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.quick-link {
+  min-height: 110px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  border: 1px solid rgba(229, 225, 220, 0.8);
+  border-radius: 22px;
+  background: var(--color-white);
+  box-shadow: var(--shadow-medium);
+  color: var(--color-text);
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    transform var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.quick-link:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 42px rgba(37, 50, 71, 0.15);
+}
+
+.quick-link-icon {
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 16px;
+  background: var(--color-primary-light);
+  font-size: 1.7rem;
+}
+
+/* =========================================================
+   Κοινές ενότητες
+   ========================================================= */
+
+.page-section {
+  padding-block: 105px;
+}
+
+.section-heading {
+  max-width: 760px;
+  margin-bottom: 42px;
+}
+
+.section-heading h2,
+.daily-guide-layout h2,
+.support-card h2 {
+  margin-bottom: 15px;
+  font-size: clamp(2.25rem, 4.5vw, 3.7rem);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+}
+
+.section-heading > p:last-child {
+  margin-bottom: 0;
+  color: var(--color-text-soft);
+  font-size: 1.07rem;
+}
+
+/* =========================================================
+   Κάρτες υπηρεσιών
+   ========================================================= */
+
+.services-section {
+  background:
+    linear-gradient(
+      180deg,
+      var(--color-background),
+      #fffdf9
+    );
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 21px;
+}
+
+.service-card {
+  position: relative;
+  min-height: 100%;
+  padding: 27px;
+  border: 1px solid var(--color-border);
+  border-top-width: 7px;
+  border-radius: var(--radius-large);
+  background: var(--color-white);
+  box-shadow: var(--shadow-small);
+  transition:
+    transform var(--transition-normal),
+    box-shadow var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-medium);
+}
+
+.service-card-food {
+  border-top-color: var(--color-primary);
+}
+
+.service-card-social {
+  border-top-color: var(--color-secondary);
+}
+
+.service-card-psychologist {
+  border-top-color: var(--color-purple);
+}
+
+.service-card-lounge {
+  border-top-color: var(--color-orange);
+}
+
+.service-card-kitchen {
+  border-top-color: var(--color-green);
+}
+
+.service-card-storage {
+  border-top-color: var(--color-accent);
+}
+
+.service-card-education {
+  border-top-color: var(--color-blue);
+}
+
+.service-card-activities {
+  border-top-color: var(--color-pink);
+}
+
+.service-card-wifi {
+  border-top-color: var(--color-teal);
+  grid-column: 1 / -1;
+}
+
+.service-card-header {
+  margin-bottom: 19px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.service-icon {
+  width: 59px;
+  height: 59px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 18px;
+  background: var(--color-surface-soft);
+  font-size: 2rem;
+}
+
+.service-card h3 {
+  margin-bottom: 0;
+  font-size: 1.34rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.service-category {
+  margin-bottom: 2px;
+  color: var(--color-text-light);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.service-card > p {
+  color: var(--color-text-soft);
+}
+
+.schedule-list {
+  margin-top: 21px;
+  display: grid;
+  gap: 10px;
+}
+
+.schedule-row {
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 13px 15px;
+  border-radius: 15px;
+  background: var(--color-surface-soft);
+}
+
+.schedule-row > div {
+  display: grid;
+}
+
+.schedule-row strong {
+  color: var(--color-text);
+}
+
+.schedule-row small {
+  margin-top: 2px;
+  color: var(--color-text-light);
+  font-size: 0.8rem;
+}
+
+.schedule-row time {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: var(--radius-round);
+  background: var(--color-white);
+  color: var(--color-text);
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow:
+    0 4px 12px rgba(37, 50, 71, 0.07);
+}
+
+.single-schedule {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 16px 17px;
+  border-radius: 16px;
+  background: var(--color-surface-soft);
+}
+
+.single-schedule span {
+  color: var(--color-text-soft);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.single-schedule strong {
+  padding: 7px 12px;
+  border-radius: var(--radius-round);
+  background: var(--color-white);
+  font-size: 1.02rem;
+  white-space: nowrap;
+  box-shadow:
+    0 4px 12px rgba(37, 50, 71, 0.07);
+}
+
+.card-link {
+  display: inline-flex;
+  margin-top: 12px;
+  color: var(--color-secondary-dark);
+  font-weight: 800;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.card-link:hover {
+  color: var(--color-primary-dark);
+}
+
+.wifi-box {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.wifi-box > div {
+  padding: 17px;
+  display: grid;
+  gap: 5px;
+  border-radius: 17px;
+  background: var(--color-teal-light);
+}
+
+.wifi-box span {
+  color: var(--color-text-soft);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.wifi-box strong {
+  font-size: 1.02rem;
+  overflow-wrap: anywhere;
+}
+
+.security-note {
+  margin: 14px 0 0;
+  color: #7a5b2f !important;
+  font-size: 0.84rem;
+}
+
+/* =========================================================
+   Καθημερινός οδηγός
+   ========================================================= */
+
+.daily-guide-section {
+  background:
+    linear-gradient(
+      135deg,
+      #eaf8f2,
+      #edf5ff
+    );
+}
+
+.daily-guide-layout {
+  display: grid;
+  grid-template-columns:
+    minmax(250px, 0.55fr)
+    minmax(0, 1.45fr);
+  gap: clamp(35px, 6vw, 85px);
+  align-items: start;
+}
+
+.daily-guide-card {
+  position: relative;
+  margin: 0;
+  padding: 34px;
+  border: 1px solid rgba(59, 157, 119, 0.19);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.91);
+  box-shadow: var(--shadow-medium);
+}
+
+.daily-guide-icon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  background: var(--color-accent-light);
+  font-size: 2.15rem;
+}
+
+.daily-guide-card p {
+  margin-bottom: 0;
+  color: var(--color-text-soft);
+  font-size: 1.04rem;
+  line-height: 1.9;
+}
+
+/* =========================================================
+   Εκπαίδευση
+   ========================================================= */
+
+.education-section {
+  background: var(--color-white);
+}
+
+.education-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.education-card {
+  min-height: 100%;
+  padding: 27px;
+  border: 1px solid var(--color-border);
+  border-radius: 25px;
+  background: var(--color-background);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.education-card:hover {
+  border-color: rgba(77, 133, 196, 0.44);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-small);
+}
+
+.education-icon {
+  width: 61px;
+  height: 61px;
+  margin-bottom: 19px;
+  display: grid;
+  place-items: center;
+  border-radius: 19px;
+  background: var(--color-blue-light);
+  font-size: 2rem;
+}
+
+.education-card h3 {
+  margin-bottom: 11px;
+  font-size: 1.27rem;
+}
+
+.education-card p {
+  margin-bottom: 0;
+  color: var(--color-text-soft);
+}
+
+/* =========================================================
+   Λεξικό
+   ========================================================= */
+
+.dictionary-section {
+  background:
+    linear-gradient(
+      180deg,
+      #fffaf5,
+      #fff6ed
+    );
+}
+
+.dictionary-heading {
+  max-width: none;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(270px, 370px);
+  align-items: end;
+  gap: 40px;
+}
+
+.dictionary-heading > div:first-child {
+  max-width: 760px;
+}
+
+.dictionary-search {
+  display: grid;
+  gap: 8px;
+}
+
+.dictionary-search label {
+  color: var(--color-text-soft);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.search-field {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: var(--color-white);
+  box-shadow: var(--shadow-small);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.search-field:focus-within {
+  border-color: var(--color-secondary);
+  box-shadow:
+    0 0 0 4px rgba(39, 107, 143, 0.12);
+}
+
+.search-field input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-text);
+}
+
+.search-field input::placeholder {
+  color: #9099a8;
+}
+
+.category-buttons {
+  margin-bottom: 29px;
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.category-button {
+  min-height: 42px;
+  padding: 8px 15px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-round);
+  background: var(--color-white);
+  color: var(--color-text-soft);
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.category-button:hover {
+  border-color: var(--color-secondary);
+  color: var(--color-secondary-dark);
+  transform: translateY(-1px);
+}
+
+.category-button.active {
+  border-color: var(--color-secondary);
+  background: var(--color-secondary);
+  color: var(--color-white);
+}
+
+.dictionary-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.word-card {
+  min-height: 145px;
+  padding: 19px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  background: var(--color-white);
+  box-shadow:
+    0 6px 17px rgba(37, 50, 71, 0.055);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.word-card:hover {
+  border-color: rgba(217, 66, 82, 0.4);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-small);
+}
+
+.word-number {
+  align-self: flex-start;
+  min-width: 30px;
+  padding: 4px 8px;
+  border-radius: var(--radius-round);
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 0.73rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.word-greek {
+  margin: 14px 0 7px;
+  color: var(--color-text);
+  font-size: 1.11rem;
+  font-weight: 800;
+}
+
+.word-translation {
+  margin: 0;
+  color: var(--color-text-soft);
+  font-size: 0.91rem;
+}
+
+.word-category {
+  margin-top: 13px;
+  color: var(--color-text-light);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.no-results {
+  margin-top: 25px;
+  padding: 24px;
+  border: 1px dashed var(--color-border);
+  border-radius: 18px;
+  background: var(--color-white);
+  color: var(--color-text-soft);
+  text-align: center;
+}
+
+/* =========================================================
+   Υποστήριξη
+   ========================================================= */
+
+.support-section {
+  padding: 0 0 105px;
+  background: #fff6ed;
+}
+
+.support-card {
+  padding: clamp(30px, 5vw, 55px);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 28px;
+  border-radius: 34px;
+  background:
+    linear-gradient(
+      135deg,
+      #ffe3e7,
+      #fff1d4
+    );
+  box-shadow: var(--shadow-medium);
+}
+
+.support-icon {
+  width: 92px;
+  height: 92px;
+  display: grid;
+  place-items: center;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.72);
+  font-size: 3.1rem;
+}
+
+.support-card h2 {
+  max-width: 850px;
+  margin-bottom: 13px;
+}
+
+.support-card p:last-child {
+  max-width: 890px;
+  margin-bottom: 0;
+  color: var(--color-text-soft);
+  font-size: 1.04rem;
+}
+
+/* =========================================================
+   Υποσέλιδο
+   ========================================================= */
+
+.site-footer {
+  padding-top: 62px;
+  background: var(--color-text);
+  color: var(--color-white);
+}
+
+.footer-layout {
+  padding-bottom: 38px;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto;
+  gap: 45px;
+  align-items: start;
+}
+
+.footer-layout > div:first-child {
+  max-width: 550px;
+}
+
+.footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  color: var(--color-white);
+  font-size: 1.33rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.footer-layout p {
+  margin-bottom: 7px;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.footer-information {
+  min-width: 230px;
+}
+
+.footer-information p:first-child {
+  color: var(--color-white);
+  font-weight: 700;
+}
+
+.footer-bottom {
+  min-height: 72px;
+  padding-block: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.84rem;
+}
+
+.footer-bottom p {
+  margin: 0;
+}
+
+.footer-bottom p:last-child {
+  max-width: 670px;
+  text-align: end;
+}
+
+.noscript-message {
+  position: fixed;
+  right: 15px;
+  bottom: 15px;
+  left: 15px;
+  z-index: 2000;
+  padding: 14px 18px;
+  border-radius: 13px;
+  background: #7d2331;
+  color: var(--color-white);
+  box-shadow: var(--shadow-large);
+  text-align: center;
+}
+
+/* =========================================================
+   Αραβική γραφή και RTL
+   ========================================================= */
+
+body[dir="rtl"] .header-container,
+body[dir="rtl"] .hero-layout,
+body[dir="rtl"] .service-card-header,
+body[dir="rtl"] .schedule-row,
+body[dir="rtl"] .single-schedule,
+body[dir="rtl"] .quick-link,
+body[dir="rtl"] .support-card {
+  direction: rtl;
+}
+
+body[dir="rtl"] .language-selector {
+  direction: ltr;
+}
+
+body[dir="rtl"] .footer-bottom p:last-child {
+  text-align: start;
+}
+
+body[dir="rtl"] .word-number {
+  align-self: flex-start;
+}
+
+/* =========================================================
+   Προσαρμογή για tablet
+   ========================================================= */
+
+@media (max-width: 1050px) {
+  .hero-layout {
+    grid-template-columns:
+      minmax(0, 1.15fr)
+      minmax(270px, 0.85fr);
+    gap: 45px;
+  }
+
+  .quick-navigation-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .dictionary-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================
+   Προσαρμογή για μικρό tablet
+   ========================================================= */
+
+@media (max-width: 850px) {
+  html {
+    scroll-padding-top: 145px;
+  }
+
+  .header-container {
+    min-height: auto;
+    padding-block: 14px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .language-selector {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .hero-section {
+    min-height: auto;
+  }
+
+  .hero-layout {
+    padding-block: 70px 100px;
+    grid-template-columns: 1fr;
+  }
+
+  .hero-content {
+    max-width: none;
+  }
+
+  .hero-visual {
+    min-height: 390px;
+  }
+
+  .welcome-card {
+    max-width: 340px;
+  }
+
+  .service-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-card-wifi {
+    grid-column: auto;
+  }
+
+  .daily-guide-layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .education-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dictionary-heading {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 26px;
+  }
+
+  .dictionary-search {
+    max-width: 480px;
+  }
+
+  .dictionary-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .support-card {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-information {
+    min-width: 0;
+  }
+}
+
+/* =========================================================
+   Προσαρμογή για κινητά
+   ========================================================= */
+
+@media (max-width: 600px) {
+  :root {
+    --radius-large: 23px;
+  }
+
+  html {
+    scroll-padding-top: 185px;
+  }
+
+  .content-container,
+  .header-container {
+    width: min(
+      calc(100% - 28px),
+      var(--container-width)
+    );
+  }
+
+  .site-header {
+    position: relative;
+  }
+
+  .header-container {
+    gap: 13px;
+  }
+
+  .language-selector {
+    display: grid;
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+  .language-button {
+    min-width: 0;
+    padding-inline: 8px;
+    font-size: 0.78rem;
+  }
+
+  .brand {
+    font-size: 1.12rem;
+  }
+
+  .brand-symbol {
+    width: 41px;
+    height: 41px;
+  }
+
+  .hero-layout {
+    padding-block: 58px 92px;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(2.8rem, 15vw, 4.4rem);
+  }
+
+  .hero-message {
+    font-size: 0.98rem;
+  }
+
+  .hero-emphasis {
+    padding: 15px;
+  }
+
+  .hero-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .button {
+    width: 100%;
+  }
+
+  .hero-visual {
+    min-height: 310px;
+  }
+
+  .welcome-card {
+    max-width: 270px;
+    border-width: 8px;
+  }
+
+  .welcome-card-heart,
+  .welcome-card-book,
+  .welcome-card-chat {
+    width: 55px;
+    height: 55px;
+    border-width: 4px;
+    border-radius: 17px;
+    font-size: 1.6rem;
+  }
+
+  .quick-navigation {
+    margin-top: -32px;
+  }
+
+  .quick-navigation-grid {
+    grid-template-columns: 1fr;
+    gap: 11px;
+  }
+
+  .quick-link {
+    min-height: 82px;
+    padding: 15px;
+  }
+
+  .quick-link-icon {
+    width: 47px;
+    height: 47px;
+  }
+
+  .page-section {
+    padding-block: 78px;
+  }
+
+  .section-heading {
+    margin-bottom: 32px;
+  }
+
+  .section-heading h2,
+  .daily-guide-layout h2,
+  .support-card h2 {
+    font-size: clamp(2rem, 10vw, 2.8rem);
+  }
+
+  .service-card {
+    padding: 21px;
+  }
+
+  .service-card-header {
+    align-items: flex-start;
+  }
+
+  .service-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    font-size: 1.72rem;
+  }
+
+  .schedule-row,
+  .single-schedule {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .schedule-row time,
+  .single-schedule strong {
+    white-space: normal;
+  }
+
+  .wifi-box {
+    grid-template-columns: 1fr;
+  }
+
+  .daily-guide-card {
+    padding: 24px;
+  }
+
+  .daily-guide-card p {
+    font-size: 0.97rem;
+    line-height: 1.8;
+  }
+
+  .dictionary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .word-card {
+    min-height: 128px;
+  }
+
+  .category-buttons {
+    flex-wrap: nowrap;
+    padding-bottom: 8px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .category-button {
+    flex-shrink: 0;
+  }
+
+  .support-section {
+    padding-bottom: 78px;
+  }
+
+  .support-card {
+    padding: 27px 22px;
+    gap: 20px;
+  }
+
+  .support-icon {
+    width: 73px;
+    height: 73px;
+    border-radius: 22px;
+    font-size: 2.4rem;
+  }
+
+  .site-footer {
+    padding-top: 48px;
+  }
+
+  .footer-bottom {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .footer-bottom p:last-child {
+    text-align: start;
+  }
+}
+
+/* =========================================================
+   Πολύ μικρές οθόνες
+   ========================================================= */
+
+@media (max-width: 390px) {
+  .language-button {
+    font-size: 0.7rem;
+  }
+
+  .language-button span {
+    display: none;
+  }
+
+  .hero-content h1 {
+    font-size: 2.65rem;
+  }
+
+  .welcome-card {
+    max-width: 240px;
+  }
+
+  .service-card {
+    padding: 19px;
+  }
+}
+
+/* =========================================================
+   Περιορισμένη κίνηση
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .welcome-card {
+    animation: none;
+  }
+}
+
+/* =========================================================
+   Εκτύπωση
+   ========================================================= */
+
+@media print {
+  .site-header,
+  .quick-navigation,
+  .hero-actions,
+  .dictionary-search,
+  .category-buttons,
+  .site-footer {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  .hero-section,
+  .daily-guide-section,
+  .dictionary-section,
+  .support-section {
+    background: white;
+  }
+
+  .hero-section {
+    min-height: auto;
+  }
+
+  .hero-layout,
+  .page-section {
+    padding-block: 25px;
+  }
+
+  .hero-visual {
+    display: none;
+  }
+
+  .service-grid,
+  .dictionary-grid,
+  .education-grid {
+    display: block;
+  }
+
+  .service-card,
+  .word-card,
+  .education-card,
+  .daily-guide-card,
+  .support-card {
+    margin-bottom: 14px;
+    break-inside: avoid;
+    box-shadow: none;
+  }
+}
