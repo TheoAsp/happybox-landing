@@ -1,696 +1,999 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>MyHappyBox | Εργαλειοθήκη Φιλοσοφικού Στοχασμού</title>
-  <meta name="description" content="MyHappyBox — Εργαλειοθήκη φιλοσοφικού στοχασμού για χαρούμενη ζωή. Ανώνυμη, γραπτή φιλοσοφική καθοδήγηση για επιλογές ζωής." />
+  <title>MyHappy Box</title>
 
   <style>
-    :root{
-      --bg1: #fff7ef;
-      --bg2: #f3fbff;
-      --card: rgba(255,255,255,0.88);
-      --text: rgba(12,18,28,0.92);
-      --muted: rgba(12,18,28,0.70);
-      --muted2: rgba(12,18,28,0.55);
-      --border: rgba(12,18,28,0.12);
-
-      --accent: #2bb3a0;
-      --accent2:#ffb84d;
-      --accent3:#7a8cff;
-
-      --ok: #2bb3a0;
-
-      --radius: 18px;
-      --shadow: 0 18px 40px rgba(12,18,28,0.10);
-      --maxw: 1040px;
+    * {
+      box-sizing: border-box;
     }
 
-    *{ box-sizing: border-box; }
-    html, body{ height: 100%; }
-    body{
+    html {
+      scroll-behavior: smooth;
+    }
+
+    :root {
+      --dark-blue: #263750;
+      --cream: #fffaf2;
+      --white: #ffffff;
+      --yellow: #ffd66b;
+      --orange: #ff9c72;
+      --pink: #ed7fa6;
+      --blue: #62a2e8;
+      --green: #58b894;
+      --purple: #9b7bd4;
+      --shadow: 0 15px 35px rgba(38, 55, 80, 0.14);
+    }
+
+    body {
       margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: var(--cream);
+      color: var(--dark-blue);
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    body[dir="rtl"] {
+      direction: rtl;
+      text-align: right;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    .hero {
+      min-height: 78vh;
+      padding: 24px 6% 70px;
       background:
-        radial-gradient(900px 600px at 12% 8%, rgba(43,179,160,0.18), transparent 60%),
-        radial-gradient(900px 600px at 88% 12%, rgba(255,184,77,0.18), transparent 60%),
-        radial-gradient(900px 700px at 50% 95%, rgba(122,140,255,0.14), transparent 60%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
-      color: var(--text);
-      line-height: 1.55;
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.4), transparent 18%),
+        radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.3), transparent 20%),
+        linear-gradient(135deg, var(--yellow), var(--orange), var(--pink));
     }
 
-    a{ color: inherit; text-decoration: none; }
-    .wrap{ max-width: var(--maxw); margin: 0 auto; padding: 28px 18px 60px; }
-
-    header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 14px;
-      padding: 14px 0 18px;
-    }
-    .brand{
-      display:flex; align-items:center; gap: 10px;
-      font-weight: 850;
-      letter-spacing: 0.2px;
-    }
-    .logo{
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      box-shadow: 0 10px 20px rgba(12,18,28,0.08);
-      object-fit: cover;
-      background: rgba(255,255,255,0.75);
+    .topbar {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
     }
 
-    nav{
-      display:flex; gap: 12px; flex-wrap: wrap;
-      color: var(--muted);
-      font-size: 14px;
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.3rem;
+      font-weight: 800;
     }
-    nav a{
-      padding: 8px 10px;
-      border-radius: 12px;
-      border: 1px solid transparent;
-    }
-    nav a:hover{ border-color: var(--border); background: rgba(255,255,255,0.55); }
 
-    .card{
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.75);
       box-shadow: var(--shadow);
-      overflow: hidden;
+      font-size: 1.7rem;
     }
 
-    .hero{
-      margin-top: 10px;
-      display:grid;
+    .language-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .language-button {
+      border: 0;
+      padding: 9px 15px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.65);
+      color: var(--dark-blue);
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .language-button:hover,
+    .language-button.active {
+      background: var(--dark-blue);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .hero-content {
+      max-width: 1200px;
+      margin: 85px auto 0;
+      display: grid;
       grid-template-columns: 1.25fr 0.75fr;
-      gap: 18px;
-      align-items: stretch;
-    }
-    @media (max-width: 900px){
-      .hero{ grid-template-columns: 1fr; }
+      gap: 50px;
+      align-items: center;
     }
 
-    .hero-main{
-      position: relative;
-      min-height: 440px;
+    .small-title {
+      margin: 0 0 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.82rem;
+      font-weight: 800;
     }
-    .hero-photo{
-      position:absolute; inset:0;
-      width:100%; height:100%;
-      object-fit: cover;
-      filter: saturate(1.08) contrast(1.03);
-      transform: scale(1.02);
+
+    h1 {
+      margin: 0;
+      font-size: clamp(3rem, 7vw, 6rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
     }
-    .hero-overlay{
-      position:absolute; inset:0;
-      background:
-        linear-gradient(90deg, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.74) 50%, rgba(255,255,255,0.56) 100%);
+
+    .intro {
+      max-width: 780px;
+      margin: 25px 0 32px;
+      font-size: clamp(1.05rem, 2vw, 1.3rem);
     }
-    @media (max-width: 900px){
-      .hero-overlay{
-        background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.80) 55%, rgba(255,255,255,0.62) 100%);
+
+    .main-button {
+      display: inline-block;
+      padding: 14px 22px;
+      border-radius: 14px;
+      background: var(--dark-blue);
+      color: white;
+      text-decoration: none;
+      font-weight: 800;
+      box-shadow: var(--shadow);
+    }
+
+    .gift {
+      text-align: center;
+      font-size: clamp(9rem, 18vw, 15rem);
+      filter: drop-shadow(0 20px 25px rgba(38, 55, 80, 0.18));
+      animation: floating 3.2s ease-in-out infinite;
+    }
+
+    @keyframes floating {
+      0%,
+      100% {
+        transform: translateY(0) rotate(-2deg);
+      }
+
+      50% {
+        transform: translateY(-15px) rotate(3deg);
       }
     }
 
-    .hero-content{
-      position: relative;
-      padding: 28px;
-      max-width: 76ch;
+    main {
+      max-width: 1200px;
+      margin: auto;
+      padding: 80px 22px;
     }
-    .kicker{
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-      font-weight: 800;
+
+    .section-title {
+      max-width: 720px;
+      margin-bottom: 35px;
     }
-    h1{
-      margin: 0 0 10px 0;
-      font-size: clamp(28px, 4vw, 44px);
-      line-height: 1.12;
+
+    .section-title h2 {
+      margin: 0;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      line-height: 1.1;
     }
-    .sub{
-      color: var(--muted);
-      font-size: 16px;
-      margin: 0 0 18px 0;
-      max-width: 70ch;
+
+    .section-title p {
+      color: #5a687d;
     }
-    .pillrow{
-      display:flex; flex-wrap: wrap; gap: 10px;
-      margin: 16px 0 18px;
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
     }
-    .pill{
-      font-size: 13px;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.65);
-      padding: 8px 10px;
-      border-radius: 999px;
+
+    .card {
+      padding: 25px;
+      border-radius: 24px;
+      background: white;
+      border-top: 7px solid;
+      box-shadow: var(--shadow);
+      transition: 0.2s;
     }
-    .cta-row{ display:flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.72);
-      color: var(--text);
-      font-weight: 900;
-      cursor: pointer;
-      transition: transform .08s ease, background .15s ease, border-color .15s ease;
+
+    .card:hover {
+      transform: translateY(-5px);
     }
-    .btn:hover{ background: rgba(255,255,255,0.92); border-color: rgba(12,18,28,0.18); }
-    .btn:active{ transform: translateY(1px); }
-    .btn.primary{
-      border-color: rgba(43,179,160,0.30);
-      background: linear-gradient(145deg, rgba(43,179,160,0.28), rgba(255,184,77,0.22));
+
+    .card h3 {
+      margin: 12px 0 8px;
+      font-size: 1.35rem;
     }
-    .fineprint{
+
+    .card p {
+      margin: 8px 0;
+      color: #4d5d72;
+    }
+
+    .card ul {
+      margin: 12px 0 0;
+      padding-inline-start: 20px;
+      color: #4d5d72;
+    }
+
+    .card-icon {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 17px;
+      font-size: 2rem;
+      background: #f4f6fa;
+    }
+
+    .card-kitchen {
+      border-color: #ff776a;
+    }
+
+    .card-social {
+      border-color: var(--blue);
+    }
+
+    .card-teachers {
+      border-color: #f4bd41;
+    }
+
+    .card-wifi {
+      border-color: var(--green);
+    }
+
+    .card-health {
+      border-color: var(--purple);
+    }
+
+    .card-laundry {
+      border-color: var(--pink);
+    }
+
+    .card-activities {
+      border-color: #43aeb0;
+    }
+
+    .card-life {
+      border-color: #ef9757;
+    }
+
+    .wifi-information {
+      margin-top: 15px;
+      padding: 13px;
+      border-radius: 13px;
+      background: #eefaf6;
+    }
+
+    .wifi-information p {
+      margin: 4px 0;
+    }
+
+    .warning {
       margin-top: 12px;
-      color: var(--muted2);
-      font-size: 12.5px;
+      font-size: 0.85rem;
+      color: #8b4e30;
     }
 
-    .hero-side{ display:flex; flex-direction:column; }
-    .side-photo{
-      width:100%;
-      height: 160px;
-      object-fit: cover;
-      filter: saturate(1.08) contrast(1.02);
-    }
-    .hero-side-inner{
-      padding: 18px;
-      display:flex;
-      flex-direction:column;
-      gap: 12px;
-    }
-    .side-title{ font-weight: 900; }
-    .side-list{ margin: 0; padding-left: 18px; color: var(--muted); }
-    .badge{
-      display:flex; align-items:center; gap: 8px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.65);
-      color: var(--muted);
-      font-size: 13px;
-    }
-    .dot{
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--ok);
-      box-shadow: 0 0 0 4px rgba(43,179,160,0.14);
+    .help {
+      margin-top: 55px;
+      padding: 35px;
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, #d9f5ee, #dfefff);
     }
 
-    section{ margin-top: 18px; }
-    .section-pad{ padding: 22px; }
-
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-    @media (max-width: 900px){ .grid{ grid-template-columns: 1fr; } }
-
-    .box{
-      padding: 18px;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.70);
-    }
-    .box h3{ margin: 0 0 8px 0; font-size: 16px; }
-    .box p{ margin: 0; color: var(--muted); font-size: 14.5px; }
-
-    .divider{
-      height: 1px;
-      background: rgba(12,18,28,0.10);
-      margin: 16px 0;
+    .help-icon {
+      font-size: 4rem;
     }
 
-    .about{
-      display:grid;
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: 14px;
-      align-items: stretch;
-    }
-    @media (max-width: 900px){
-      .about{ grid-template-columns: 1fr; }
-    }
-    .about-photo{
-      width: 100%;
-      height: 260px;
-      object-fit: cover;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      filter: saturate(1.08) contrast(1.02);
-    }
-    .about-text{
-      padding: 18px;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.70);
-    }
-    .about-text ul{
-      margin: 10px 0 0;
-      padding-left: 18px;
-      color: var(--muted);
+    .help h2 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3rem);
     }
 
-    .pricing{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-    @media (max-width: 900px){ .pricing{ grid-template-columns: 1fr; } }
-
-    .price-card{ padding: 18px; box-shadow:none; }
-    .price-name{ font-weight: 950; }
-    .price{
-      margin-top: 8px;
-      font-size: 26px;
-      font-weight: 950;
-      letter-spacing: -0.02em;
-    }
-    .price small{ font-size: 14px; color: var(--muted); font-weight: 900; }
-    .price-desc{ margin-top: 8px; color: var(--muted); font-size: 14.5px; }
-    .price-ul{ margin: 12px 0 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
-    .price-card.featured{
-      background: linear-gradient(145deg, rgba(43,179,160,0.16), rgba(255,184,77,0.18));
-      border-color: rgba(43,179,160,0.22);
+    footer {
+      padding: 30px 20px;
+      text-align: center;
+      background: var(--dark-blue);
+      color: white;
     }
 
-    .form{
-      padding: 18px;
-      display:grid;
-      gap: 12px;
-    }
-    label{ font-size: 13px; color: var(--muted); display:block; margin-bottom: 6px; font-weight: 850; }
-    input, textarea, select{
-      width: 100%;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(12,18,28,0.14);
-      background: rgba(255,255,255,0.85);
-      color: var(--text);
-      outline: none;
-    }
-    textarea{ min-height: 120px; resize: vertical; }
-    input:focus, textarea:focus, select:focus{
-      border-color: rgba(43,179,160,0.36);
-      box-shadow: 0 0 0 4px rgba(43,179,160,0.12);
+    footer p {
+      margin: 5px 0;
     }
 
-    /* NEW: Contact mini-cards */
-    .contact-cards{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-    .contact-card{
-      display:inline-flex;
-      align-items:center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.70);
-      color: var(--muted);
-      font-size: 13.5px;
-      font-weight: 850;
-    }
-    .contact-card:hover{
-      background: rgba(255,255,255,0.92);
-      border-color: rgba(12,18,28,0.18);
-    }
-    .icon{
-      width: 18px;
-      height: 18px;
-      display:block;
+    footer small {
+      opacity: 0.75;
     }
 
-    .footer{
-      margin-top: 22px;
-      color: var(--muted2);
-      font-size: 12.5px;
-      display:flex;
-      justify-content:space-between;
-      gap: 12px;
-      flex-wrap: wrap;
+    @media (max-width: 800px) {
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero-content {
+        grid-template-columns: 1fr;
+        margin-top: 55px;
+      }
+
+      .gift {
+        font-size: 9rem;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .help {
+        align-items: flex-start;
+      }
     }
-    .tiny a{ text-decoration: underline; text-decoration-color: rgba(12,18,28,0.20); }
-    .credits{ color: var(--muted2); }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .gift {
+        animation: none;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
 
-    <!-- HEADER -->
-    <header>
-      <div class="brand">
-        <!-- Logo: public/photos/logo.png -->
-        <!-- Χρησιμοποιούμε σχετικό path + fallback για GitHub Pages subpath -->
-        <img
-          class="logo"
-          src="photos/logo.png"
-          alt="MyHappyBox logo"
-          loading="eager"
-          onerror="(function(img){var tries=['/photos/logo.png','/happybox-landing/photos/logo.png','public/photos/logo.png'];for(var i=0;i<tries.length;i++){if(img.src.indexOf(tries[i])===-1){img.src=tries[i];return;}}})(this)"
-        />
-        <div>MyHappyBox</div>
+  <header class="hero">
+
+    <nav class="topbar">
+
+      <div class="logo">
+        <span class="logo-icon">🎁</span>
+        <span>MyHappy Box</span>
       </div>
 
-      <nav aria-label="Πλοήγηση">
-        <a href="#πώς">Πώς λειτουργεί</a>
-        <a href="#υπόβαθρο">Υπόβαθρο</a>
-        <a href="#πακέτα">Τιμές</a>
-        <a href="#συχνές">FAQ</a>
-        <a href="#επικοινωνία">Αίτημα</a>
-      </nav>
-    </header>
+      <div class="language-buttons">
 
-    <!-- HERO -->
-    <div class="hero">
-      <div class="card hero-main">
-        <img
-          class="hero-photo"
-          src="https://commons.wikimedia.org/wiki/Special:FilePath/Wing_with_morning_sunrise_sky.jpg"
-          alt="Φωτεινός ουρανός με πρωινό φως"
-          loading="lazy"
-        />
-        <div class="hero-overlay" aria-hidden="true"></div>
+        <button
+          class="language-button active"
+          data-language="el"
+          type="button">
+          Ελληνικά
+        </button>
 
-        <div class="hero-content">
-          <div class="kicker">Εργαλειοθήκη • Στοχασμός • Πράξη</div>
+        <button
+          class="language-button"
+          data-language="ar"
+          type="button">
+          العربية
+        </button>
 
-          <!-- UPDATED (μόνο εδώ) -->
-          <h1>Μετέτρεψε τη σύγχυση σε καθαρή σκέψη.</h1>
-          <p class="sub">
-            Γραπτή φιλοσοφική καθοδήγηση για διλήμματα και υπερανάλυση — αξίες, επιλογές, συνέπειες, επόμενο βήμα.
-          </p>
-          <div class="fineprint" style="margin:-8px 0 18px 0;">
-            Παραλαμβάνεις γραπτή ανάλυση με πλαίσιο απόφασης και follow-up.
-          </div>
-          <!-- /UPDATED -->
+        <button
+          class="language-button"
+          data-language="bn"
+          type="button">
+          বাংলা
+        </button>
 
-          <div class="pillrow" role="list">
-            <div class="pill" role="listitem">Χωρίς κάμερα</div>
-            <div class="pill" role="listitem">Χωρίς πραγματικό όνομα</div>
-            <div class="pill" role="listitem">Απολύτως ανώνυμο αίτημα</div>
-            <div class="pill" role="listitem">Εργαλεία στοχασμού</div>
-          </div>
-
-          <div class="cta-row">
-            <a class="btn primary" href="#επικοινωνία">Ζήτησε καθοδήγηση</a>
-            <a class="btn" href="#πώς">Δες τη διαδικασία</a>
-          </div>
-
-          <div class="fineprint">
-            Σημαντικό: Δεν παρέχεται ψυχοθεραπεία, διάγνωση ή αντιμετώπιση κλινικών ζητημάτων.
-            Αν βρίσκεσαι σε κίνδυνο ή έντονη κρίση, απευθύνσου σε επαγγελματία ψυχικής υγείας ή στις αρμόδιες υπηρεσίες.
-          </div>
-        </div>
       </div>
 
-      <div class="card hero-side">
-        <img
-          class="side-photo"
-          src="https://commons.wikimedia.org/wiki/Special:FilePath/Open_book_1_(Unsplash).jpg"
-          alt="Ανοιχτό βιβλίο σε ζεστό φως"
-          loading="lazy"
-        />
+    </nav>
 
-        <div class="hero-side-inner">
-          <div class="side-title">Τι θα λάβεις</div>
-          <div class="badge"><span class="dot" aria-hidden="true"></span> Γραπτή ανάλυση 2–3 σελίδων</div>
-          <div class="badge"><span class="dot" aria-hidden="true"></span> Πλαίσιο απόφασης + ερωτήματα</div>
-          <div class="badge"><span class="dot" aria-hidden="true"></span> 1 follow-up διευκρίνισης</div>
+    <section class="hero-content">
 
-          <div class="divider"></div>
+      <div>
 
-          <div class="side-title">Θεματικές που ταιριάζουν</div>
-          <ul class="side-list">
-            <li>καριέρα / αλλαγή πορείας</li>
-            <li>ηθικά διλήμματα</li>
-            <li>νόημα / προτεραιότητες</li>
-            <li>υπερανάλυση / σύγχυση / νοητική κόπωση</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- ΠΩΣ ΛΕΙΤΟΥΡΓΕΙ -->
-    <section id="πώς" class="card section-pad">
-      <h2 style="margin:0 0 10px 0;">Πώς λειτουργεί</h2>
-      <p style="margin:0 0 14px 0; color: var(--muted);">
-        Στόχος: να μετατρέψουμε ένα “μπερδεμένο” ζήτημα σε καθαρή δομή:
-        <strong>τι συμβαίνει → τι μετράει (αξίες) → ποιες επιλογές υπάρχουν → ποιες συνέπειες → ποια πράξη</strong>.
-      </p>
-
-      <div class="grid">
-        <div class="box">
-          <h3>1) Ανώνυμο αίτημα</h3>
-          <p>Συμπληρώνεις φόρμα με το ζήτημά σου (χωρίς προσωπικά στοιχεία αν δεν θέλεις).</p>
-        </div>
-
-        <div class="box">
-          <h3>2) Ανάλυση</h3>
-          <p>Λαμβάνεις γραπτώς αποσαφήνιση, φιλοσοφικό πλαίσιο και ερωτήματα στοχασμού.</p>
-        </div>
-
-        <div class="box">
-          <h3>3) Follow-up</h3>
-          <p>Ένα επιπλέον γραπτό μήνυμα για διευκρίνιση, ώστε να γίνει πιο σταθερή η επιλογή σου.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ΥΠΟΒΑΘΡΟ -->
-    <section id="υπόβαθρο" class="card section-pad">
-      <h2 style="margin:0 0 10px 0;">Υπόβαθρο</h2>
-      <p style="margin:0 0 14px 0; color: var(--muted);">
-        Η προσέγγιση είναι ανθρωπιστική, φιλολογική και στοχαστική, με έμφαση στη σαφήνεια, την ευθύνη και την αξιοπρέπεια.
-      </p>
-
-      <div class="about">
-        <div>
-          <img
-            class="about-photo"
-            src="https://commons.wikimedia.org/wiki/Special:FilePath/Desk-laptop-notebook-pen_(23958719819).jpg"
-            alt="Γραφείο με σημειωματάριο και στυλό"
-            loading="lazy"
-          />
-        </div>
-
-        <div class="about-text">
-          <div style="font-weight:950; font-size:16px;">Σύντομη παρουσίαση (χωρίς έκθεση)</div>
-          <ul>
-            <li><strong>Φιλόλογος</strong> με ακαδημαϊκό υπόβαθρο στις ανθρωπιστικές επιστήμες.</li>
-            <li><strong>Μεταπτυχιακή κατάρτιση</strong> στον φιλοσοφικό στοχασμό και στη μεθοδολογία του αναστοχασμού.</li>
-            <li><strong>Εμπειρία</strong> σε ανθρωπιστικό πλαίσιο με <strong>ευάλωτους πληθυσμούς</strong>, με εχεμύθεια και σεβασμό.</li>
-          </ul>
-          <div class="fineprint" style="margin-top:12px;">
-            Για λόγους ιδιωτικότητας, η υπηρεσία παρέχεται χωρίς δημόσια έκθεση προσωπικών στοιχείων.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ΤΙΜΕΣ / ΠΑΚΕΤΑ -->
-    <section id="πακέτα" class="card section-pad">
-      <h2 style="margin:0 0 10px 0;">Τιμές παροχής υπηρεσιών</h2>
-
-      <div class="pricing">
-        <!-- 1 -->
-        <div class="card price-card">
-          <div class="price-name">Μία Ανάλυση</div>
-          <div class="price">Δωρεάν <small>/ υπόθεση</small></div>
-          <div class="price-desc">Δοκίμασε την αξία της υπηρεσίας με 1 πλήρη ανάλυση.</div>
-          <ul class="price-ul">
-            <li>ανάλυση 2–3 σελίδων</li>
-            <li>πλαίσιο απόφασης</li>
-            <li>1 follow-up</li>
-          </ul>
-        </div>
-
-        <!-- 2 -->
-        <div class="card price-card featured">
-          <div class="price-name">Τρίπτυχο Απόφασης</div>
-          <div class="price">10€ <small>/ μήνα</small></div>
-          <div class="price-desc">Για σύνθετες αποφάσεις σε 3 βήματα.</div>
-          <ul class="price-ul">
-            <li>3 αναλύσεις (διαδοχικές)</li>
-            <li>σύνδεση επιλογών & συνεπειών</li>
-            <li>2 follow-ups συνολικά</li>
-          </ul>
-          <div class="fineprint" style="margin-top:10px;">
-            Παρέχεται το εκπαιδευτικό υλικό για προσωπική χρήση.
-          </div>
-        </div>
-
-        <!-- 3 -->
-        <div class="card price-card">
-          <div class="price-name">Μηνιαία Καθοδήγηση</div>
-          <div class="price">30€ <small>/ μήνα</small></div>
-          <div class="price-desc">Συνεχής γραπτός διάλογος, αναστοχασμός και εμβάθυνση.</div>
-          <ul class="price-ul">
-            <li>έως 4 “κύκλοι” ανάλυσης</li>
-            <li>πρόοδος & αναθεώρηση</li>
-            <li>πλαίσιο πειθαρχίας/πράξης</li>
-            <li>Εξερεύνηση φιλοσοφικών ρευμάτων (π.χ. Στωικοί, Επικούρειοι, Πλάτωνας, Αριστοτέλης αναλογικά της εκάστοτε περίπτωσης) και συνοδευτικό υλικό τεκμηρίωσης (αποσπάσματα/σημεία αναφοράς).</li>
-            <li>Επίσης προσφέρεται και εξατομικευμένο υλικό για πιο προσεκτική δουλειά.</li>
-          </ul>
-          <div class="fineprint" style="margin-top:10px;">
-            <strong>ΠΡΟΣΟΧΗ:</strong> Το υλικό παρέχεται εκπαιδευτικά/μελετητικά για προσωπική χρήση και δεν υποκαθιστά θεραπευτική ή ιατρική καθοδήγηση.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ΣΥΧΝΕΣ ΕΡΩΤΗΣΕΙΣ -->
-    <section id="συχνές" class="card section-pad">
-      <h2 style="margin:0 0 10px 0;">Συχνές ερωτήσεις</h2>
-
-      <div class="grid">
-        <div class="box">
-          <h3>Είναι ψυχοθεραπεία;</h3>
-          <p>Όχι. Είναι φιλοσοφική αποσαφήνιση: αξίες, επιλογές, ευθύνη, νόημα, συνέπεια σκέψης και πράξης.</p>
-        </div>
-
-        <div class="box">
-          <h3>Πρέπει να δώσω στοιχεία;</h3>
-          <p>Όχι. Μπορείς να χρησιμοποιήσεις ψευδώνυμο και email μόνο για να λάβεις απάντηση.</p>
-        </div>
-
-        <div class="box">
-          <h3>Τι είδους θέματα δεν αναλαμβάνονται;</h3>
-          <p>Κρίσεις υψηλού κινδύνου, κλινικά ζητήματα, επείγοντα περιστατικά. Εκεί χρειάζονται ειδικοί/υπηρεσίες.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ΕΠΙΚΟΙΝΩΝΙΑ -->
-    <section id="επικοινωνία" class="card">
-      <div class="form">
-        <h2 style="margin:0;">Ανώνυμο αίτημα καθοδήγησης</h2>
-        <p style="margin:0; color: var(--muted);">
-          Συμπλήρωσε τα παρακάτω. Με το “Αποστολή” θα ανοίξει το email σου έτοιμο (χωρίς να αποθηκεύεται κάτι στο site).
+        <p
+          class="small-title"
+          data-translate="welcome">
+          Καλώς ήρθατε
         </p>
 
-        <!-- NEW: Contact details (email + instagram) -->
-        <div class="contact-cards" aria-label="Στοιχεία επικοινωνίας">
-          <a class="contact-card" href="mailto:contact@myhappybox.gr">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v9A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5v-9Z" stroke="currentColor" stroke-width="1.8"/>
-              <path d="m6 8 6 4 6-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            contact@myhappybox.gr
-          </a>
+        <h1 data-translate="title">
+          Το χαρούμενο κουτί σας
+        </h1>
 
-          <a class="contact-card" href="https://www.instagram.com/myhappybox_philosophy/?hl=en" target="_blank" rel="noopener noreferrer">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M7.5 3h9A4.5 4.5 0 0 1 21 7.5v9A4.5 4.5 0 0 1 16.5 21h-9A4.5 4.5 0 0 1 3 16.5v-9A4.5 4.5 0 0 1 7.5 3Z" stroke="currentColor" stroke-width="1.8"/>
-              <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.8"/>
-              <path d="M17.2 6.8h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
-            </svg>
-            @myhappybox_philosophy
-          </a>
-        </div>
+        <p
+          class="intro"
+          data-translate="intro">
+          Το χαρούμενο κουτί σας για χαρούμενη διαμονή
+          στην δομή του Ελληνικού Ερυθρού Σταυρού στα Καλάβρυτα.
+          Μαζί θα μάθουμε και θα περάσουμε ωραίες στιγμές.
+          Γιατί το ταξίδι σας είναι και δικό μας.
+        </p>
 
-        <div>
-          <label for="email">Email για απάντηση (προαιρετικό αλλά προτείνεται)</label>
-          <input id="email" type="email" placeholder="π.χ. name@domain.com" />
-        </div>
+        <a
+          href="#information"
+          class="main-button"
+          data-translate="informationButton">
+          Δείτε τις πληροφορίες
+        </a>
 
-        <div>
-          <label for="topic">Θέμα</label>
-          <select id="topic">
-            <option>Απόφαση καριέρας</option>
-            <option>Ηθικό δίλημμα</option>
-            <option>Νόημα / προτεραιότητες</option>
-            <option>Υπερανάλυση / σύγχυση</option>
-            <option>Άλλο</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="message">Περιγραφή ζητήματος (όσο πιο συγκεκριμένα, τόσο καλύτερα)</label>
-          <textarea id="message" placeholder="Γράψε τι συμβαίνει, ποιες είναι οι επιλογές που βλέπεις και τι σε δυσκολεύει."></textarea>
-        </div>
-
-        <div class="cta-row">
-          <button class="btn primary" type="button" onclick="αποστολήEmail()">Αποστολή</button>
-          <button class="btn" type="button" onclick="καθαρισμός()">Καθαρισμός</button>
-        </div>
-
-        <div class="fineprint">
-          Με την αποστολή συμφωνείς ότι αυτό είναι φιλοσοφική καθοδήγηση και όχι υπηρεσία ψυχικής υγείας.
-        </div>
       </div>
+
+      <div
+        class="gift"
+        aria-hidden="true">
+        🎁
+      </div>
+
     </section>
 
-    <div class="footer">
-      <div class="tiny">© <span id="year"></span> MyHappyBox</div>
+  </header>
 
-      <div class="tiny">
-        <a href="#πώς">Διαδικασία</a> · <a href="#υπόβαθρο">Υπόβαθρο</a> · <a href="#πακέτα">Τιμές</a> · <a href="#συχνές">FAQ</a>
+  <main id="information">
+
+    <section class="section-title">
+
+      <p
+        class="small-title"
+        data-translate="usefulInformation">
+        Χρήσιμες πληροφορίες
+      </p>
+
+      <h2 data-translate="everythingYouNeed">
+        Όλα όσα χρειάζεστε
+      </h2>
+
+      <p data-translate="informationDescription">
+        Εδώ μπορείτε να δείτε ώρες λειτουργίας,
+        υπηρεσίες και χρήσιμες πληροφορίες για την καθημερινή ζωή στη δομή.
+      </p>
+
+    </section>
+
+    <section class="cards">
+
+      <article class="card card-kitchen">
+
+        <div class="card-icon">🍽️</div>
+
+        <h3 data-translate="kitchenTitle">
+          Κουζίνα και γεύματα
+        </h3>
+
+        <p>
+          <strong data-translate="breakfast">Πρωινό:</strong>
+          08:00–09:00
+        </p>
+
+        <p>
+          <strong data-translate="lunch">Μεσημεριανό:</strong>
+          13:30–14:30
+        </p>
+
+        <p>
+          <strong data-translate="dinner">Βραδινό:</strong>
+          19:30–20:30
+        </p>
+
+      </article>
+
+      <article class="card card-social">
+
+        <div class="card-icon">🤝</div>
+
+        <h3 data-translate="socialServiceTitle">
+          Γραφείο Κοινωνικής Υπηρεσίας
+        </h3>
+
+        <p data-translate="socialServiceText">
+          Υποστήριξη για προσωπικά, κοινωνικά και διοικητικά θέματα.
+        </p>
+
+        <p>
+          <strong data-translate="mondayFriday">
+            Δευτέρα έως Παρασκευή:
+          </strong>
+
+          09:00–15:00
+        </p>
+
+        <p>
+          <strong data-translate="appointments">
+            Ραντεβού:
+          </strong>
+
+          <span data-translate="askStaff">
+            Ρωτήστε το προσωπικό
+          </span>
+        </p>
+
+      </article>
+
+      <article class="card card-teachers">
+
+        <div class="card-icon">📚</div>
+
+        <h3 data-translate="teachersTitle">
+          Γραφείο Εκπαιδευτικών
+        </h3>
+
+        <p data-translate="teachersText">
+          Πληροφορίες για σχολείο, μαθήματα,
+          μελέτη και εκπαιδευτικές δραστηριότητες.
+        </p>
+
+        <p>
+          <strong data-translate="mondayFriday">
+            Δευτέρα έως Παρασκευή:
+          </strong>
+
+          09:00–17:00
+        </p>
+
+        <p>
+          <strong data-translate="studySupport">
+            Υποστήριξη μελέτης:
+          </strong>
+
+          16:00–18:00
+        </p>
+
+      </article>
+
+      <article class="card card-wifi">
+
+        <div class="card-icon">📶</div>
+
+        <h3>Wi-Fi</h3>
+
+        <p data-translate="wifiText">
+          Συνδεθείτε στο ασύρματο δίκτυο της δομής.
+        </p>
+
+        <div class="wifi-information">
+
+          <p>
+            <strong data-translate="network">
+              Όνομα δικτύου:
+            </strong>
+
+            MYHAPPYBOX
+          </p>
+
+          <p>
+            <strong data-translate="password">
+              Κωδικός:
+            </strong>
+
+            ΣΥΜΠΛΗΡΩΣΤΕ ΕΔΩ
+          </p>
+
+        </div>
+
+        <p
+          class="warning"
+          data-translate="wifiWarning">
+          Για λόγους ασφάλειας, μην ανεβάσετε τον πραγματικό κωδικό
+          Wi-Fi σε δημόσιο GitHub.
+        </p>
+
+      </article>
+
+      <article class="card card-health">
+
+        <div class="card-icon">🩺</div>
+
+        <h3 data-translate="healthTitle">
+          Υγεία και φροντίδα
+        </h3>
+
+        <p data-translate="healthText">
+          Για ιατρική βοήθεια, φάρμακα ή κάποιο πρόβλημα υγείας,
+          απευθυνθείτε στο προσωπικό της δομής.
+        </p>
+
+        <p>
+          <strong data-translate="officeHours">
+            Ώρες γραφείου:
+          </strong>
+
+          09:00–15:00
+        </p>
+
+        <p>
+          <strong data-translate="emergency">
+            Επείγον περιστατικό:
+          </strong>
+
+          <span data-translate="contactStaff">
+            Επικοινωνήστε αμέσως με το προσωπικό.
+          </span>
+        </p>
+
+      </article>
+
+      <article class="card card-laundry">
+
+        <div class="card-icon">🧺</div>
+
+        <h3 data-translate="laundryTitle">
+          Πλυντήρια
+        </h3>
+
+        <p data-translate="laundryText">
+          Χρησιμοποιείτε τα πλυντήρια σύμφωνα
+          με το εβδομαδιαίο πρόγραμμα της δομής.
+        </p>
+
+        <p>
+          <strong data-translate="hours">
+            Ώρες:
+          </strong>
+
+          10:00–18:00
+        </p>
+
+        <p>
+          <strong data-translate="schedule">
+            Πρόγραμμα:
+          </strong>
+
+          <span data-translate="noticeBoard">
+            Δείτε τον πίνακα ανακοινώσεων.
+          </span>
+        </p>
+
+      </article>
+
+      <article class="card card-activities">
+
+        <div class="card-icon">⚽</div>
+
+        <h3 data-translate="activitiesTitle">
+          Δραστηριότητες
+        </h3>
+
+        <p data-translate="activitiesText">
+          Αθλητισμός, δημιουργική απασχόληση,
+          εκδρομές, παιχνίδια και ομαδικές δράσεις.
+        </p>
+
+        <p>
+          <strong data-translate="dailyProgram">
+            Καθημερινό πρόγραμμα:
+          </strong>
+
+          17:00–19:00
+        </p>
+
+        <p>
+          <strong data-translate="details">
+            Λεπτομέρειες:
+          </strong>
+
+          <span data-translate="noticeBoard">
+            Δείτε τον πίνακα ανακοινώσεων.
+          </span>
+        </p>
+
+      </article>
+
+      <article class="card card-life">
+
+        <div class="card-icon">🏠</div>
+
+        <h3 data-translate="dailyLifeTitle">
+          Καθημερινή ζωή στη δομή
+        </h3>
+
+        <p data-translate="dailyLifeText">
+          Σεβόμαστε ο ένας τον άλλον
+          και φροντίζουμε τους κοινόχρηστους χώρους.
+        </p>
+
+        <ul>
+
+          <li data-translate="quietHours">
+            Ώρες κοινής ησυχίας: 22:30–07:30
+          </li>
+
+          <li data-translate="cleanAreas">
+            Διατηρούμε καθαρούς τους χώρους.
+          </li>
+
+          <li data-translate="respect">
+            Σεβόμαστε το προσωπικό και τους υπόλοιπους φιλοξενούμενους.
+          </li>
+
+          <li data-translate="askForHelp">
+            Ζητάμε βοήθεια όταν τη χρειαζόμαστε.
+          </li>
+
+        </ul>
+
+      </article>
+
+    </section>
+
+    <section class="help">
+
+      <div class="help-icon">
+        💬
       </div>
 
-      <div class="credits tiny">
-        <a href="mailto:contact@myhappybox.gr">contact@myhappybox.gr</a> ·
-        <a href="https://www.instagram.com/myhappybox_philosophy/?hl=en" target="_blank" rel="noopener noreferrer">Instagram</a>
-        · Εικόνες: CC0 από Wikimedia Commons.
-      </div>
-    </div>
+      <div>
 
-  </div>
+        <p
+          class="small-title"
+          data-translate="weAreHere">
+          Είμαστε εδώ
+        </p>
+
+        <h2 data-translate="needHelp">
+          Χρειάζεστε βοήθεια;
+        </h2>
+
+        <p data-translate="helpText">
+          Μιλήστε με έναν εργαζόμενο της δομής.
+          Δεν χρειάζεται να αντιμετωπίζετε κάποιο πρόβλημα μόνοι σας.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer>
+
+    <p>
+      MyHappy Box ·
+      <span data-translate="footer">
+        Ελληνικός Ερυθρός Σταυρός — Καλάβρυτα
+      </span>
+    </p>
+
+    <small data-translate="disclaimer">
+      Τα ωράρια είναι ενδεικτικά.
+      Προσαρμόστε τα σύμφωνα με το επίσημο πρόγραμμα της δομής.
+    </small>
+
+  </footer>
 
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    const translations = {
 
-    // Email παραλήπτη για τα αιτήματα (και συνεργασίες, αν το επιθυμείς ίδιο inbox)
-    const EMAIL_ΠΑΡΑΛΗΠΤΗ = "contact@myhappybox.gr";
+      el: {
+        welcome: "Καλώς ήρθατε",
+        title: "Το χαρούμενο κουτί σας",
+        intro: "Το χαρούμενο κουτί σας για χαρούμενη διαμονή στην δομή του Ελληνικού Ερυθρού Σταυρού στα Καλάβρυτα. Μαζί θα μάθουμε και θα περάσουμε ωραίες στιγμές. Γιατί το ταξίδι σας είναι και δικό μας.",
+        informationButton: "Δείτε τις πληροφορίες",
+        usefulInformation: "Χρήσιμες πληροφορίες",
+        everythingYouNeed: "Όλα όσα χρειάζεστε",
+        informationDescription: "Εδώ μπορείτε να δείτε ώρες λειτουργίας, υπηρεσίες και χρήσιμες πληροφορίες για την καθημερινή ζωή στη δομή.",
+        kitchenTitle: "Κουζίνα και γεύματα",
+        breakfast: "Πρωινό:",
+        lunch: "Μεσημεριανό:",
+        dinner: "Βραδινό:",
+        socialServiceTitle: "Γραφείο Κοινωνικής Υπηρεσίας",
+        socialServiceText: "Υποστήριξη για προσωπικά, κοινωνικά και διοικητικά θέματα.",
+        mondayFriday: "Δευτέρα έως Παρασκευή:",
+        appointments: "Ραντεβού:",
+        askStaff: "Ρωτήστε το προσωπικό",
+        teachersTitle: "Γραφείο Εκπαιδευτικών",
+        teachersText: "Πληροφορίες για σχολείο, μαθήματα, μελέτη και εκπαιδευτικές δραστηριότητες.",
+        studySupport: "Υποστήριξη μελέτης:",
+        wifiText: "Συνδεθείτε στο ασύρματο δίκτυο της δομής.",
+        network: "Όνομα δικτύου:",
+        password: "Κωδικός:",
+        wifiWarning: "Για λόγους ασφάλειας, μην ανεβάσετε τον πραγματικό κωδικό Wi-Fi σε δημόσιο GitHub.",
+        healthTitle: "Υγεία και φροντίδα",
+        healthText: "Για ιατρική βοήθεια, φάρμακα ή κάποιο πρόβλημα υγείας, απευθυνθείτε στο προσωπικό της δομής.",
+        officeHours: "Ώρες γραφείου:",
+        emergency: "Επείγον περιστατικό:",
+        contactStaff: "Επικοινωνήστε αμέσως με το προσωπικό.",
+        laundryTitle: "Πλυντήρια",
+        laundryText: "Χρησιμοποιείτε τα πλυντήρια σύμφωνα με το εβδομαδιαίο πρόγραμμα της δομής.",
+        hours: "Ώρες:",
+        schedule: "Πρόγραμμα:",
+        noticeBoard: "Δείτε τον πίνακα ανακοινώσεων.",
+        activitiesTitle: "Δραστηριότητες",
+        activitiesText: "Αθλητισμός, δημιουργική απασχόληση, εκδρομές, παιχνίδια και ομαδικές δράσεις.",
+        dailyProgram: "Καθημερινό πρόγραμμα:",
+        details: "Λεπτομέρειες:",
+        dailyLifeTitle: "Καθημερινή ζωή στη δομή",
+        dailyLifeText: "Σεβόμαστε ο ένας τον άλλον και φροντίζουμε τους κοινόχρηστους χώρους.",
+        quietHours: "Ώρες κοινής ησυχίας: 22:30–07:30",
+        cleanAreas: "Διατηρούμε καθαρούς τους χώρους.",
+        respect: "Σεβόμαστε το προσωπικό και τους υπόλοιπους φιλοξενούμενους.",
+        askForHelp: "Ζητάμε βοήθεια όταν τη χρειαζόμαστε.",
+        weAreHere: "Είμαστε εδώ",
+        needHelp: "Χρειάζεστε βοήθεια;",
+        helpText: "Μιλήστε με έναν εργαζόμενο της δομής. Δεν χρειάζεται να αντιμετωπίζετε κάποιο πρόβλημα μόνοι σας.",
+        footer: "Ελληνικός Ερυθρός Σταυρός — Καλάβρυτα",
+        disclaimer: "Τα ωράρια είναι ενδεικτικά. Προσαρμόστε τα σύμφωνα με το επίσημο πρόγραμμα της δομής."
+      },
 
-    function αποστολήEmail(){
-      const email = (document.getElementById("email").value || "").trim();
-      const topic = document.getElementById("topic").value;
-      const msg = (document.getElementById("message").value || "").trim();
+      ar: {
+        welcome: "أهلاً وسهلاً",
+        title: "صندوقكم السعيد",
+        intro: "صندوقكم السعيد لإقامة سعيدة في مركز الصليب الأحمر اليوناني في كالافريتا. سنتعلم معًا ونقضي أوقاتًا جميلة، لأن رحلتكم هي رحلتنا أيضًا.",
+        informationButton: "عرض المعلومات",
+        usefulInformation: "معلومات مفيدة",
+        everythingYouNeed: "كل ما تحتاجون إليه",
+        informationDescription: "هنا يمكنكم الاطلاع على ساعات العمل والخدمات والمعلومات المفيدة للحياة اليومية في المركز.",
+        kitchenTitle: "المطبخ والوجبات",
+        breakfast: "الفطور:",
+        lunch: "الغداء:",
+        dinner: "العشاء:",
+        socialServiceTitle: "مكتب الخدمة الاجتماعية",
+        socialServiceText: "دعم في المسائل الشخصية والاجتماعية والإدارية.",
+        mondayFriday: "الاثنين إلى الجمعة:",
+        appointments: "المواعيد:",
+        askStaff: "اسألوا فريق العمل",
+        teachersTitle: "مكتب المعلّمين",
+        teachersText: "معلومات عن المدرسة والدروس والدراسة والأنشطة التعليمية.",
+        studySupport: "دعم الدراسة:",
+        wifiText: "اتصلوا بشبكة الإنترنت اللاسلكية في المركز.",
+        network: "اسم الشبكة:",
+        password: "كلمة المرور:",
+        wifiWarning: "لأسباب أمنية، لا تضعوا كلمة مرور Wi-Fi الحقيقية في مستودع GitHub عام.",
+        healthTitle: "الصحة والرعاية",
+        healthText: "للمساعدة الطبية أو الأدوية أو أي مشكلة صحية، تحدثوا مع فريق العمل.",
+        officeHours: "ساعات المكتب:",
+        emergency: "حالة طارئة:",
+        contactStaff: "تواصلوا فورًا مع فريق العمل.",
+        laundryTitle: "غسيل الملابس",
+        laundryText: "استخدموا الغسالات وفق البرنامج الأسبوعي للمركز.",
+        hours: "الساعات:",
+        schedule: "البرنامج:",
+        noticeBoard: "راجعوا لوحة الإعلانات.",
+        activitiesTitle: "الأنشطة",
+        activitiesText: "رياضة وأنشطة إبداعية ورحلات وألعاب وأنشطة جماعية.",
+        dailyProgram: "البرنامج اليومي:",
+        details: "التفاصيل:",
+        dailyLifeTitle: "الحياة اليومية في المركز",
+        dailyLifeText: "نحترم بعضنا ونعتني بالأماكن المشتركة.",
+        quietHours: "ساعات الهدوء: 22:30–07:30",
+        cleanAreas: "نحافظ على نظافة الأماكن.",
+        respect: "نحترم فريق العمل وبقية المقيمين.",
+        askForHelp: "نطلب المساعدة عندما نحتاج إليها.",
+        weAreHere: "نحن هنا",
+        needHelp: "هل تحتاجون إلى مساعدة؟",
+        helpText: "تحدثوا مع أحد العاملين في المركز. لستم مضطرين إلى مواجهة أي مشكلة بمفردكم.",
+        footer: "الصليب الأحمر اليوناني — كالافريتا",
+        disclaimer: "الساعات المذكورة إرشادية. عدّلوها وفق البرنامج الرسمي للمركز."
+      },
 
-      if(!msg){
-        alert("Γράψε πρώτα μια σύντομη περιγραφή ζητήματος.");
-        return;
+      bn: {
+        welcome: "স্বাগতম",
+        title: "আপনাদের আনন্দের বাক্স",
+        intro: "কালাভ্রিতায় গ্রিক রেড ক্রসের আশ্রয়কেন্দ্রে আনন্দময় থাকার জন্য এটি আপনাদের আনন্দের বাক্স। আমরা একসঙ্গে শিখব এবং সুন্দর সময় কাটাব, কারণ আপনাদের যাত্রা আমাদেরও যাত্রা।",
+        informationButton: "তথ্য দেখুন",
+        usefulInformation: "প্রয়োজনীয় তথ্য",
+        everythingYouNeed: "আপনার যা যা দরকার",
+        informationDescription: "এখানে আশ্রয়কেন্দ্রের দৈনন্দিন জীবন, সেবা এবং সময়সূচি সম্পর্কে তথ্য পাওয়া যাবে।",
+        kitchenTitle: "রান্নাঘর ও খাবার",
+        breakfast: "সকালের নাশতা:",
+        lunch: "দুপুরের খাবার:",
+        dinner: "রাতের খাবার:",
+        socialServiceTitle: "সমাজসেবা অফিস",
+        socialServiceText: "ব্যক্তিগত, সামাজিক ও প্রশাসনিক বিষয়ে সহায়তা।",
+        mondayFriday: "সোমবার থেকে শুক্রবার:",
+        appointments: "অ্যাপয়েন্টমেন্ট:",
+        askStaff: "কর্মীদের জিজ্ঞাসা করুন",
+        teachersTitle: "শিক্ষকদের অফিস",
+        teachersText: "স্কুল, পাঠ, পড়াশোনা ও শিক্ষামূলক কার্যক্রমের তথ্য।",
+        studySupport: "পড়াশোনার সহায়তা:",
+        wifiText: "আশ্রয়কেন্দ্রের Wi-Fi নেটওয়ার্কে সংযুক্ত হন।",
+        network: "নেটওয়ার্কের নাম:",
+        password: "পাসওয়ার্ড:",
+        wifiWarning: "নিরাপত্তার জন্য পাবলিক GitHub-এ আসল Wi-Fi পাসওয়ার্ড দেবেন না।",
+        healthTitle: "স্বাস্থ্য ও যত্ন",
+        healthText: "চিকিৎসা সহায়তা, ওষুধ বা স্বাস্থ্য সমস্যার জন্য কর্মীদের সঙ্গে কথা বলুন।",
+        officeHours: "অফিসের সময়:",
+        emergency: "জরুরি অবস্থা:",
+        contactStaff: "অবিলম্বে কর্মীদের সঙ্গে যোগাযোগ করুন।",
+        laundryTitle: "কাপড় ধোয়া",
+        laundryText: "সাপ্তাহিক সময়সূচি অনুযায়ী ওয়াশিং মেশিন ব্যবহার করুন।",
+        hours: "সময়:",
+        schedule: "সময়সূচি:",
+        noticeBoard: "নোটিশ বোর্ড দেখুন।",
+        activitiesTitle: "কার্যক্রম",
+        activitiesText: "খেলাধুলা, সৃজনশীল কাজ, ভ্রমণ, খেলা ও দলীয় কার্যক্রম।",
+        dailyProgram: "প্রতিদিনের সময়সূচি:",
+        details: "বিস্তারিত:",
+        dailyLifeTitle: "আশ্রয়কেন্দ্রের দৈনন্দিন জীবন",
+        dailyLifeText: "আমরা একে অন্যকে সম্মান করি এবং সবার ব্যবহারের জায়গাগুলো পরিষ্কার রাখি।",
+        quietHours: "নীরবতার সময়: 22:30–07:30",
+        cleanAreas: "আমরা জায়গাগুলো পরিষ্কার রাখি।",
+        respect: "আমরা কর্মী ও অন্যান্য বাসিন্দাদের সম্মান করি।",
+        askForHelp: "প্রয়োজন হলে আমরা সাহায্য চাই।",
+        weAreHere: "আমরা এখানে আছি",
+        needHelp: "সহায়তা দরকার?",
+        helpText: "আশ্রয়কেন্দ্রের একজন কর্মীর সঙ্গে কথা বলুন। কোনো সমস্যার মুখোমুখি আপনাকে একা হতে হবে না।",
+        footer: "গ্রিক রেড ক্রস — কালাভ্রিতা",
+        disclaimer: "সময়গুলো উদাহরণ হিসেবে দেওয়া হয়েছে। আশ্রয়কেন্দ্রের সরকারি সময়সূচি অনুযায়ী পরিবর্তন করুন।"
       }
 
-      const subject = encodeURIComponent("MyHappyBox — Ανώνυμο αίτημα — " + topic);
-      const bodyLines = [
-        "ΘΕΜΑ: " + topic,
-        "",
-        "EMAIL ΕΠΙΚΟΙΝΩΝΙΑΣ: " + (email ? email : "(δεν δόθηκε)"),
-        "",
-        "ΠΕΡΙΓΡΑΦΗ:",
-        msg,
-        "",
-        "—",
-        "Στάλθηκε από το one-page site (mailto)."
-      ];
-      const body = encodeURIComponent(bodyLines.join("\n"));
-      window.location.href = `mailto:${EMAIL_ΠΑΡΑΛΗΠΤΗ}?subject=${subject}&body=${body}`;
+    };
+
+    const languageButtons =
+      document.querySelectorAll(".language-button");
+
+    const translatedElements =
+      document.querySelectorAll("[data-translate]");
+
+    function changeLanguage(language) {
+
+      document.documentElement.lang = language;
+
+      if (language === "ar") {
+        document.body.setAttribute("dir", "rtl");
+      } else {
+        document.body.setAttribute("dir", "ltr");
+      }
+
+      translatedElements.forEach(function(element) {
+
+        const translationKey =
+          element.getAttribute("data-translate");
+
+        if (
+          translations[language] &&
+          translations[language][translationKey]
+        ) {
+          element.textContent =
+            translations[language][translationKey];
+        }
+
+      });
+
+      languageButtons.forEach(function(button) {
+
+        button.classList.remove("active");
+
+        if (
+          button.getAttribute("data-language") === language
+        ) {
+          button.classList.add("active");
+        }
+
+      });
+
+      localStorage.setItem(
+        "myHappyBoxLanguage",
+        language
+      );
     }
 
-    function καθαρισμός(){
-      document.getElementById("email").value = "";
-      document.getElementById("topic").selectedIndex = 0;
-      document.getElementById("message").value = "";
+    languageButtons.forEach(function(button) {
+
+      button.addEventListener("click", function() {
+
+        const selectedLanguage =
+          button.getAttribute("data-language");
+
+        changeLanguage(selectedLanguage);
+
+      });
+
+    });
+
+    const savedLanguage =
+      localStorage.getItem("myHappyBoxLanguage");
+
+    if (
+      savedLanguage &&
+      translations[savedLanguage]
+    ) {
+      changeLanguage(savedLanguage);
+    } else {
+      changeLanguage("el");
     }
   </script>
+
 </body>
 </html>
