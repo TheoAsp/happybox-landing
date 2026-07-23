@@ -1,744 +1,1093 @@
 <!DOCTYPE html>
-<html lang="el">
+<html lang="el" dir="ltr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>MyHappy Box</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+  <meta
+    name="description"
+    content="MyHappyBox — χρήσιμες πληροφορίες, ωράρια, υπηρεσίες και βασικές ελληνικές λέξεις για τα παιδιά της δομής."
+  >
 
-    html {
-      scroll-behavior: smooth;
-    }
+  <meta name="theme-color" content="#e8505b">
 
-    :root {
-      --dark-blue: #263750;
-      --cream: #fffaf2;
-      --white: #ffffff;
-      --yellow: #ffd66b;
-      --orange: #ff9c72;
-      --pink: #ed7fa6;
-      --blue: #62a2e8;
-      --green: #58b894;
-      --purple: #9b7bd4;
-      --shadow: 0 15px 35px rgba(38, 55, 80, 0.14);
-    }
+  <title>MyHappyBox</title>
 
-    body {
-      margin: 0;
-      background: var(--cream);
-      color: var(--dark-blue);
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-    }
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
 
-    body[dir="rtl"] {
-      direction: rtl;
-      text-align: right;
-    }
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
 
-    button,
-    a {
-      font: inherit;
-    }
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
 
-    .hero {
-      min-height: 78vh;
-      padding: 24px 6% 70px;
-      background:
-        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.4), transparent 18%),
-        radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.3), transparent 20%),
-        linear-gradient(135deg, var(--yellow), var(--orange), var(--pink));
-    }
-
-    .topbar {
-      max-width: 1200px;
-      margin: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.3rem;
-      font-weight: 800;
-    }
-
-    .logo-icon {
-      width: 48px;
-      height: 48px;
-      display: grid;
-      place-items: center;
-      border-radius: 15px;
-      background: rgba(255, 255, 255, 0.75);
-      box-shadow: var(--shadow);
-      font-size: 1.7rem;
-    }
-
-    .language-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .language-button {
-      border: 0;
-      padding: 9px 15px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.65);
-      color: var(--dark-blue);
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .language-button:hover,
-    .language-button.active {
-      background: var(--dark-blue);
-      color: white;
-      transform: translateY(-2px);
-    }
-
-    .hero-content {
-      max-width: 1200px;
-      margin: 85px auto 0;
-      display: grid;
-      grid-template-columns: 1.25fr 0.75fr;
-      gap: 50px;
-      align-items: center;
-    }
-
-    .small-title {
-      margin: 0 0 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      font-size: 0.82rem;
-      font-weight: 800;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(3rem, 7vw, 6rem);
-      line-height: 1;
-      letter-spacing: -0.05em;
-    }
-
-    .intro {
-      max-width: 780px;
-      margin: 25px 0 32px;
-      font-size: clamp(1.05rem, 2vw, 1.3rem);
-    }
-
-    .main-button {
-      display: inline-block;
-      padding: 14px 22px;
-      border-radius: 14px;
-      background: var(--dark-blue);
-      color: white;
-      text-decoration: none;
-      font-weight: 800;
-      box-shadow: var(--shadow);
-    }
-
-    .gift {
-      text-align: center;
-      font-size: clamp(9rem, 18vw, 15rem);
-      filter: drop-shadow(0 20px 25px rgba(38, 55, 80, 0.18));
-      animation: floating 3.2s ease-in-out infinite;
-    }
-
-    @keyframes floating {
-      0%,
-      100% {
-        transform: translateY(0) rotate(-2deg);
-      }
-
-      50% {
-        transform: translateY(-15px) rotate(3deg);
-      }
-    }
-
-    main {
-      max-width: 1200px;
-      margin: auto;
-      padding: 80px 22px;
-    }
-
-    .section-title {
-      max-width: 720px;
-      margin-bottom: 35px;
-    }
-
-    .section-title h2 {
-      margin: 0;
-      font-size: clamp(2.2rem, 4vw, 3.5rem);
-      line-height: 1.1;
-    }
-
-    .section-title p {
-      color: #5a687d;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
-    }
-
-    .card {
-      padding: 25px;
-      border-radius: 24px;
-      background: white;
-      border-top: 7px solid;
-      box-shadow: var(--shadow);
-      transition: 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-    }
-
-    .card h3 {
-      margin: 12px 0 8px;
-      font-size: 1.35rem;
-    }
-
-    .card p {
-      margin: 8px 0;
-      color: #4d5d72;
-    }
-
-    .card ul {
-      margin: 12px 0 0;
-      padding-inline-start: 20px;
-      color: #4d5d72;
-    }
-
-    .card-icon {
-      width: 58px;
-      height: 58px;
-      display: grid;
-      place-items: center;
-      border-radius: 17px;
-      font-size: 2rem;
-      background: #f4f6fa;
-    }
-
-    .card-kitchen {
-      border-color: #ff776a;
-    }
-
-    .card-social {
-      border-color: var(--blue);
-    }
-
-    .card-teachers {
-      border-color: #f4bd41;
-    }
-
-    .card-wifi {
-      border-color: var(--green);
-    }
-
-    .card-health {
-      border-color: var(--purple);
-    }
-
-    .card-laundry {
-      border-color: var(--pink);
-    }
-
-    .card-activities {
-      border-color: #43aeb0;
-    }
-
-    .card-life {
-      border-color: #ef9757;
-    }
-
-    .wifi-information {
-      margin-top: 15px;
-      padding: 13px;
-      border-radius: 13px;
-      background: #eefaf6;
-    }
-
-    .wifi-information p {
-      margin: 4px 0;
-    }
-
-    .warning {
-      margin-top: 12px;
-      font-size: 0.85rem;
-      color: #8b4e30;
-    }
-
-    .help {
-      margin-top: 55px;
-      padding: 35px;
-      display: flex;
-      align-items: center;
-      gap: 25px;
-      border-radius: 28px;
-      background: linear-gradient(135deg, #d9f5ee, #dfefff);
-    }
-
-    .help-icon {
-      font-size: 4rem;
-    }
-
-    .help h2 {
-      margin: 0;
-      font-size: clamp(2rem, 4vw, 3rem);
-    }
-
-    footer {
-      padding: 30px 20px;
-      text-align: center;
-      background: var(--dark-blue);
-      color: white;
-    }
-
-    footer p {
-      margin: 5px 0;
-    }
-
-    footer small {
-      opacity: 0.75;
-    }
-
-    @media (max-width: 800px) {
-      .topbar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .hero-content {
-        grid-template-columns: 1fr;
-        margin-top: 55px;
-      }
-
-      .gift {
-        font-size: 9rem;
-      }
-
-      .cards {
-        grid-template-columns: 1fr;
-      }
-
-      .help {
-        align-items: flex-start;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-
-      .gift {
-        animation: none;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-  <header class="hero">
+  <!-- Σύνδεσμος προσβασιμότητας -->
+  <a
+    class="skip-link"
+    href="#main-content"
+    data-i18n="accessibility.skip"
+  >
+    Μετάβαση στο κύριο περιεχόμενο
+  </a>
 
-    <nav class="topbar">
+  <!-- Κεφαλίδα -->
+  <header class="site-header">
 
-      <div class="logo">
-        <span class="logo-icon">🎁</span>
-        <span>MyHappy Box</span>
-      </div>
+    <div class="header-container">
 
-      <div class="language-buttons">
+      <a
+        class="brand"
+        href="#home"
+        aria-label="MyHappyBox"
+      >
+        <span
+          class="brand-symbol"
+          aria-hidden="true"
+        >
+          🎁
+        </span>
+
+        <span class="brand-text">
+          MyHappyBox
+        </span>
+      </a>
+
+      <!-- Επιλογή γλώσσας -->
+      <div
+        class="language-selector"
+        role="group"
+        aria-label="Επιλογή γλώσσας"
+      >
 
         <button
           class="language-button active"
+          type="button"
           data-language="el"
-          type="button">
+          aria-pressed="true"
+        >
+          <span aria-hidden="true">🇬🇷</span>
           Ελληνικά
         </button>
 
         <button
           class="language-button"
+          type="button"
           data-language="ar"
-          type="button">
+          aria-pressed="false"
+        >
+          <span aria-hidden="true">🌍</span>
           العربية
         </button>
 
         <button
           class="language-button"
+          type="button"
           data-language="bn"
-          type="button">
+          aria-pressed="false"
+        >
+          <span aria-hidden="true">🇧🇩</span>
           বাংলা
         </button>
 
       </div>
 
-    </nav>
+    </div>
 
-    <section class="hero-content">
+  </header>
 
-      <div>
+  <main id="main-content">
 
-        <p
-          class="small-title"
-          data-translate="welcome">
-          Καλώς ήρθατε
-        </p>
+    <!-- Αρχική ενότητα -->
+    <section
+      id="home"
+      class="hero-section"
+    >
 
-        <h1 data-translate="title">
-          Το χαρούμενο κουτί σας
-        </h1>
+      <div class="hero-decoration hero-decoration-one"></div>
+      <div class="hero-decoration hero-decoration-two"></div>
 
-        <p
-          class="intro"
-          data-translate="intro">
-          Το χαρούμενο κουτί σας για χαρούμενη διαμονή
-          στην δομή του Ελληνικού Ερυθρού Σταυρού στα Καλάβρυτα.
-          Μαζί θα μάθουμε και θα περάσουμε ωραίες στιγμές.
-          Γιατί το ταξίδι σας είναι και δικό μας.
-        </p>
+      <div class="content-container hero-layout">
 
-        <a
-          href="#information"
-          class="main-button"
-          data-translate="informationButton">
-          Δείτε τις πληροφορίες
+        <div class="hero-content">
+
+          <p
+            class="section-label"
+            data-i18n="hero.label"
+          >
+            Καλώς ήρθες στη νέα σου καθημερινότητα
+          </p>
+
+          <h1 data-i18n="hero.title">
+            Χαιρόμαστε που είσαι εδώ!
+          </h1>
+
+          <div class="hero-message">
+
+            <p data-i18n="hero.paragraph1">
+              Εδώ θα σε βοηθήσουμε να γνωρίσεις τη νέα σου
+              καθημερινότητα με εύκολο και απλό τρόπο.
+            </p>
+
+            <p data-i18n="hero.paragraph2">
+              Θα βρεις χρήσιμες πληροφορίες για τη δομή, τα
+              ωράρια των υπηρεσιών, βασικές λέξεις και μικρές
+              εκφράσεις στα ελληνικά, καθώς και απλές οδηγίες
+              που θα σε βοηθήσουν στην επικοινωνία και στις
+              καθημερινές σου ανάγκες.
+            </p>
+
+            <p data-i18n="hero.paragraph3">
+              Δεν χρειάζεται να τα μάθεις όλα από την πρώτη
+              μέρα. Μπορείς να επιστρέφεις σε αυτή τη σελίδα
+              όποτε θέλεις. Κάθε μικρό βήμα είναι σημαντικό
+              και κάθε νέα λέξη σε βοηθά να αισθάνεσαι πιο
+              άνετα και πιο σίγουρος.
+            </p>
+
+            <p
+              class="hero-emphasis"
+              data-i18n="hero.paragraph4"
+            >
+              Θυμήσου: Δεν είσαι μόνος ή μόνη. Οι άνθρωποι
+              της δομής είναι εδώ για να σε στηρίξουν, να
+              απαντήσουν στις ερωτήσεις σου και να σε
+              βοηθήσουν να νιώσεις ασφαλής και ευπρόσδεκτος.
+            </p>
+
+          </div>
+
+          <div class="hero-actions">
+
+            <a
+              class="button button-primary"
+              href="#services"
+              data-i18n="hero.servicesButton"
+            >
+              Δες τα ωράρια
+            </a>
+
+            <a
+              class="button button-secondary"
+              href="#dictionary"
+              data-i18n="hero.wordsButton"
+            >
+              Μάθε ελληνικές λέξεις
+            </a>
+
+          </div>
+
+        </div>
+
+        <div
+          class="hero-visual"
+          aria-hidden="true"
+        >
+
+          <div class="welcome-card">
+
+            <span class="welcome-card-icon">
+              🏠
+            </span>
+
+            <span class="welcome-card-heart">
+              ❤️
+            </span>
+
+            <span class="welcome-card-book">
+              📖
+            </span>
+
+            <span class="welcome-card-chat">
+              💬
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Γρήγορη πλοήγηση -->
+    <nav
+      class="quick-navigation"
+      aria-label="Γρήγορη πλοήγηση"
+    >
+
+      <div class="content-container quick-navigation-grid">
+
+        <a href="#services" class="quick-link">
+          <span class="quick-link-icon" aria-hidden="true">
+            🕒
+          </span>
+
+          <span data-i18n="navigation.services">
+            Ωράρια και υπηρεσίες
+          </span>
+        </a>
+
+        <a href="#daily-guide" class="quick-link">
+          <span class="quick-link-icon" aria-hidden="true">
+            📌
+          </span>
+
+          <span data-i18n="navigation.dailyGuide">
+            Καθημερινός οδηγός
+          </span>
+        </a>
+
+        <a href="#education" class="quick-link">
+          <span class="quick-link-icon" aria-hidden="true">
+            🎓
+          </span>
+
+          <span data-i18n="navigation.education">
+            Εκπαίδευση και δράσεις
+          </span>
+        </a>
+
+        <a href="#dictionary" class="quick-link">
+          <span class="quick-link-icon" aria-hidden="true">
+            🗣️
+          </span>
+
+          <span data-i18n="navigation.dictionary">
+            Ελληνικές λέξεις
+          </span>
         </a>
 
       </div>
 
-      <div
-        class="gift"
-        aria-hidden="true">
-        🎁
-      </div>
+    </nav>
 
-    </section>
+    <!-- Υπηρεσίες και ωράρια -->
+    <section
+      id="services"
+      class="page-section services-section"
+    >
 
-  </header>
+      <div class="content-container">
 
-  <main id="information">
+        <div class="section-heading">
 
-    <section class="section-title">
-
-      <p
-        class="small-title"
-        data-translate="usefulInformation">
-        Χρήσιμες πληροφορίες
-      </p>
-
-      <h2 data-translate="everythingYouNeed">
-        Όλα όσα χρειάζεστε
-      </h2>
-
-      <p data-translate="informationDescription">
-        Εδώ μπορείτε να δείτε ώρες λειτουργίας,
-        υπηρεσίες και χρήσιμες πληροφορίες για την καθημερινή ζωή στη δομή.
-      </p>
-
-    </section>
-
-    <section class="cards">
-
-      <article class="card card-kitchen">
-
-        <div class="card-icon">🍽️</div>
-
-        <h3 data-translate="kitchenTitle">
-          Κουζίνα και γεύματα
-        </h3>
-
-        <p>
-          <strong data-translate="breakfast">Πρωινό:</strong>
-          08:00–09:00
-        </p>
-
-        <p>
-          <strong data-translate="lunch">Μεσημεριανό:</strong>
-          13:30–14:30
-        </p>
-
-        <p>
-          <strong data-translate="dinner">Βραδινό:</strong>
-          19:30–20:30
-        </p>
-
-      </article>
-
-      <article class="card card-social">
-
-        <div class="card-icon">🤝</div>
-
-        <h3 data-translate="socialServiceTitle">
-          Γραφείο Κοινωνικής Υπηρεσίας
-        </h3>
-
-        <p data-translate="socialServiceText">
-          Υποστήριξη για προσωπικά, κοινωνικά και διοικητικά θέματα.
-        </p>
-
-        <p>
-          <strong data-translate="mondayFriday">
-            Δευτέρα έως Παρασκευή:
-          </strong>
-
-          09:00–15:00
-        </p>
-
-        <p>
-          <strong data-translate="appointments">
-            Ραντεβού:
-          </strong>
-
-          <span data-translate="askStaff">
-            Ρωτήστε το προσωπικό
-          </span>
-        </p>
-
-      </article>
-
-      <article class="card card-teachers">
-
-        <div class="card-icon">📚</div>
-
-        <h3 data-translate="teachersTitle">
-          Γραφείο Εκπαιδευτικών
-        </h3>
-
-        <p data-translate="teachersText">
-          Πληροφορίες για σχολείο, μαθήματα,
-          μελέτη και εκπαιδευτικές δραστηριότητες.
-        </p>
-
-        <p>
-          <strong data-translate="mondayFriday">
-            Δευτέρα έως Παρασκευή:
-          </strong>
-
-          09:00–17:00
-        </p>
-
-        <p>
-          <strong data-translate="studySupport">
-            Υποστήριξη μελέτης:
-          </strong>
-
-          16:00–18:00
-        </p>
-
-      </article>
-
-      <article class="card card-wifi">
-
-        <div class="card-icon">📶</div>
-
-        <h3>Wi-Fi</h3>
-
-        <p data-translate="wifiText">
-          Συνδεθείτε στο ασύρματο δίκτυο της δομής.
-        </p>
-
-        <div class="wifi-information">
-
-          <p>
-            <strong data-translate="network">
-              Όνομα δικτύου:
-            </strong>
-
-            MYHAPPYBOX
+          <p
+            class="section-label"
+            data-i18n="services.label"
+          >
+            Χρήσιμες πληροφορίες
           </p>
 
-          <p>
-            <strong data-translate="password">
-              Κωδικός:
-            </strong>
+          <h2 data-i18n="services.title">
+            Υπηρεσίες και ωράρια
+          </h2>
 
-            ΣΥΜΠΛΗΡΩΣΤΕ ΕΔΩ
+          <p data-i18n="services.description">
+            Εδώ μπορείς να δεις πότε λειτουργούν οι βασικοί
+            χώροι και οι υπηρεσίες της δομής.
           </p>
 
         </div>
 
-        <p
-          class="warning"
-          data-translate="wifiWarning">
-          Για λόγους ασφάλειας, μην ανεβάσετε τον πραγματικό κωδικό
-          Wi-Fi σε δημόσιο GitHub.
-        </p>
+        <div class="service-grid">
 
-      </article>
+          <!-- Γεύματα -->
+          <article class="service-card service-card-food">
 
-      <article class="card card-health">
+            <div class="service-card-header">
 
-        <div class="card-icon">🩺</div>
+              <span
+                class="service-icon"
+                aria-hidden="true"
+              >
+                🍽️
+              </span>
 
-        <h3 data-translate="healthTitle">
-          Υγεία και φροντίδα
-        </h3>
+              <div>
+                <p
+                  class="service-category"
+                  data-i18n="services.food.category"
+                >
+                  Καθημερινά
+                </p>
 
-        <p data-translate="healthText">
-          Για ιατρική βοήθεια, φάρμακα ή κάποιο πρόβλημα υγείας,
-          απευθυνθείτε στο προσωπικό της δομής.
-        </p>
+                <h3 data-i18n="services.food.title">
+                  Γεύματα
+                </h3>
+              </div>
 
-        <p>
-          <strong data-translate="officeHours">
-            Ώρες γραφείου:
-          </strong>
+            </div>
 
-          09:00–15:00
-        </p>
+            <div class="schedule-list">
 
-        <p>
-          <strong data-translate="emergency">
-            Επείγον περιστατικό:
-          </strong>
+              <div class="schedule-row">
 
-          <span data-translate="contactStaff">
-            Επικοινωνήστε αμέσως με το προσωπικό.
-          </span>
-        </p>
+                <div>
+                  <strong data-i18n="services.food.breakfast">
+                    Πρωινό
+                  </strong>
 
-      </article>
+                  <small data-i18n="services.food.breakfastPlace">
+                    Χώρος διανομής πρωινού
+                  </small>
+                </div>
 
-      <article class="card card-laundry">
+                <time>07:30–11:00</time>
 
-        <div class="card-icon">🧺</div>
+              </div>
 
-        <h3 data-translate="laundryTitle">
-          Πλυντήρια
-        </h3>
+              <div class="schedule-row">
 
-        <p data-translate="laundryText">
-          Χρησιμοποιείτε τα πλυντήρια σύμφωνα
-          με το εβδομαδιαίο πρόγραμμα της δομής.
-        </p>
+                <div>
+                  <strong data-i18n="services.food.lunch">
+                    Μεσημεριανό
+                  </strong>
 
-        <p>
-          <strong data-translate="hours">
-            Ώρες:
-          </strong>
+                  <small data-i18n="services.food.diningRoom">
+                    Στην τραπεζαρία
+                  </small>
+                </div>
 
-          10:00–18:00
-        </p>
+                <time>13:00–14:30</time>
 
-        <p>
-          <strong data-translate="schedule">
-            Πρόγραμμα:
-          </strong>
+              </div>
 
-          <span data-translate="noticeBoard">
-            Δείτε τον πίνακα ανακοινώσεων.
-          </span>
-        </p>
+              <div class="schedule-row">
 
-      </article>
+                <div>
+                  <strong data-i18n="services.food.afternoon">
+                    Απογευματινό
+                  </strong>
 
-      <article class="card card-activities">
+                  <small data-i18n="services.food.afternoonPlace">
+                    Απογευματινή διανομή
+                  </small>
+                </div>
 
-        <div class="card-icon">⚽</div>
+                <time>16:00–18:00</time>
 
-        <h3 data-translate="activitiesTitle">
-          Δραστηριότητες
-        </h3>
+              </div>
 
-        <p data-translate="activitiesText">
-          Αθλητισμός, δημιουργική απασχόληση,
-          εκδρομές, παιχνίδια και ομαδικές δράσεις.
-        </p>
+              <div class="schedule-row">
 
-        <p>
-          <strong data-translate="dailyProgram">
-            Καθημερινό πρόγραμμα:
-          </strong>
+                <div>
+                  <strong data-i18n="services.food.dinner">
+                    Βραδινό
+                  </strong>
 
-          17:00–19:00
-        </p>
+                  <small data-i18n="services.food.diningRoom">
+                    Στην τραπεζαρία
+                  </small>
+                </div>
 
-        <p>
-          <strong data-translate="details">
-            Λεπτομέρειες:
-          </strong>
+                <time>19:30–20:30</time>
 
-          <span data-translate="noticeBoard">
-            Δείτε τον πίνακα ανακοινώσεων.
-          </span>
-        </p>
+              </div>
 
-      </article>
+            </div>
 
-      <article class="card card-life">
+          </article>
 
-        <div class="card-icon">🏠</div>
+          <!-- Κοινωνική υπηρεσία -->
+          <article class="service-card service-card-social">
 
-        <h3 data-translate="dailyLifeTitle">
-          Καθημερινή ζωή στη δομή
-        </h3>
+            <div class="service-card-header">
 
-        <p data-translate="dailyLifeText">
-          Σεβόμαστε ο ένας τον άλλον
-          και φροντίζουμε τους κοινόχρηστους χώρους.
-        </p>
+              <span
+                class="service-icon"
+                aria-hidden="true"
+              >
+                🤝
+              </span>
 
-        <ul>
+              <div>
+                <p
+                  class="service-category"
+                  data-i18n="services.everyDay"
+                >
+                  Κάθε ημέρα
+                </p>
 
-          <li data-translate="quietHours">
-            Ώρες κοινής ησυχίας: 22:30–07:30
-          </li>
+                <h3 data-i18n="services.social.title">
+                  Γραφείο Κοινωνικής Υπηρεσίας
+                </h3>
+              </div>
 
-          <li data-translate="cleanAreas">
-            Διατηρούμε καθαρούς τους χώρους.
-          </li>
+            </div>
 
-          <li data-translate="respect">
-            Σεβόμαστε το προσωπικό και τους υπόλοιπους φιλοξενούμενους.
-          </li>
+            <p data-i18n="services.social.description">
+              Μπορείς να απευθυνθείς στην κοινωνική υπηρεσία
+              για προσωπικά, κοινωνικά και διοικητικά ζητήματα.
+            </p>
 
-          <li data-translate="askForHelp">
-            Ζητάμε βοήθεια όταν τη χρειαζόμαστε.
-          </li>
+            <div class="single-schedule">
 
-        </ul>
+              <span data-i18n="services.openingHours">
+                Ώρες λειτουργίας
+              </span>
 
-      </article>
+              <strong>08:00–22:00</strong>
+
+            </div>
+
+          </article>
+
+          <!-- Ψυχολόγος -->
+          <article class="service-card service-card-psychologist">
+
+            <div class="service-card-header">
+
+              <span
+                class="service-icon"
+                aria-hidden="true"
+              >
+                💬
+              </span>
+
+              <div>
+                <p
+                  class="service-category"
+                  data-i18n="services.psychologist.category"
+                >
+                  Ανάλογα με τη βάρδια
+                </p>
+
+                <h3 data-i18n="services.psychologist.title">
+                  Γραφείο Ψυχολόγου
+                </h3>
+              </div>
+
+            </div>
+
+            <p data-i18n="services.psychologist.description">
+              Μπορείς να μιλήσεις με τον ψυχολόγο όταν
+              χρειάζεσαι υποστήριξη ή θέλεις να μοιραστείς
+              κάτι που σε απασχολεί.
+            </p>
+
+            <div class="schedule-list">
+
+              <div class="schedule-row">
+
+                <strong data-i18n="services.psychologist.shiftOne">
+                  Πρωινή βάρδια
+                </strong>
+
+                <time>09:00–17:00</time>
+
+              </div>
+
+              <div class="schedule-row">
+
+                <strong data-i18n="services.psychologist.shiftTwo">
+                  Απογευματινή βάρδια
+                </strong>
+
+                <time>13:00–21:00</time>
+
+              </div>
+
+            </div>
+
+          </article>
+
+          <!-- Σαλόνι -->
+          <article class="service-card service-card-lounge">
+
+            <div class="service-card-header">
+
+              <span
+                class="service-icon"
+                aria-hidden="true"
+              >
+                🛋️
+              </span>
+
+              <div>
+                <p
+                  class="service-category"
+                  data-i18n="services.everyDay"
+                >
+                  Κάθε ημέρα
+                </p>
+
+                <h3 data-i18n="services.lounge.title">
+                  Σαλόνι
+                </h3>
+              </div>
+
+            </div>
+
+            <p data-i18n="services.lounge.description">
+              Χώρος ξεκούρασης, συνάντησης και καθημερινής
+              επικοινωνίας.
+            </p>
+
+            <div class="single-schedule">
+
+              <span data-i18n="services.openingHours">
+                Ώρες λειτουργίας
+              </span>
+
+              <strong>07:00–23:30</strong>
+
+            </div>
+
+          </article>
+
+          <!-- Κουζίνα -->
+          <article class="service-card service-card-kitchen">
+
+            <div class="service-card-header">
+
+              <span
+                class="service-icon"
+                aria-hidden="true"
+              >
+                🥣
+              </span>
+
+              <div>
+                <p
+                  class="service-category"
+                  data-i18n="services.everyDay"
+                >
+                  Κάθε ημέρα
+                </p>
+
+                <h3 data-i18n="services.kitchen.title">
+                  Κουζίνα
+                </h3>
+              </div>
+
+            </div>
+
+            <p data-i18n="services.kitchen.description">
+              Ακολούθησε τις οδηγίες του προσωπικού για την
+              ασφαλή και σωστή χρήση της κουζίνας.
+            </p>
+
+            <div class="single-schedule">
+
+              <span data-i18n="services.openingHours">
+                Ώρες λειτουργίας
+              </span>
+
+              <strong>07:30–22:00</strong>
+
+            </div>
+
+          </article>
+
+          <!-- Αποθήκη -->
+          <article class="service-card service-card-storage">
+
+            <div class="service-card-header">
+
+              <span
+                class="service-icon"
+                aria-hidden="true"
+              >
+                📦
+              </span>
+
+              <div>
+                <p
+                  class="service-category"
+                  data-i18n="services.storage.category"
+                >
+                  Δύο ωράρια
+                </p>
+
+                <h3 data-i18n="services.storage.title">
+                  Αποθήκη
+                </h3>
+              </div>
+
+            </div>
+
+            <p data-i18n="services.storage.description">
+              Για είδη καθημερινής χρήσης, ρούχα ή άλλα
+              απαραίτητα αντικείμενα, απευθύνσου στο αρμόδιο
+              προσωπικό.
+            </p>
+
+            <div class="schedule-list">
+
+              <div class="schedule-row">
+
+                <strong data-i18n="services.storage.morning">
+                  Πρωινό ωράριο
+                </strong>
+
+                <time>07:30–13:00</time>
+
+              </div>
+
+              <div class="schedule-row">
+
+                <strong data-i18n="services.storage.afternoon">
+                  Απογευματινό ωράριο
+                </strong>
+
+                <time>16:00–22:00</time>
+
+              </div>
+
+            </div>
+
+          </article>
+
+          <!-- Εκπαίδευση -->
+          <article class="service-card service-card-education">
+
+            <div class="service-card-header">
+
+              <span
+                class="service-icon"
+                aria-hidden="true"
+              >
+                📚
+              </span>
+
+              <div>
+                <p
+                  class="service-category"
+                  data-i18n="services.education.category"
+                >
+                  Σύμφωνα με το πρόγραμμα
+                </p>
+
+                <h3 data-i18n="services.education.title">
+                  Εκπαίδευση
+                </h3>
+              </div>
+
+            </div>
+
+            <p data-i18n="services.education.description">
+              Για μαθήματα, σχολείο και εκπαιδευτικές
+              συναντήσεις, συμβουλεύσου το αναρτημένο πρόγραμμα
+              ή ρώτησε τους εκπαιδευτικούς.
+            </p>
+
+            <a
+              class="card-link"
+              href="#education"
+              data-i18n="services.education.link"
+            >
+              Περισσότερες πληροφορίες
+            </a>
+
+          </article>
+
+          <!-- Δράσεις -->
+          <article class="service-card service-card-activities">
+
+            <div class="service-card-header">
+
+              <span
+                class="service-icon"
+                aria-hidden="true"
+              >
+                ⚽
+              </span>
+
+              <div>
+                <p
+                  class="service-category"
+                  data-i18n="services.activities.category"
+                >
+                  Ιδέες και συμμετοχή
+                </p>
+
+                <h3 data-i18n="services.activities.title">
+                  Δράσεις και δραστηριότητες
+                </h3>
+              </div>
+
+            </div>
+
+            <p data-i18n="services.activities.description">
+              Για τις προγραμματισμένες δράσεις, δες το
+              αναρτημένο πρόγραμμα ή ρώτησε τους εκπαιδευτικούς.
+              Μπορείς επίσης να προτείνεις τη δική σου ιδέα.
+            </p>
+
+            <a
+              class="card-link"
+              href="#education"
+              data-i18n="services.activities.link"
+            >
+              Δες πώς μπορείς να συμμετέχεις
+            </a>
+
+          </article>
+
+          <!-- Wi-Fi -->
+          <article class="service-card service-card-wifi">
+
+            <div class="service-card-header">
+
+              <span
+                class="service-icon"
+                aria-hidden="true"
+              >
+                📶
+              </span>
+
+              <div>
+                <p
+                  class="service-category"
+                  data-i18n="services.wifi.category"
+                >
+                  Σύνδεση στο διαδίκτυο
+                </p>
+
+                <h3 data-i18n="services.wifi.title">
+                  Wi-Fi
+                </h3>
+              </div>
+
+            </div>
+
+            <p data-i18n="services.wifi.description">
+              Για το όνομα του δικτύου και τον κωδικό,
+              απευθύνσου στο προσωπικό της δομής.
+            </p>
+
+            <div class="wifi-box">
+
+              <div>
+                <span data-i18n="services.wifi.network">
+                  Δίκτυο
+                </span>
+
+                <strong>MYHAPPYBOX</strong>
+              </div>
+
+              <div>
+                <span data-i18n="services.wifi.password">
+                  Κωδικός
+                </span>
+
+                <strong data-i18n="services.wifi.askStaff">
+                  Ρώτησε το προσωπικό
+                </strong>
+              </div>
+
+            </div>
+
+            <p
+              class="security-note"
+              data-i18n="services.wifi.security"
+            >
+              Για λόγους ασφάλειας, ο πραγματικός κωδικός
+              Wi-Fi δεν πρέπει να δημοσιεύεται σε δημόσιο
+              αποθετήριο GitHub.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
 
     </section>
 
-    <section class="help">
+    <!-- Καθημερινός οδηγός -->
+    <section
+      id="daily-guide"
+      class="page-section daily-guide-section"
+    >
 
-      <div class="help-icon">
-        💬
+      <div class="content-container daily-guide-layout">
+
+        <div>
+
+          <p
+            class="section-label"
+            data-i18n="dailyGuide.label"
+          >
+            Για καθημερινή χρήση
+          </p>
+
+          <h2 data-i18n="dailyGuide.title">
+            Ένας μικρός οδηγός για κάθε ημέρα
+          </h2>
+
+        </div>
+
+        <article class="daily-guide-card">
+
+          <span
+            class="daily-guide-icon"
+            aria-hidden="true"
+          >
+            🌟
+          </span>
+
+          <p data-i18n="dailyGuide.text">
+            Ξεκίνα τη μέρα σου ήρεμα και έλεγξε το πρόγραμμα
+            της δομής. Ρώτησε το προσωπικό όταν χρειάζεσαι
+            πληροφορίες, βοήθεια ή κάτι που δεν καταλαβαίνεις.
+            Σεβάσου τους κοινόχρηστους χώρους, τα ωράρια και
+            τους ανθρώπους που ζουν και εργάζονται μαζί σου.
+            Φρόντιζε τα προσωπικά σου αντικείμενα και ενημέρωνε
+            αμέσως έναν εργαζόμενο αν δεν αισθάνεσαι καλά ή αν
+            κάτι σε φοβίζει. Μπορείς να συμμετέχεις στα
+            μαθήματα και στις δραστηριότητες, αλλά και να
+            προτείνεις νέες ιδέες. Προσπάθησε να μαθαίνεις
+            λίγες ελληνικές λέξεις κάθε μέρα. Δεν χρειάζεται
+            να γνωρίζεις τα πάντα. Ζήτησε χρόνο, επανάληψη και
+            υποστήριξη. Εδώ υπάρχουν άνθρωποι που θέλουν να σε
+            ακούσουν, να σε προστατεύσουν και να σε βοηθήσουν.
+          </p>
+
+        </article>
+
       </div>
 
-      <div>
+    </section>
+
+    <!-- Εκπαίδευση και δράσεις -->
+    <section
+      id="education"
+      class="page-section education-section"
+    >
+
+      <div class="content-container">
+
+        <div class="section-heading">
+
+          <p
+            class="section-label"
+            data-i18n="education.label"
+          >
+            Μάθηση και συμμετοχή
+          </p>
+
+          <h2 data-i18n="education.title">
+            Εκπαίδευση και δράσεις
+          </h2>
+
+          <p data-i18n="education.description">
+            Οι εκπαιδευτικοί μπορούν να σε βοηθήσουν με το
+            σχολείο, τη μελέτη, τη γλώσσα και τις δημιουργικές
+            δραστηριότητες.
+          </p>
+
+        </div>
+
+        <div class="education-grid">
+
+          <article class="education-card">
+
+            <span
+              class="education-icon"
+              aria-hidden="true"
+            >
+              🗓️
+            </span>
+
+            <h3 data-i18n="education.scheduleTitle">
+              Πρόγραμμα μαθημάτων
+            </h3>
+
+            <p data-i18n="education.scheduleText">
+              Δες το αναρτημένο πρόγραμμα της δομής ή ρώτησε
+              τους εκπαιδευτικούς για τις ημέρες και τις ώρες
+              των μαθημάτων.
+            </p>
+
+          </article>
+
+          <article class="education-card">
+
+            <span
+              class="education-icon"
+              aria-hidden="true"
+            >
+              🙋
+            </span>
+
+            <h3 data-i18n="education.questionsTitle">
+              Όταν έχεις ερώτηση
+            </h3>
+
+            <p data-i18n="education.questionsText">
+              Μπορείς να ζητήσεις βοήθεια για μια εργασία,
+              μια λέξη που δεν καταλαβαίνεις ή για την
+              επικοινωνία με το σχολείο.
+            </p>
+
+          </article>
+
+          <article class="education-card">
+
+            <span
+              class="education-icon"
+              aria-hidden="true"
+            >
+              💡
+            </span>
+
+            <h3 data-i18n="education.ideaTitle">
+              Πρότεινε μια δράση
+            </h3>
+
+            <p data-i18n="education.ideaText">
+              Αν θέλεις να προτείνεις ένα παιχνίδι, μια
+              εκδρομή, ένα εργαστήριο ή άλλη δραστηριότητα,
+              μίλησε με τους εκπαιδευτικούς.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Λεξικό -->
+    <section
+      id="dictionary"
+      class="page-section dictionary-section"
+    >
+
+      <div class="content-container">
+
+        <div class="section-heading dictionary-heading">
+
+          <div>
+
+            <p
+              class="section-label"
+              data-i18n="dictionary.label"
+            >
+              Μικρά βήματα στη γλώσσα
+            </p>
+
+            <h2 data-i18n="dictionary.title">
+              100 χρήσιμες ελληνικές λέξεις και εκφράσεις
+            </h2>
+
+            <p data-i18n="dictionary.description">
+              Πάτησε σε μια κατηγορία ή χρησιμοποίησε την
+              αναζήτηση για να βρεις γρήγορα τη λέξη που
+              χρειάζεσαι.
+            </p>
+
+          </div>
+
+          <div class="dictionary-search">
+
+            <label
+              for="word-search"
+              data-i18n="dictionary.searchLabel"
+            >
+              Αναζήτηση λέξης
+            </label>
+
+            <div class="search-field">
+
+              <span aria-hidden="true">
+                🔎
+              </span>
+
+              <input
+                id="word-search"
+                type="search"
+                autocomplete="off"
+                data-i18n-placeholder="dictionary.searchPlaceholder"
+                placeholder="Γράψε μια λέξη..."
+              >
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div
+          id="category-buttons"
+          class="category-buttons"
+          aria-label="Κατηγορίες λέξεων"
+        >
+          <!-- Δημιουργούνται από το JavaScript -->
+        </div>
+
+        <div
+          id="dictionary-grid"
+          class="dictionary-grid"
+          aria-live="polite"
+        >
+          <!-- Οι 100 λέξεις δημιουργούνται από το JavaScript -->
+        </div>
 
         <p
-          class="small-title"
-          data-translate="weAreHere">
-          Είμαστε εδώ
+          id="no-results"
+          class="no-results"
+          hidden
+          data-i18n="dictionary.noResults"
+        >
+          Δεν βρέθηκε λέξη. Δοκίμασε διαφορετική αναζήτηση.
         </p>
 
-        <h2 data-translate="needHelp">
-          Χρειάζεστε βοήθεια;
-        </h2>
+      </div>
 
-        <p data-translate="helpText">
-          Μιλήστε με έναν εργαζόμενο της δομής.
-          Δεν χρειάζεται να αντιμετωπίζετε κάποιο πρόβλημα μόνοι σας.
-        </p>
+    </section>
+
+    <!-- Μήνυμα υποστήριξης -->
+    <section class="support-section">
+
+      <div class="content-container support-card">
+
+        <div
+          class="support-icon"
+          aria-hidden="true"
+        >
+          ❤️
+        </div>
+
+        <div>
+
+          <p
+            class="section-label"
+            data-i18n="support.label"
+          >
+            Είμαστε δίπλα σου
+          </p>
+
+          <h2 data-i18n="support.title">
+            Δεν χρειάζεται να αντιμετωπίζεις κάτι μόνος ή μόνη
+          </h2>
+
+          <p data-i18n="support.text">
+            Αν χρειάζεσαι βοήθεια, αν φοβάσαι, αν δεν
+            αισθάνεσαι καλά ή αν κάτι σε απασχολεί, μίλησε
+            αμέσως με έναν εργαζόμενο της δομής.
+          </p>
+
+        </div>
 
       </div>
 
@@ -746,254 +1095,66 @@
 
   </main>
 
-  <footer>
+  <!-- Υποσέλιδο -->
+  <footer class="site-footer">
 
-    <p>
-      MyHappy Box ·
-      <span data-translate="footer">
-        Ελληνικός Ερυθρός Σταυρός — Καλάβρυτα
-      </span>
-    </p>
+    <div class="content-container footer-layout">
 
-    <small data-translate="disclaimer">
-      Τα ωράρια είναι ενδεικτικά.
-      Προσαρμόστε τα σύμφωνα με το επίσημο πρόγραμμα της δομής.
-    </small>
+      <div>
+
+        <a
+          class="footer-brand"
+          href="#home"
+        >
+          <span aria-hidden="true">🎁</span>
+          MyHappyBox
+        </a>
+
+        <p data-i18n="footer.description">
+          Ένας απλός και φιλικός οδηγός για την καθημερινή ζωή
+          στη δομή.
+        </p>
+
+      </div>
+
+      <div class="footer-information">
+
+        <p data-i18n="footer.organization">
+          Ελληνικός Ερυθρός Σταυρός
+        </p>
+
+        <p data-i18n="footer.location">
+          Δομή Καλαβρύτων
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="content-container footer-bottom">
+
+      <p>
+        © <span id="current-year"></span> MyHappyBox
+      </p>
+
+      <p data-i18n="footer.notice">
+        Τα ωράρια και οι πληροφορίες πρέπει να ενημερώνονται
+        σύμφωνα με το επίσημο πρόγραμμα της δομής.
+      </p>
+
+    </div>
 
   </footer>
 
-  <script>
-    const translations = {
+  <noscript>
+    <div class="noscript-message">
+      Για να λειτουργεί η αλλαγή γλώσσας και το λεξικό,
+      χρειάζεται να είναι ενεργοποιημένο το JavaScript.
+    </div>
+  </noscript>
 
-      el: {
-        welcome: "Καλώς ήρθατε",
-        title: "Το χαρούμενο κουτί σας",
-        intro: "Το χαρούμενο κουτί σας για χαρούμενη διαμονή στην δομή του Ελληνικού Ερυθρού Σταυρού στα Καλάβρυτα. Μαζί θα μάθουμε και θα περάσουμε ωραίες στιγμές. Γιατί το ταξίδι σας είναι και δικό μας.",
-        informationButton: "Δείτε τις πληροφορίες",
-        usefulInformation: "Χρήσιμες πληροφορίες",
-        everythingYouNeed: "Όλα όσα χρειάζεστε",
-        informationDescription: "Εδώ μπορείτε να δείτε ώρες λειτουργίας, υπηρεσίες και χρήσιμες πληροφορίες για την καθημερινή ζωή στη δομή.",
-        kitchenTitle: "Κουζίνα και γεύματα",
-        breakfast: "Πρωινό:",
-        lunch: "Μεσημεριανό:",
-        dinner: "Βραδινό:",
-        socialServiceTitle: "Γραφείο Κοινωνικής Υπηρεσίας",
-        socialServiceText: "Υποστήριξη για προσωπικά, κοινωνικά και διοικητικά θέματα.",
-        mondayFriday: "Δευτέρα έως Παρασκευή:",
-        appointments: "Ραντεβού:",
-        askStaff: "Ρωτήστε το προσωπικό",
-        teachersTitle: "Γραφείο Εκπαιδευτικών",
-        teachersText: "Πληροφορίες για σχολείο, μαθήματα, μελέτη και εκπαιδευτικές δραστηριότητες.",
-        studySupport: "Υποστήριξη μελέτης:",
-        wifiText: "Συνδεθείτε στο ασύρματο δίκτυο της δομής.",
-        network: "Όνομα δικτύου:",
-        password: "Κωδικός:",
-        wifiWarning: "Για λόγους ασφάλειας, μην ανεβάσετε τον πραγματικό κωδικό Wi-Fi σε δημόσιο GitHub.",
-        healthTitle: "Υγεία και φροντίδα",
-        healthText: "Για ιατρική βοήθεια, φάρμακα ή κάποιο πρόβλημα υγείας, απευθυνθείτε στο προσωπικό της δομής.",
-        officeHours: "Ώρες γραφείου:",
-        emergency: "Επείγον περιστατικό:",
-        contactStaff: "Επικοινωνήστε αμέσως με το προσωπικό.",
-        laundryTitle: "Πλυντήρια",
-        laundryText: "Χρησιμοποιείτε τα πλυντήρια σύμφωνα με το εβδομαδιαίο πρόγραμμα της δομής.",
-        hours: "Ώρες:",
-        schedule: "Πρόγραμμα:",
-        noticeBoard: "Δείτε τον πίνακα ανακοινώσεων.",
-        activitiesTitle: "Δραστηριότητες",
-        activitiesText: "Αθλητισμός, δημιουργική απασχόληση, εκδρομές, παιχνίδια και ομαδικές δράσεις.",
-        dailyProgram: "Καθημερινό πρόγραμμα:",
-        details: "Λεπτομέρειες:",
-        dailyLifeTitle: "Καθημερινή ζωή στη δομή",
-        dailyLifeText: "Σεβόμαστε ο ένας τον άλλον και φροντίζουμε τους κοινόχρηστους χώρους.",
-        quietHours: "Ώρες κοινής ησυχίας: 22:30–07:30",
-        cleanAreas: "Διατηρούμε καθαρούς τους χώρους.",
-        respect: "Σεβόμαστε το προσωπικό και τους υπόλοιπους φιλοξενούμενους.",
-        askForHelp: "Ζητάμε βοήθεια όταν τη χρειαζόμαστε.",
-        weAreHere: "Είμαστε εδώ",
-        needHelp: "Χρειάζεστε βοήθεια;",
-        helpText: "Μιλήστε με έναν εργαζόμενο της δομής. Δεν χρειάζεται να αντιμετωπίζετε κάποιο πρόβλημα μόνοι σας.",
-        footer: "Ελληνικός Ερυθρός Σταυρός — Καλάβρυτα",
-        disclaimer: "Τα ωράρια είναι ενδεικτικά. Προσαρμόστε τα σύμφωνα με το επίσημο πρόγραμμα της δομής."
-      },
-
-      ar: {
-        welcome: "أهلاً وسهلاً",
-        title: "صندوقكم السعيد",
-        intro: "صندوقكم السعيد لإقامة سعيدة في مركز الصليب الأحمر اليوناني في كالافريتا. سنتعلم معًا ونقضي أوقاتًا جميلة، لأن رحلتكم هي رحلتنا أيضًا.",
-        informationButton: "عرض المعلومات",
-        usefulInformation: "معلومات مفيدة",
-        everythingYouNeed: "كل ما تحتاجون إليه",
-        informationDescription: "هنا يمكنكم الاطلاع على ساعات العمل والخدمات والمعلومات المفيدة للحياة اليومية في المركز.",
-        kitchenTitle: "المطبخ والوجبات",
-        breakfast: "الفطور:",
-        lunch: "الغداء:",
-        dinner: "العشاء:",
-        socialServiceTitle: "مكتب الخدمة الاجتماعية",
-        socialServiceText: "دعم في المسائل الشخصية والاجتماعية والإدارية.",
-        mondayFriday: "الاثنين إلى الجمعة:",
-        appointments: "المواعيد:",
-        askStaff: "اسألوا فريق العمل",
-        teachersTitle: "مكتب المعلّمين",
-        teachersText: "معلومات عن المدرسة والدروس والدراسة والأنشطة التعليمية.",
-        studySupport: "دعم الدراسة:",
-        wifiText: "اتصلوا بشبكة الإنترنت اللاسلكية في المركز.",
-        network: "اسم الشبكة:",
-        password: "كلمة المرور:",
-        wifiWarning: "لأسباب أمنية، لا تضعوا كلمة مرور Wi-Fi الحقيقية في مستودع GitHub عام.",
-        healthTitle: "الصحة والرعاية",
-        healthText: "للمساعدة الطبية أو الأدوية أو أي مشكلة صحية، تحدثوا مع فريق العمل.",
-        officeHours: "ساعات المكتب:",
-        emergency: "حالة طارئة:",
-        contactStaff: "تواصلوا فورًا مع فريق العمل.",
-        laundryTitle: "غسيل الملابس",
-        laundryText: "استخدموا الغسالات وفق البرنامج الأسبوعي للمركز.",
-        hours: "الساعات:",
-        schedule: "البرنامج:",
-        noticeBoard: "راجعوا لوحة الإعلانات.",
-        activitiesTitle: "الأنشطة",
-        activitiesText: "رياضة وأنشطة إبداعية ورحلات وألعاب وأنشطة جماعية.",
-        dailyProgram: "البرنامج اليومي:",
-        details: "التفاصيل:",
-        dailyLifeTitle: "الحياة اليومية في المركز",
-        dailyLifeText: "نحترم بعضنا ونعتني بالأماكن المشتركة.",
-        quietHours: "ساعات الهدوء: 22:30–07:30",
-        cleanAreas: "نحافظ على نظافة الأماكن.",
-        respect: "نحترم فريق العمل وبقية المقيمين.",
-        askForHelp: "نطلب المساعدة عندما نحتاج إليها.",
-        weAreHere: "نحن هنا",
-        needHelp: "هل تحتاجون إلى مساعدة؟",
-        helpText: "تحدثوا مع أحد العاملين في المركز. لستم مضطرين إلى مواجهة أي مشكلة بمفردكم.",
-        footer: "الصليب الأحمر اليوناني — كالافريتا",
-        disclaimer: "الساعات المذكورة إرشادية. عدّلوها وفق البرنامج الرسمي للمركز."
-      },
-
-      bn: {
-        welcome: "স্বাগতম",
-        title: "আপনাদের আনন্দের বাক্স",
-        intro: "কালাভ্রিতায় গ্রিক রেড ক্রসের আশ্রয়কেন্দ্রে আনন্দময় থাকার জন্য এটি আপনাদের আনন্দের বাক্স। আমরা একসঙ্গে শিখব এবং সুন্দর সময় কাটাব, কারণ আপনাদের যাত্রা আমাদেরও যাত্রা।",
-        informationButton: "তথ্য দেখুন",
-        usefulInformation: "প্রয়োজনীয় তথ্য",
-        everythingYouNeed: "আপনার যা যা দরকার",
-        informationDescription: "এখানে আশ্রয়কেন্দ্রের দৈনন্দিন জীবন, সেবা এবং সময়সূচি সম্পর্কে তথ্য পাওয়া যাবে।",
-        kitchenTitle: "রান্নাঘর ও খাবার",
-        breakfast: "সকালের নাশতা:",
-        lunch: "দুপুরের খাবার:",
-        dinner: "রাতের খাবার:",
-        socialServiceTitle: "সমাজসেবা অফিস",
-        socialServiceText: "ব্যক্তিগত, সামাজিক ও প্রশাসনিক বিষয়ে সহায়তা।",
-        mondayFriday: "সোমবার থেকে শুক্রবার:",
-        appointments: "অ্যাপয়েন্টমেন্ট:",
-        askStaff: "কর্মীদের জিজ্ঞাসা করুন",
-        teachersTitle: "শিক্ষকদের অফিস",
-        teachersText: "স্কুল, পাঠ, পড়াশোনা ও শিক্ষামূলক কার্যক্রমের তথ্য।",
-        studySupport: "পড়াশোনার সহায়তা:",
-        wifiText: "আশ্রয়কেন্দ্রের Wi-Fi নেটওয়ার্কে সংযুক্ত হন।",
-        network: "নেটওয়ার্কের নাম:",
-        password: "পাসওয়ার্ড:",
-        wifiWarning: "নিরাপত্তার জন্য পাবলিক GitHub-এ আসল Wi-Fi পাসওয়ার্ড দেবেন না।",
-        healthTitle: "স্বাস্থ্য ও যত্ন",
-        healthText: "চিকিৎসা সহায়তা, ওষুধ বা স্বাস্থ্য সমস্যার জন্য কর্মীদের সঙ্গে কথা বলুন।",
-        officeHours: "অফিসের সময়:",
-        emergency: "জরুরি অবস্থা:",
-        contactStaff: "অবিলম্বে কর্মীদের সঙ্গে যোগাযোগ করুন।",
-        laundryTitle: "কাপড় ধোয়া",
-        laundryText: "সাপ্তাহিক সময়সূচি অনুযায়ী ওয়াশিং মেশিন ব্যবহার করুন।",
-        hours: "সময়:",
-        schedule: "সময়সূচি:",
-        noticeBoard: "নোটিশ বোর্ড দেখুন।",
-        activitiesTitle: "কার্যক্রম",
-        activitiesText: "খেলাধুলা, সৃজনশীল কাজ, ভ্রমণ, খেলা ও দলীয় কার্যক্রম।",
-        dailyProgram: "প্রতিদিনের সময়সূচি:",
-        details: "বিস্তারিত:",
-        dailyLifeTitle: "আশ্রয়কেন্দ্রের দৈনন্দিন জীবন",
-        dailyLifeText: "আমরা একে অন্যকে সম্মান করি এবং সবার ব্যবহারের জায়গাগুলো পরিষ্কার রাখি।",
-        quietHours: "নীরবতার সময়: 22:30–07:30",
-        cleanAreas: "আমরা জায়গাগুলো পরিষ্কার রাখি।",
-        respect: "আমরা কর্মী ও অন্যান্য বাসিন্দাদের সম্মান করি।",
-        askForHelp: "প্রয়োজন হলে আমরা সাহায্য চাই।",
-        weAreHere: "আমরা এখানে আছি",
-        needHelp: "সহায়তা দরকার?",
-        helpText: "আশ্রয়কেন্দ্রের একজন কর্মীর সঙ্গে কথা বলুন। কোনো সমস্যার মুখোমুখি আপনাকে একা হতে হবে না।",
-        footer: "গ্রিক রেড ক্রস — কালাভ্রিতা",
-        disclaimer: "সময়গুলো উদাহরণ হিসেবে দেওয়া হয়েছে। আশ্রয়কেন্দ্রের সরকারি সময়সূচি অনুযায়ী পরিবর্তন করুন।"
-      }
-
-    };
-
-    const languageButtons =
-      document.querySelectorAll(".language-button");
-
-    const translatedElements =
-      document.querySelectorAll("[data-translate]");
-
-    function changeLanguage(language) {
-
-      document.documentElement.lang = language;
-
-      if (language === "ar") {
-        document.body.setAttribute("dir", "rtl");
-      } else {
-        document.body.setAttribute("dir", "ltr");
-      }
-
-      translatedElements.forEach(function(element) {
-
-        const translationKey =
-          element.getAttribute("data-translate");
-
-        if (
-          translations[language] &&
-          translations[language][translationKey]
-        ) {
-          element.textContent =
-            translations[language][translationKey];
-        }
-
-      });
-
-      languageButtons.forEach(function(button) {
-
-        button.classList.remove("active");
-
-        if (
-          button.getAttribute("data-language") === language
-        ) {
-          button.classList.add("active");
-        }
-
-      });
-
-      localStorage.setItem(
-        "myHappyBoxLanguage",
-        language
-      );
-    }
-
-    languageButtons.forEach(function(button) {
-
-      button.addEventListener("click", function() {
-
-        const selectedLanguage =
-          button.getAttribute("data-language");
-
-        changeLanguage(selectedLanguage);
-
-      });
-
-    });
-
-    const savedLanguage =
-      localStorage.getItem("myHappyBoxLanguage");
-
-    if (
-      savedLanguage &&
-      translations[savedLanguage]
-    ) {
-      changeLanguage(savedLanguage);
-    } else {
-      changeLanguage("el");
-    }
-  </script>
+  <script src="translations.js"></script>
+  <script src="app.js"></script>
 
 </body>
 </html>
